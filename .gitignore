@@ -1,0 +1,7 @@
+*.opensdf
+*.sdf
+*.v11.suo
+*.userprefs
+arduino/control-panel/Debug/
+plugin/obj/
+plugin/bin/
