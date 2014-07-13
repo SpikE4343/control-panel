@@ -189,7 +189,7 @@ namespace ControlPanelPlugin
       return (float)(amount / max) * 100.0f;
     }
 
-    public float liquidFuelPercent
+    public float liquidResourcePercent
     {
       get
       {
@@ -201,7 +201,7 @@ namespace ControlPanelPlugin
       }
     }
 
-    public float oxiFuelPercent
+    public float oxiResourcePercent
     {
       get
       {
@@ -213,7 +213,7 @@ namespace ControlPanelPlugin
       }
     }
 
-    public float monoFuelPercent
+    public float monoResourcePercent
     {
       get
       {
@@ -225,7 +225,7 @@ namespace ControlPanelPlugin
       }
     }
 
-    public float electricFuelPercent
+    public float electricResourcePercent
     {
       get
       {

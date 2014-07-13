@@ -11,161 +11,163 @@ using System;
 using UnityEngine;
 using KSP;
 using System.Collections;
+using ControlPanelPlugin.Telemetry;
+using plugin.telemetry;
+using plugin.telemetry.analog;
 
 namespace ControlPanelPlugin
 {
-  public class ControlPanelModule : PartModule
-  {
-    ControlPanel panel;
-
-    KSPVessel kspVessel = new KSPVessel();
-
-    private void createStatusItem(KSPActionGroup group)
+    public class ControlPanelModule : PartModule
     {
-      panel.Add(group, vessel.ActionGroups[group]);
-    }
+        ControlPanel panel;
 
-    public override void OnStart(StartState state)
-    {
-      if( Log.Implementor == null )
-        Log.Implementor = new UnityLogger();
+        KSPVessel kspVessel = new KSPVessel();
 
-      
-      // TODO: load from data file
-      if (state == StartState.Editor || state == StartState.None)
-        return;
-
-      if (ConnectionManager.Instance.Panel == null)
-      {
-        panel = new ControlPanel();
-        
-        ConnectionManager.Instance.Panel = panel;
-
-        createStatusItem(KSPActionGroup.RCS);
-        createStatusItem(KSPActionGroup.SAS);
-        createStatusItem(KSPActionGroup.Stage);
-        createStatusItem(KSPActionGroup.Brakes);
-        createStatusItem(KSPActionGroup.Gear);
-        createStatusItem(KSPActionGroup.Light);
-
-        panel.Add(new ControlPanel.AltitudeTelemetryItem(0));
-        panel.Add(new ControlPanel.SpeedTelemetryItem(1));
-        panel.Add(new ControlPanel.ThrottleTelemetryItem(2));
-        panel.Add(new ControlPanel.LiquidFuelItem(3, 0));
-        panel.Add(new ControlPanel.OxiFuelItem(4, 1));
-        panel.Add(new ControlPanel.MonoFuelItem(5, 2));
-        panel.Add(new ControlPanel.EvFuelItem(6, 3));
-        panel.Start("COM1", 9600);
-      }
-
-      panel = ConnectionManager.Instance.Panel;
-      panel.CurrentVessel = kspVessel;
-
-      StartCoroutine(UpdatePanelInput());
-      StartCoroutine(UpdatePanel());
-      StartCoroutine(UpdateVessel());
-    }
-
-    /*
-    public override void OnAwake()
-    {
-      if (ConnectionManager.Instance.Panel == null)
-      {
-        Debug.Log("[ControlPanelModule] Creating panel");
-        panel = new ControlPanel();
-        panel.CurrentVessel = kspVessel;
-        ConnectionManager.Instance.Panel = panel;
-
-        createStatusItem(KSPActionGroup.RCS);
-        createStatusItem(KSPActionGroup.SAS);
-        createStatusItem(KSPActionGroup.Stage);
-        createStatusItem(KSPActionGroup.Brakes);
-        createStatusItem(KSPActionGroup.Gear);
-        createStatusItem(KSPActionGroup.Light);
-
-        panel.Add(new ControlPanel.AltitudeTelemetryItem(0));
-        panel.Add(new ControlPanel.SpeedTelemetryItem(1));
-        panel.Add(new ControlPanel.ThrottleTelemetryItem(2));
-        panel.Add(new ControlPanel.LiquidFuelItem(3, 0));
-        panel.Add(new ControlPanel.OxiFuelItem(4, 1));
-        panel.Add(new ControlPanel.MonoFuelItem(5, 2));
-        panel.Add(new ControlPanel.EvFuelItem(6, 3));
-        panel.Start("COM4", 9600);
-      }
-
-      panel = ConnectionManager.Instance.Panel;
-
-      StartCoroutine(UpdatePanelInput());
-      StartCoroutine(UpdatePanel());
-    }
-     */
-
-    // coroutine for polling input
-    IEnumerator UpdatePanelInput()
-    {
-      while (active)
-      {
-
-        if (vessel != null)
+        private void createStatusItem(KSPActionGroup group)
         {
-            kspVessel.vessel = vessel;
-            panel.UpdateInput();
+            panel.Add(group, vessel.ActionGroups[group]);
         }
 
-        yield return new WaitForSeconds(panel.InputUpdateInterval);
-      }
-    }
-
-    IEnumerator UpdateVessel()
-    {
-      while (active)
-      {
-
-        if (vessel != null)
+        public override void OnStart(StartState state)
         {
-          kspVessel.vessel = vessel;
-          kspVessel.Update();
+            if (Log.Implementor == null)
+                Log.Implementor = new UnityLogger();
+
+            // TODO: load from data file
+            if (state == StartState.Editor || state == StartState.None)
+                return;
+
+            if (ConnectionManager.Instance.Panel == null)
+            {
+                panel = new ControlPanel();
+
+                ConnectionManager.Instance.Panel = panel;
+
+                createStatusItem(KSPActionGroup.RCS);
+                createStatusItem(KSPActionGroup.SAS);
+                createStatusItem(KSPActionGroup.Stage);
+                createStatusItem(KSPActionGroup.Brakes);
+                createStatusItem(KSPActionGroup.Gear);
+                createStatusItem(KSPActionGroup.Light);
+
+                panel.Add(new AltitudeTelemetryItem(0, 0, 0, 8, 2));
+                panel.Add(new SpeedTelemetryItem(1, 1, 0, 4, 3));
+                panel.Add(new ThrottleTelemetryItem(0, 0, 0, 8, 2));
+                panel.Add(new LiquidResourceItem(0));
+                panel.Add(new OxiResourceItem(1));
+                panel.Add(new MonoResourceItem(2));
+                panel.Add(new EvResourceItem(3));
+                panel.Start("COM1", 9600);
+            }
+
+            panel = ConnectionManager.Instance.Panel;
+            panel.CurrentVessel = kspVessel;
+
+            StartCoroutine(UpdatePanelInput());
+            StartCoroutine(UpdatePanel());
+            StartCoroutine(UpdateVessel());
         }
 
-        yield return new WaitForSeconds(kspVessel.UpdateInterval);
-      }
-    }
-
-    // coroutine for updating state/sending data to panel
-    IEnumerator UpdatePanel()
-    {
-
-      while (active)
-      {
-        if (vessel != null)
+        /*
+        public override void OnAwake()
         {
-            kspVessel.vessel = vessel;
-          panel.UpdateState();
+          if (ConnectionManager.Instance.Panel == null)
+          {
+            Debug.Log("[ControlPanelModule] Creating panel");
+            panel = new ControlPanel();
+            panel.CurrentVessel = kspVessel;
+            ConnectionManager.Instance.Panel = panel;
+
+            createStatusItem(KSPActionGroup.RCS);
+            createStatusItem(KSPActionGroup.SAS);
+            createStatusItem(KSPActionGroup.Stage);
+            createStatusItem(KSPActionGroup.Brakes);
+            createStatusItem(KSPActionGroup.Gear);
+            createStatusItem(KSPActionGroup.Light);
+
+            panel.Add(new ControlPanel.AltitudeTelemetryItem(0));
+            panel.Add(new ControlPanel.SpeedTelemetryItem(1));
+            panel.Add(new ControlPanel.ThrottleTelemetryItem(2));
+            panel.Add(new ControlPanel.LiquidFuelItem(3, 0));
+            panel.Add(new ControlPanel.OxiFuelItem(4, 1));
+            panel.Add(new ControlPanel.MonoFuelItem(5, 2));
+            panel.Add(new ControlPanel.EvFuelItem(6, 3));
+            panel.Start("COM4", 9600);
+          }
+
+          panel = ConnectionManager.Instance.Panel;
+
+          StartCoroutine(UpdatePanelInput());
+          StartCoroutine(UpdatePanel());
+        }
+         */
+
+        // coroutine for polling input
+        IEnumerator UpdatePanelInput()
+        {
+            while (active)
+            {
+
+                if (vessel != null)
+                {
+                    kspVessel.vessel = vessel;
+                    panel.UpdateInput();
+                }
+
+                yield return new WaitForSeconds(panel.InputUpdateInterval);
+            }
         }
 
-        yield return new WaitForSeconds(panel.PanelUpdateInterval);
-      }
-    }
+        IEnumerator UpdateVessel()
+        {
+            while (active)
+            {
 
-    void OnGUI()
-    {
-      if( panel != null )
-        panel.OnGUI();
-    }
+                if (vessel != null)
+                {
+                    kspVessel.vessel = vessel;
+                    kspVessel.Update();
+                }
 
-    public void OnDestroy()
-    {
-      Debug.Log("[ControlPanel] Stopping");
-      if (panel != null)
-        panel.Stop();
-    }
+                yield return new WaitForSeconds(kspVessel.UpdateInterval);
+            }
+        }
 
-    public override void OnInactive()
-    {
-      Debug.Log("[ControlPanel] OnInactive");
-      if( panel != null )
-        panel.Stop();
+        // coroutine for updating state/sending data to panel
+        IEnumerator UpdatePanel()
+        {
+
+            while (active)
+            {
+                if (vessel != null)
+                {
+                    kspVessel.vessel = vessel;
+                    panel.UpdateState();
+                }
+
+                yield return new WaitForSeconds(panel.PanelUpdateInterval);
+            }
+        }
+
+        void OnGUI()
+        {
+            if (panel != null)
+                panel.OnGUI();
+        }
+
+        public void OnDestroy()
+        {
+            Debug.Log("[ControlPanel] Stopping");
+            if (panel != null)
+                panel.Stop();
+        }
+
+        public override void OnInactive()
+        {
+            Debug.Log("[ControlPanel] OnInactive");
+            if (panel != null)
+                panel.Stop();
+        }
     }
-  }
 }
 

@@ -20,238 +20,238 @@ using System.Collections.Generic;
 
 namespace ControlPanelPlugin
 {
-  public class SerialConnection
-  {
-    public enum MsgType
+    public class SerialConnection
     {
-      GroupState = 0,
-      Telemetry,
-      AnalogInput,
-      Action,
-      Heartbeat,
-      AnalogMeterTelemetry,
-      LogInfo,
-      NumMessages
-    }
-
-    public enum ConnectionState
-    {
-      Disconnected,
-      Connected
-    }
-
-    public ConnectionState CurrentConnectionState { get; set; }
-    public ConnectionState DesiredConnectionState { get; set; }
-
-    public delegate void MessageHandler(MsgType type, byte size, BinaryReader stream);
-
-    SerialPort stream;
-    public string COM { get; set; }
-    public int Baud { get; set; }
-
-    public bool Connected { get { return CurrentConnectionState == ConnectionState.Connected && stream != null && stream.IsOpen; } }
-
-    List<MessageHandler>[] handlers = new List<MessageHandler>[(int)MsgType.NumMessages];
-
-
-    public SerialConnection(string com, int baud = 9600)
-    {
-      COM = com;
-      Baud = baud;
-    }
-
-    public void RegisterHandler(MsgType type, MessageHandler handler)
-    {
-      var handlerList = handlers[(int)type];
-      if (handlerList == null)
-      {
-        handlerList = new List<MessageHandler>();
-        handlers[(int)type] = handlerList;
-      }
-
-      handlerList.Add(handler);
-    }
-
-    public void UnregisterHandler(MsgType type, MessageHandler handler)
-    {
-      var handlerList = handlers[(int)type];
-      if (handlerList == null)
-        return;
-
-      handlerList.Remove(handler);
-    }
-
-    // Use this for initialization
-    public void Start()
-    {
-      DesiredConnectionState = ConnectionState.Connected;
-    }
-
-    public void Stop()
-    {
-      Disconnect();
-      stream = null;
-    }
-
-    public void Update()
-    {
-      UpdateConnectionState();
-    }
-
-    void UpdateConnectionState()
-    {
-      //Log.Debug("[ControlPanel] " + CurrentConnectionState + ", " + DesiredConnectionState);
-      switch (CurrentConnectionState)
-      {
-        case ConnectionState.Disconnected:
-          switch (DesiredConnectionState)
-          {
-            case ConnectionState.Disconnected:
-              // nothing to do
-              break;
-            case ConnectionState.Connected:
-              Connect();
-              
-              break;
-          }
-          break;
-
-        case ConnectionState.Connected:
-          switch (DesiredConnectionState)
-          {
-            case ConnectionState.Disconnected:
-              Disconnect();
-              break;
-
-            case ConnectionState.Connected:
-              if (stream != null && !stream.IsOpen)
-                DesiredConnectionState = ConnectionState.Disconnected;
-              // read and write
-              ReadMessages();
-              
-              break;
-          }
-          break;
-      }
-    }
-
-
-    void Connect()
-    {
-      if (stream == null)
-      {
-        stream = new SerialPort(COM, Baud);
-      }
-
-      if (!stream.IsOpen)
-      {
-        stream.Open();
-        if (!stream.IsOpen)
+        public enum MsgType
         {
-          Log.Error("Failed to open serialport");
-          return;
+            GroupState = 0,
+            Telemetry,
+            AnalogInput,
+            Action,
+            Heartbeat,
+            AnalogMeterTelemetry,
+            LogInfo,
+            NumMessages
         }
-      }
 
-      streamReader = new BinaryReader(stream.BaseStream);
-      streamWriter = new BinaryWriter(stream.BaseStream);//outStream);
-      outFile = new FileStream("output.txt", FileMode.Create);
-      fileWriter = new StreamWriter(outFile);
-        CurrentConnectionState = ConnectionState.Connected;
-      Log.Info("[ControlPanel] serialport opened");
-    }
+        public enum ConnectionState
+        {
+            Disconnected,
+            Connected
+        }
 
-    StreamWriter fileWriter;
-    public void Disconnect()
-    {
-      if (IsOpen)
-        stream.Close();
+        public ConnectionState CurrentConnectionState { get; set; }
+        public ConnectionState DesiredConnectionState { get; set; }
 
-      outFile.Close();
-      CurrentConnectionState = ConnectionState.Disconnected;
-    }
+        public delegate void MessageHandler(MsgType type, byte size, BinaryReader stream);
 
-    FileStream outFile;
-    private BinaryReader streamReader;
-    private BinaryWriter streamWriter;
-    private MemoryStream outStream = new MemoryStream();
+        SerialPort stream;
+        public string COM { get; set; }
+        public int Baud { get; set; }
 
-    private MsgType PendingType;
-    private byte PendingSize;
-    private bool HasPendingMessage = false;
+        public bool Connected { get { return CurrentConnectionState == ConnectionState.Connected && stream != null && stream.IsOpen; } }
 
-    public bool IsOpen { get { return stream != null && stream.IsOpen; } }
+        List<MessageHandler>[] handlers = new List<MessageHandler>[(int)MsgType.NumMessages];
 
-    void ReadMessages()
-    {
-      if (stream == null || !stream.IsOpen || stream.BytesToRead < 4)
-        return;
+
+        public SerialConnection(string com, int baud = 9600)
+        {
+            COM = com;
+            Baud = baud;
+        }
+
+        public void RegisterHandler(MsgType type, MessageHandler handler)
+        {
+            var handlerList = handlers[(int)type];
+            if (handlerList == null)
+            {
+                handlerList = new List<MessageHandler>();
+                handlers[(int)type] = handlerList;
+            }
+
+            handlerList.Add(handler);
+        }
+
+        public void UnregisterHandler(MsgType type, MessageHandler handler)
+        {
+            var handlerList = handlers[(int)type];
+            if (handlerList == null)
+                return;
+
+            handlerList.Remove(handler);
+        }
+
+        // Use this for initialization
+        public void Start()
+        {
+            DesiredConnectionState = ConnectionState.Connected;
+        }
+
+        public void Stop()
+        {
+            Disconnect();
+            stream = null;
+        }
+
+        public void Update()
+        {
+            UpdateConnectionState();
+        }
+
+        void UpdateConnectionState()
+        {
+            //Log.Debug("[ControlPanel] " + CurrentConnectionState + ", " + DesiredConnectionState);
+            switch (CurrentConnectionState)
+            {
+                case ConnectionState.Disconnected:
+                    switch (DesiredConnectionState)
+                    {
+                        case ConnectionState.Disconnected:
+                            // nothing to do
+                            break;
+                        case ConnectionState.Connected:
+                            Connect();
+
+                            break;
+                    }
+                    break;
+
+                case ConnectionState.Connected:
+                    switch (DesiredConnectionState)
+                    {
+                        case ConnectionState.Disconnected:
+                            Disconnect();
+                            break;
+
+                        case ConnectionState.Connected:
+                            if (stream != null && !stream.IsOpen)
+                                DesiredConnectionState = ConnectionState.Disconnected;
+                            // read and write
+                            ReadMessages();
+
+                            break;
+                    }
+                    break;
+            }
+        }
+
+
+        void Connect()
+        {
+            if (stream == null)
+            {
+                stream = new SerialPort(COM, Baud);
+            }
+
+            if (!stream.IsOpen)
+            {
+                stream.Open();
+                if (!stream.IsOpen)
+                {
+                    Log.Error("Failed to open serialport");
+                    return;
+                }
+            }
+
+            streamReader = new BinaryReader(stream.BaseStream);
+            streamWriter = new BinaryWriter(stream.BaseStream);//outStream);
+            outFile = new FileStream("output.txt", FileMode.Create);
+            fileWriter = new StreamWriter(outFile);
+            CurrentConnectionState = ConnectionState.Connected;
+            Log.Info("[ControlPanel] serialport opened");
+        }
+
+        StreamWriter fileWriter;
+        public void Disconnect()
+        {
+            if (IsOpen)
+                stream.Close();
+
+            outFile.Close();
+            CurrentConnectionState = ConnectionState.Disconnected;
+        }
+
+        FileStream outFile;
+        private BinaryReader streamReader;
+        private BinaryWriter streamWriter;
+        private MemoryStream outStream = new MemoryStream();
+
+        private MsgType PendingType;
+        private byte PendingSize;
+        private bool HasPendingMessage = false;
+
+        public bool IsOpen { get { return stream != null && stream.IsOpen; } }
+
+        void ReadMessages()
+        {
+            if (stream == null || !stream.IsOpen || stream.BytesToRead < 4)
+                return;
 
 #if !DEBUG
       try
       {
 #endif
-        if( !HasPendingMessage )
-        {
-          if (stream.BytesToRead < 4)
-            return;
-
-          //Console.Write((char)streamReader.PeekChar());
-          byte marker = streamReader.ReadByte();
-          
-          if (marker != 'e')
-          {
-              //Console.Write((char)marker);
-              return;
-          }
-
-          char marker1 = (char)streamReader.ReadByte();
-          //Console.Write(marker);
-          if (marker1 != 'R')
-          {
-              return;
-          }
-
-          PendingType = (MsgType)streamReader.ReadByte();
-          //Console.Write((byte)PendingType);
-          PendingSize = streamReader.ReadByte();
-
-          //Console.Write(PendingSize);
-
-          HasPendingMessage = true;
-        }
-
-        if (HasPendingMessage && stream.BytesToRead >= PendingSize)
-        {
-            HasPendingMessage = false;
-            /*
-            if (PendingType != MsgType.Heartbeat)
+            if (!HasPendingMessage)
             {
-                byte[] buffer = new byte[4 + PendingSize];
-                buffer[0] = (byte)'e';
-                buffer[1] = (byte)'R';
-                buffer[2] = (byte)PendingType;
-                buffer[3] = PendingSize;
+                if (stream.BytesToRead < 4)
+                    return;
 
-                for (int i = 0; i < PendingSize; ++i)
+                //Console.Write((char)streamReader.PeekChar());
+                byte marker = streamReader.ReadByte();
+
+                if (marker != 'e')
                 {
-                    buffer[i + 4] = streamReader.ReadByte();
+                    //Console.Write((char)marker);
+                    return;
                 }
 
-                Console.WriteLine(BitConverter.ToString(buffer));
-                return;
-            }*/
-          
-          
-          List<MessageHandler> handlerList = handlers[(int)PendingType];
-          if (handlerList != null)
-          {
-            foreach (var handler in handlerList)
-            {
-              handler(PendingType, PendingSize, streamReader);
+                char marker1 = (char)streamReader.ReadByte();
+                //Console.Write(marker);
+                if (marker1 != 'R')
+                {
+                    return;
+                }
+
+                PendingType = (MsgType)streamReader.ReadByte();
+                //Console.Write((byte)PendingType);
+                PendingSize = streamReader.ReadByte();
+
+                //Console.Write(PendingSize);
+
+                HasPendingMessage = true;
             }
-          }
-        }
+
+            if (HasPendingMessage && stream.BytesToRead >= PendingSize)
+            {
+                HasPendingMessage = false;
+                /*
+                if (PendingType != MsgType.Heartbeat)
+                {
+                    byte[] buffer = new byte[4 + PendingSize];
+                    buffer[0] = (byte)'e';
+                    buffer[1] = (byte)'R';
+                    buffer[2] = (byte)PendingType;
+                    buffer[3] = PendingSize;
+
+                    for (int i = 0; i < PendingSize; ++i)
+                    {
+                        buffer[i + 4] = streamReader.ReadByte();
+                    }
+
+                    Console.WriteLine(BitConverter.ToString(buffer));
+                    return;
+                }*/
+
+
+                List<MessageHandler> handlerList = handlers[(int)PendingType];
+                if (handlerList != null)
+                {
+                    foreach (var handler in handlerList)
+                    {
+                        handler(PendingType, PendingSize, streamReader);
+                    }
+                }
+            }
 #if !DEBUG
       }
       catch (Exception e)
@@ -259,122 +259,122 @@ namespace ControlPanelPlugin
         Log.Error("Unable to read message from stream: {0}", e.Message);
       }
 #endif
-    }
-    
-    private void WriteHeader(MsgType type, byte size)
-    {
-      streamWriter.Write('e');
-      streamWriter.Write('R');
-      streamWriter.Write((byte)type);
-      streamWriter.Write(size);
-    }
+        }
 
-    public void SendTelemetryMessage(int id, 
-        int display,
-        int start,
-        int maxDigits,
-        int precision, 
-        float value)
-    {
-      if (stream == null || !stream.IsOpen)
-        return;
+        private void WriteHeader(MsgType type, byte size)
+        {
+            streamWriter.Write('e');
+            streamWriter.Write('R');
+            streamWriter.Write((byte)type);
+            streamWriter.Write(size);
+        }
 
-      //Log.Debug("[ControlPanel] Sending Telemetry Message: " + id);
-      try
-      {
-        WriteHeader(MsgType.Telemetry, 9 );
-        streamWriter.Write((byte)id);
-        streamWriter.Write((byte)display);
-        streamWriter.Write((byte)precision);
-        streamWriter.Write((byte)start);
-        streamWriter.Write((byte)maxDigits);
-        int lvalue = (int)(value * Math.Pow(10, precision));
+        public void SendTelemetryMessage(int id,
+            int display,
+            int start,
+            int maxDigits,
+            int precision,
+            float value)
+        {
+            if (stream == null || !stream.IsOpen)
+                return;
 
-        streamWriter.Write(lvalue);
-        streamWriter.Flush();
-        flush();
-      }
-      catch (Exception e)
-      {
-        Log.Error("Unable to write ActionGroup message to stream: {1}", e.Message);
-      }
-    }
+            //Log.Debug("[ControlPanel] Sending Telemetry Message: " + id);
+            try
+            {
+                WriteHeader(MsgType.Telemetry, 9);
+                streamWriter.Write((byte)id);
+                streamWriter.Write((byte)display);
+                streamWriter.Write((byte)precision);
+                streamWriter.Write((byte)start);
+                streamWriter.Write((byte)maxDigits);
+                int lvalue = (int)(value * Math.Pow(10, precision));
 
-    public void SendActionGroupMessage(int id, bool state)
-    {
-      if (stream == null || !stream.IsOpen)
-        return;
+                streamWriter.Write(lvalue);
+                streamWriter.Flush();
+                flush();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Unable to write ActionGroup message to stream: {1}", e.Message);
+            }
+        }
 
-      try
-      {
-        WriteHeader(MsgType.GroupState, 2);
-        streamWriter.Write((byte)id);
-        streamWriter.Write((byte)(state ? 1 : 0));
-        flush();
-      }
-      catch (Exception e)
-      {
-        Log.Error("Unable to write ActionGroup message to stream: {1}", e.Message);
-      }
-    }
+        public void SendActionGroupMessage(int id, bool state)
+        {
+            if (stream == null || !stream.IsOpen)
+                return;
 
-    public void SendAnalogMeterMsg(int meter, byte value)
-    {
-        if (stream == null || !stream.IsOpen)
+            try
+            {
+                WriteHeader(MsgType.GroupState, 2);
+                streamWriter.Write((byte)id);
+                streamWriter.Write((byte)(state ? 1 : 0));
+                flush();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Unable to write ActionGroup message to stream: {1}", e.Message);
+            }
+        }
+
+        public void SendAnalogMeterMsg(int meter, byte value)
+        {
+            if (stream == null || !stream.IsOpen)
+                return;
+
+            try
+            {
+                WriteHeader(MsgType.AnalogMeterTelemetry, 2);
+                streamWriter.Write((byte)meter);
+                streamWriter.Write(value);
+                flush();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Unable to write AnalogMeterTelemetry message to stream: {1}", e.Message);
+            }
+        }
+        public void SendMessage(MsgType type, byte[] buffer)
+        {
+            if (stream == null || !stream.IsOpen)
+                return;
+
+            try
+            {
+                byte size = (byte)buffer.Length;
+                streamWriter.Write('e');
+                streamWriter.Write('R');
+                streamWriter.Write((byte)type);
+                streamWriter.Write(size);
+                streamWriter.Write(buffer, 0, size);
+                flush();
+            }
+            catch (Exception e)
+            {
+                Log.Error("Unable to write message to {0} stream: {1}",
+                    Enum.GetName(typeof(MsgType), type),
+                    e.Message);
+            }
+        }
+
+
+        private void flush()
+        {
             return;
 
-        try
-        {
-            WriteHeader(MsgType.AnalogMeterTelemetry, 2);
-            streamWriter.Write((byte)meter);
-            streamWriter.Write(value);
-            flush();
+            byte[] buffer = outStream.GetBuffer();
+            if (outStream.Length <= 0)
+                return;
+
+            int size = (int)outStream.Length;
+            stream.BaseStream.Write(buffer, 0, size);
+            //outFile.Write(buffer, 0, size);
+
+
+            outStream.Seek(0, SeekOrigin.Begin);
+            outStream.SetLength(0);
         }
-        catch (Exception e)
-        {
-            Log.Error("Unable to write AnalogMeterTelemetry message to stream: {1}", e.Message);
-        }
     }
-    public void SendMessage(MsgType type, byte[] buffer)
-    {
-      if (stream == null || !stream.IsOpen)
-        return;
-
-      try
-      {
-        byte size = (byte)buffer.Length;
-        streamWriter.Write('e');
-        streamWriter.Write('R');
-        streamWriter.Write((byte)type);
-        streamWriter.Write(size);
-        streamWriter.Write(buffer, 0, size);
-        flush();
-      }
-      catch (Exception e)
-      {
-        Log.Error("Unable to write message to {0} stream: {1}", 
-            Enum.GetName(typeof(MsgType), type), 
-            e.Message);
-      }
-    }
-
-    
-    private void flush()
-    {
-        return;
-
-        byte[] buffer = outStream.GetBuffer();
-        if (outStream.Length <= 0)
-            return;
-
-        int size = (int)outStream.Length;
-        stream.BaseStream.Write(buffer, 0, size);
-        //outFile.Write(buffer, 0, size);
-        
-        
-        outStream.Seek(0, SeekOrigin.Begin);
-        outStream.SetLength(0);
-    }
-  }
 }
 

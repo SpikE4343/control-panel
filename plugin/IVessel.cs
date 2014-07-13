@@ -7,17 +7,15 @@ namespace ControlPanelPlugin
 {
     public interface IVessel
     {
-      string Name { get; }
+        string Name { get; }
         float altitude { get; set; }
         float speed { get; set; }
         float mainThrottle { get; set; }
 
-        
-
-        float liquidFuelPercent { get; set; }
-        float oxiFuelPercent { get; set; }
-        float monoFuelPercent { get; set; }
-        float electricFuelPercent { get; set; }
+        float liquidResourcePercent { get; set; }
+        float oxiResourcePercent { get; set; }
+        float monoResourcePercent { get; set; }
+        float electricResourcePercent { get; set; }
         float geeLevelPercent { get; set; }
         float psiPercent { get; set; }
         float verticalSpeed { get; set; }

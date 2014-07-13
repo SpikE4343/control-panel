@@ -33,6 +33,25 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\external\ksp\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.core">
+      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\nunit.core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.core.interfaces">
+      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\nunit.core.interfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util">
+      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\nunit.util.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NUnit.VisualStudio.TestAdapter">
+      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,10 +67,10 @@
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="ControlPanel.cs" />
     <Compile Include="IVessel.cs" />
-    <Compile Include="KSPVessel.cs" />
+    <Compile Include="ksp\KSPVessel.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Messages.cs" />
-    <Compile Include="ModuleVesselControlPanel.cs" />
+    <Compile Include="ksp\ControlPanelModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialConnection.cs" />
     <Compile Include="SerialPort\ISerialStreamCtrl.cs" />
@@ -64,8 +83,20 @@
     <Compile Include="SerialPort\Win32CE\PortCapabilities.cs" />
     <Compile Include="SerialPort\Win32CE\PortSettings.cs" />
     <Compile Include="SerialPort\Win32CE\WinStream.cs" />
+    <Compile Include="telemetry\digital\AltitudeTelemetryItem.cs" />
+    <Compile Include="telemetry\analog\AnalogTelemetryPercentItem.cs" />
+    <Compile Include="telemetry\analog\EvResourceItem.cs" />
+    <Compile Include="telemetry\analog\LiquidResourceItem.cs" />
+    <Compile Include="telemetry\analog\MonoResourceItem.cs" />
+    <Compile Include="telemetry\analog\OxiResourceItem.cs" />
+    <Compile Include="telemetry\digital\DigitalTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\SpeedTelemetryItem.cs" />
+    <Compile Include="telemetry\TelemetryItem.cs" />
+    <Compile Include="telemetry\digital\ThrottleTelemetryItem.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
