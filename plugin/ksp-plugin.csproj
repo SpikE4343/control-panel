@@ -7,8 +7,8 @@
     <ProjectGuid>{0C426753-6C1C-4424-9738-3C2CD972BE3D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>plugin</RootNamespace>
-    <AssemblyName>plugin</AssemblyName>
+    <RootNamespace>ControlPanelPlugin</RootNamespace>
+    <AssemblyName>control-panel-plugin</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -28,6 +28,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -67,6 +70,7 @@
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="ControlPanel.cs" />
     <Compile Include="IVessel.cs" />
+    <Compile Include="ksp\ControlPanelGUI.cs" />
     <Compile Include="ksp\KSPVessel.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Messages.cs" />
@@ -90,14 +94,21 @@
     <Compile Include="telemetry\analog\MonoResourceItem.cs" />
     <Compile Include="telemetry\analog\OxiResourceItem.cs" />
     <Compile Include="telemetry\digital\DigitalTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\NextNodeTimeTelemetryItem.cs" />
     <Compile Include="telemetry\digital\SpeedTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\TerrainHeightTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\VerticalSpeedTelemetryItem.cs" />
     <Compile Include="telemetry\TelemetryItem.cs" />
     <Compile Include="telemetry\digital\ThrottleTelemetryItem.cs" />
+    <Compile Include="UnityUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

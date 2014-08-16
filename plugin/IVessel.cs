@@ -20,6 +20,9 @@ namespace ControlPanelPlugin
         float psiPercent { get; set; }
         float verticalSpeed { get; set; }
 
+        float heightFromTerrain { get; set; }
+        float nextNodeSeconds { get; }
+
         bool TanslationControls { get; set; }
         bool FineControls { get; set; }
 

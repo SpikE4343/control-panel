@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace plugin.telemetry.analog
+namespace ControlPanelPlugin.telemetry.analog
 {
     public class OxiResourceItem : AnalogTelemetryPercentItem
     {

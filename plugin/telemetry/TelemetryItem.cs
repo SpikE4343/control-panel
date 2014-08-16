@@ -14,5 +14,10 @@ namespace ControlPanelPlugin.Telemetry
         }
 
         public abstract bool Update(IVessel vessel);
+
+        public virtual void OnGUI()
+        {
+
+        }
     }
 }

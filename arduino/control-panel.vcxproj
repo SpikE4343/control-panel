@@ -10,9 +10,27 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="commands.cpp" />
+    <ClCompile Include="status_lights.cpp" />
+    <ClCompile Include="switch_controls.cpp" />
+    <ClCompile Include="telemetry_analog_meter.cpp" />
+    <ClCompile Include="telemetry_displays.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commands.h" />
+    <ClInclude Include="status_lights.h" />
+    <ClInclude Include="switch_controls.h" />
+    <ClInclude Include="telemetry_analog_meter.h" />
+    <ClInclude Include="telemetry_displays.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="arduino.ino" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0F8F9422-174E-4776-80D5-E597B66D8D25}</ProjectGuid>
     <RootNamespace>controlpanel</RootNamespace>
+    <ProjectName>arduino</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -61,8 +79,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

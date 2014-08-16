@@ -1,0 +1,1 @@
+copy /Y plugin\bin\Release\control-panel-plugin.dll "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\control-panel-plugin.dll"

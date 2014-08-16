@@ -19,6 +19,7 @@ namespace ControlPanelPlugin
     Dictionary<ResourceTypes, HashSet<PartResource>> resourceList = new Dictionary<ResourceTypes, HashSet<PartResource>>();
     Dictionary<ResourceTypes, Vessel.ActiveResource> activeResources = new Dictionary<ResourceTypes, Vessel.ActiveResource>();
     Dictionary<string, ResourceTypes> nameToResourceMap = new Dictionary<string, ResourceTypes>();
+
     public KSPVessel()
     {
       nameToResourceMap.Add( Enum.GetName( typeof(ResourceTypes), ResourceTypes.LiquidFuel), ResourceTypes.LiquidFuel );
@@ -114,13 +115,22 @@ namespace ControlPanelPlugin
 
     public float UpdateInterval { get { return 1.0f; } }
 
+    float nextNodeTime = 0.0f;
     public void Update()
     {
       if (vessel != null)
       {
         updateResources();
+
+        nextNodeTime = -1;
+        if (vessel.patchedConicSolver != null && vessel.patchedConicSolver.maneuverNodes.Count > 0)
+        {
+          nextNodeTime = (float)(Planetarium.GetUniversalTime() - vessel.patchedConicSolver.maneuverNodes[0].UT);
+        }
       }
     }
+
+    public float nextNodeSeconds { get { return nextNodeTime; } }
 
     private void updateResources()
     {
@@ -241,7 +251,7 @@ namespace ControlPanelPlugin
     {
       get
       {
-        throw new NotImplementedException();
+        return (float)vessel.geeForce;
       }
       set
       {
@@ -265,22 +275,46 @@ namespace ControlPanelPlugin
     {
       get
       {
-        throw new NotImplementedException();
+        return (float)vessel.verticalSpeed;
       }
       set
       {
         throw new NotImplementedException();
       }
     }
+    
 
     public bool TanslationControls { get; set; }
-    public bool FineControls { get; set; }
+    public bool FineControls 
+     {
+      get
+      {
+        return FlightInputHandler.fetch.precisionMode;
+      }
+      set
+      {
+        FlightInputHandler.fetch.precisionMode = value;
+      }
+    }
 
     public List<Vessel.ActiveResource> ActiveResources
     {
       get
       {
         return null;
+      }
+    }
+
+
+    public float heightFromTerrain
+    {
+      get
+      {
+        return vessel.heightFromTerrain;
+      }
+      set
+      {
+        throw new NotImplementedException();
       }
     }
   }

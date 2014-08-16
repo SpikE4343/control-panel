@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace plugin.telemetry.digital
+namespace ControlPanelPlugin.telemetry.digital
 {
     public class DigitalTelemetryItem : TelemetryItem
     {
@@ -31,6 +31,11 @@ namespace plugin.telemetry.digital
         public override bool Update(ControlPanelPlugin.IVessel vessel)
         {
              throw new NotImplementedException();
+        }
+
+        public void Send()
+        {
+          ConnectionManager.Instance.Connection.SendTelemetryMessage(Id, Display, StartDigit, MaxDigits, Precision, Value);
         }
     }
 }

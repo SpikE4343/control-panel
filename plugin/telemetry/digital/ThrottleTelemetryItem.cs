@@ -1,8 +1,8 @@
 ﻿using ControlPanelPlugin;
 using ControlPanelPlugin.Telemetry;
-using plugin.telemetry.digital;
+using ControlPanelPlugin.telemetry.digital;
 
-namespace plugin.telemetry
+namespace ControlPanelPlugin.telemetry
 {
     public class ThrottleTelemetryItem : DigitalTelemetryItem
     {
@@ -22,7 +22,7 @@ namespace plugin.telemetry
             if (speed != Value)
             {
                 Value = speed;
-                ConnectionManager.Instance.Connection.SendTelemetryMessage(TelemetryId, Display, StartDigit, MaxDigits, Precision, Value);
+                Send();
                 return true;
             }
 

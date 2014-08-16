@@ -56,8 +56,8 @@ void send_heartbeat()
   if( now() < nextHeartbeat)
     return;
 
-  set_telemetry(9, 2, 0, 3, 0, Serial.available() );
-  set_telemetry(8, 3, 0, 8, 0, frame );
+  //set_telemetry(9, 2, 0, 3, 0, Serial.available() );
+  //set_telemetry(8, 3, 0, 8, 0, frame );
 
   nextHeartbeat = now()+1000;
   

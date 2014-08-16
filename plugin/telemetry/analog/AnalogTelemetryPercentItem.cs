@@ -1,7 +1,7 @@
 ﻿using ControlPanelPlugin;
 using ControlPanelPlugin.Telemetry;
 
-namespace plugin.telemetry.analog
+namespace ControlPanelPlugin.telemetry.analog
 {
     public abstract class AnalogTelemetryPercentItem : TelemetryItem
     {

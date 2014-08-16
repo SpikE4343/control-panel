@@ -5,3 +5,7 @@
 arduino/control-panel/Debug/
 plugin/obj/
 plugin/bin/
+arduino/Debug/
+arduino/Release/
+ksp-pluginTests/bin/
+ksp-pluginTests/obj/

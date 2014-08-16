@@ -1,4 +1,4 @@
-﻿using plugin.telemetry.digital;
+﻿using ControlPanelPlugin.telemetry.digital;
 
 namespace ControlPanelPlugin.Telemetry
 {
