@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -35,10 +35,6 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\external\ksp\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\tester\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.core">
       <HintPath>..\packages\NUnitTestAdapter.1.1\lib\nunit.core.dll</HintPath>
@@ -71,15 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Items\ButtonItem.cs" />
-    <Compile Include="Items\ButtonStatusItem.cs" />
-    <Compile Include="Items\MapViewButtonItem.cs" />
-    <Compile Include="Items\DockingViewButtonItem.cs" />
-    <Compile Include="Items\StageArmButtonItem.cs" />
-    <Compile Include="Items\StageButtonItem.cs" />
-    <Compile Include="Items\Telemetry\ValueFormat.cs" />
-    <Compile Include="Network\ConnectionManager.cs" />
+    <Compile Include="ConnectionManager.cs" />
     <Compile Include="ControlPanel.cs" />
     <Compile Include="IVessel.cs" />
     <Compile Include="ksp\ControlPanelGUI.cs" />
@@ -87,10 +75,8 @@
     <Compile Include="Log.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="ksp\ControlPanelModule.cs" />
-    <Compile Include="Items\PanelItem.cs" />
-    <Compile Include="Persistence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Network\SerialConnection.cs" />
+    <Compile Include="SerialConnection.cs" />
     <Compile Include="SerialPort\ISerialStreamCtrl.cs" />
     <Compile Include="SerialPort\NetStream.cs" />
     <Compile Include="SerialPort\SerialPort.cs" />
@@ -101,19 +87,19 @@
     <Compile Include="SerialPort\Win32CE\PortCapabilities.cs" />
     <Compile Include="SerialPort\Win32CE\PortSettings.cs" />
     <Compile Include="SerialPort\Win32CE\WinStream.cs" />
-    <Compile Include="Items\Telemetry\digital\AltitudeTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\analog\AnalogTelemetryPercentItem.cs" />
-    <Compile Include="Items\Telemetry\analog\EvResourceItem.cs" />
-    <Compile Include="Items\Telemetry\analog\LiquidResourceItem.cs" />
-    <Compile Include="Items\Telemetry\analog\MonoResourceItem.cs" />
-    <Compile Include="Items\Telemetry\analog\OxiResourceItem.cs" />
-    <Compile Include="Items\Telemetry\digital\DigitalTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\NextNodeTimeTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\SpeedTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\TerrainHeightTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\VerticalSpeedTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\TelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\ThrottleTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\AltitudeTelemetryItem.cs" />
+    <Compile Include="telemetry\analog\AnalogTelemetryPercentItem.cs" />
+    <Compile Include="telemetry\analog\EvResourceItem.cs" />
+    <Compile Include="telemetry\analog\LiquidResourceItem.cs" />
+    <Compile Include="telemetry\analog\MonoResourceItem.cs" />
+    <Compile Include="telemetry\analog\OxiResourceItem.cs" />
+    <Compile Include="telemetry\digital\DigitalTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\NextNodeTimeTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\SpeedTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\TerrainHeightTelemetryItem.cs" />
+    <Compile Include="telemetry\digital\VerticalSpeedTelemetryItem.cs" />
+    <Compile Include="telemetry\TelemetryItem.cs" />
+    <Compile Include="telemetry\digital\ThrottleTelemetryItem.cs" />
     <Compile Include="UnityUtils.cs" />
   </ItemGroup>
   <ItemGroup>

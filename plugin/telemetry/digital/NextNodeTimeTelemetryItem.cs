@@ -12,11 +12,6 @@ namespace ControlPanelPlugin.telemetry
     public int Minutes;
     public int Seconds;
 
-    public NextNodeTimeTelemetryItem()
-    {
-
-    }
-
     public NextNodeTimeTelemetryItem(int id,
                                  int display,
                                  int startDigit,
@@ -27,9 +22,9 @@ namespace ControlPanelPlugin.telemetry
 
     }
 
-    public override bool Update()
+    public override bool Update(IVessel vessel)
     {
-      float time = Mathf.Min(0.0f, Panel.CurrentVessel.nextNodeSeconds);
+      float time = Mathf.Abs(vessel.nextNodeSeconds);
       Precision = 0;
 
       const int minute = 60;
