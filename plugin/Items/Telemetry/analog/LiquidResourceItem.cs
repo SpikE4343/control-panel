@@ -7,16 +7,22 @@ using System.Threading.Tasks;
 
 namespace ControlPanelPlugin.telemetry.analog
 {
-    public class OxiResourceItem : AnalogTelemetryPercentItem
+    public class LiquidResourceItem : AnalogTelemetryPercentItem
     {
-        public OxiResourceItem(int meter)
-            : base(meter)
+      public LiquidResourceItem()
         {
+
         }
 
-        public override bool Update(IVessel vessel)
+        public LiquidResourceItem(int meter) 
+            : base(meter)
         {
-            if (!UpdateValue(vessel.oxiResourcePercent))
+
+        }
+
+        public override bool Update()
+        {
+            if (!UpdateValue(vessel.liquidResourcePercent))
             {
                 Send();
                 return true;

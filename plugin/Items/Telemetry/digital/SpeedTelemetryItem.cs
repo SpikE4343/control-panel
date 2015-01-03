@@ -6,6 +6,11 @@ namespace ControlPanelPlugin.telemetry
 {
     public class SpeedTelemetryItem : DigitalTelemetryItem
     {
+      public SpeedTelemetryItem()
+      {
+
+      }
+
         public SpeedTelemetryItem(int id,
                                      int display,
                                      int startDigit,
@@ -16,9 +21,9 @@ namespace ControlPanelPlugin.telemetry
 
         }
 
-        public override bool Update(IVessel vessel)
+        public override bool Update()
         {
-            float speed = vessel.speed;
+            float speed = Panel.CurrentVessel.speed;
             Precision = 3;
 
             if (speed >= 1000)
