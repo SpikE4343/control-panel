@@ -54,6 +54,11 @@ namespace ControlPanelPlugin
     List<MessageHandler>[] handlers = new List<MessageHandler>[(int)MsgType.NumMessages];
 
 
+    public SerialConnection()
+    {
+
+    }
+
     public SerialConnection(string com, int baud = 9600)
     {
       COM = com;
