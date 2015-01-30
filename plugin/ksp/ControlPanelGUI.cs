@@ -8,6 +8,7 @@ using ControlPanelPlugin.telemetry;
 using ControlPanelPlugin.telemetry.analog;
 using ControlPanelPlugin.Telemetry;
 using UnityEngine;
+using ControlPanelPlugin.telemetry.display;
 
 namespace ControlPanelPlugin
 {
@@ -18,11 +19,6 @@ namespace ControlPanelPlugin
     KSPVessel kspVessel = new KSPVessel();
     bool updatePanel = false;
 
-    private void createStatusItem(KSPActionGroup group)
-    {
-      panel.Add(group, kspVessel.vessel.ActionGroups[group]);
-    }
-    
     void Awake()
     {
       useGUILayout = true;
@@ -55,35 +51,50 @@ namespace ControlPanelPlugin
       if (ConnectionManager.Instance.Panel == null)
       {
         panel = new ControlPanel();
+
+        panel.Load("panel.json");
+
         ConnectionManager.Instance.Panel = panel;
 
-        createStatusItem(KSPActionGroup.RCS);
-        createStatusItem(KSPActionGroup.SAS);
-        createStatusItem(KSPActionGroup.Stage);
-        createStatusItem(KSPActionGroup.Brakes);
-        createStatusItem(KSPActionGroup.Gear);
-        createStatusItem(KSPActionGroup.Light);
+        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.RCS, false ));
+        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.SAS, false));
+        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.Stage, false));
+        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.Brakes, false));
+        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.Gear, false));
+        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.Light, false));
 
-        //      [      ALT      ]
-        // [0]: |7|6|5|4|3|2|1|0|
+        panel.Add(new MapViewButtonItem());
+        panel.Add(new DockingViewButtonItem());
+        panel.Add(new StageArmButtonItem());
+        panel.Add(new StageButtonItem());
 
-        //      [ Throt |  Spd  ]
-        // [1]: |7|6|5|4|3|2|1|0|
+        var display = new DigitalDisplay(5, 3, 0, 4);
+        display.Add(1000, 0);
+        display.Add(100, 1);
+        display.Add(10, 2);
+        display.Add(0, 3);
+        panel.Add(new TelemetryItem("verticalSpeed", display));
 
-        //      [ Next Node Time]                
-        // [2]: |7|6|5|4|3|2|1|0|
+        ////      [      ALT      ]
+        //// [0]: |7|6|5|4|3|2|1|0|
 
-        //      [ T.Ht  | V spd ]
-        // [3]: |7|6|5|4|3|2|1|0|
-        // [4]: |7|6|5|4|3|2|1|0|
+        ////      [ Throt |  Spd  ]
+        //// [1]: |7|6|5|4|3|2|1|0|
+
+        ////      [ Next Node Time]                
+        //// [2]: |7|6|5|4|3|2|1|0|
+
+        ////      [ T.Ht  | V spd ]
+        //// [3]: |7|6|5|4|3|2|1|0|
+        //// [4]: |7|6|5|4|3|2|1|0|
 
         panel.Add(new AltitudeTelemetryItem(0, 0, 0, 8, 2));
         panel.Add(new SpeedTelemetryItem(1, 1, 0, 4, 3));
-        panel.Add(new ThrottleTelemetryItem(3, 1, 5, 3, 0));
+        //panel.Add(new ThrottleTelemetryItem(3, 1, 5, 3, 0));
 
         panel.Add(new NextNodeTimeTelemetryItem(4, 2, 0, 8, 0));
 
-        panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
+        //panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
         panel.Add(new TerrainHeightTelemetryItem(6, 3, 4, 4, 3));
 
         panel.Add(new LiquidResourceItem(0));
@@ -95,7 +106,6 @@ namespace ControlPanelPlugin
       {
         panel = ConnectionManager.Instance.Panel;
       }
-
 
       if (!updatePanel)
       {
@@ -112,6 +122,8 @@ namespace ControlPanelPlugin
         StartCoroutine(UpdatePanel());
         StartCoroutine(UpdateVessel());
       }
+
+      panel.Save("panel.json");
     }
 
     // coroutine for polling input

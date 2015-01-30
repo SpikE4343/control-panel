@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "arduino", "arduino\control-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ksp-pluginTests", "ksp-pluginTests\ksp-pluginTests.csproj", "{0F906057-747D-4619-A60D-68EC28D93DDE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tester", "tester\tester.csproj", "{FFC2793F-482A-4838-8F0B-9B9E73CD5621}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +51,26 @@ Global
 		{0F906057-747D-4619-A60D-68EC28D93DDE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0F906057-747D-4619-A60D-68EC28D93DDE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0F906057-747D-4619-A60D-68EC28D93DDE}.Release|Win32.ActiveCfg = Release|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FFC2793F-482A-4838-8F0B-9B9E73CD5621}.Release|Win32.ActiveCfg = Release|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{892AECC9-98EA-4EE7-AD3D-295FB1B3120C}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

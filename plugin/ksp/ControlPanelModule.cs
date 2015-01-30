@@ -25,7 +25,7 @@ namespace ControlPanelPlugin
 
         private void createStatusItem(KSPActionGroup group)
         {
-            panel.Add(group, vessel.ActionGroups[group]);
+            //panel.Add(group, vessel.ActionGroups[group]);
         }
 
         public override void OnStart(StartState state)
@@ -65,11 +65,11 @@ namespace ControlPanelPlugin
 
                 panel.Add(new AltitudeTelemetryItem     (0, 0, 0, 8, 2));
                 panel.Add(new SpeedTelemetryItem        (1, 1, 0, 4, 3));
-                panel.Add(new ThrottleTelemetryItem     (3, 1, 5, 3, 0));
+                //panel.Add(new ThrottleTelemetryItem     (3, 1, 5, 3, 0));
 
                 panel.Add(new NextNodeTimeTelemetryItem (4, 2, 0, 8, 0));
 
-                panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
+                //panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
                 panel.Add(new TerrainHeightTelemetryItem(6, 3, 4, 4, 3));
 
                 panel.Add(new LiquidResourceItem(0));
