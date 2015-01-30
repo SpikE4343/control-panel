@@ -143,10 +143,11 @@ namespace ControlPanelPlugin
 
     void Connect()
     {
+      if (string.IsNullOrEmpty(COM) || Baud == 0)
+        return;
+
       if (stream == null)
-      {
         stream = new SerialPort(COM, Baud);
-      }
 
       if (!stream.IsOpen)
       {
