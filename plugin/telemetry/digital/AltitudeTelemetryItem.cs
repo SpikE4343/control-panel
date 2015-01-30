@@ -4,11 +4,6 @@ namespace ControlPanelPlugin.Telemetry
 {
     public class AltitudeTelemetryItem : DigitalTelemetryItem
     {
-      public AltitudeTelemetryItem()
-      {
-
-      }
-
         public AltitudeTelemetryItem( int id,
                                      int display,
                                      int startDigit,
@@ -19,9 +14,10 @@ namespace ControlPanelPlugin.Telemetry
 
         }
 
-        public override bool Update()
+        public override bool Update(IVessel vessel)
         {
-          float alt = Panel.CurrentVessel.altitude;
+            float alt = vessel.altitude;
+            int precision = 2;
 
             if (alt >= 10000000)
             {

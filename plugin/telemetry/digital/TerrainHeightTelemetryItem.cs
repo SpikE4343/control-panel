@@ -6,11 +6,6 @@ namespace ControlPanelPlugin.telemetry
 {
   public class TerrainHeightTelemetryItem : DigitalTelemetryItem
   {
-    public TerrainHeightTelemetryItem()
-    {
-      
-    }
-
     public TerrainHeightTelemetryItem(int id,
                                  int display,
                                  int startDigit,
@@ -21,17 +16,33 @@ namespace ControlPanelPlugin.telemetry
 
     }
 
-    public override void SetupFormatting()
+    public override bool Update(IVessel vessel)
     {
-      Add(1000, 0);
-      Add(100, 1);
-      Add(10, 2);
-      Add(0, 3);
+      float speed = vessel.heightFromTerrain;
+      Precision = 3;
+
+      if (speed >= 1000)
+      {
+        Precision = 0;
+      }
+      else if (speed >= 100)
+      {
+        Precision = 1;
+      }
+      else if (speed >= 10)
+      {
+        Precision = 2;
+      }
+
+      if (speed != Value)
+      {
+        Value = speed;
+        Send();
+        return true;
+      }
+
+      return false;
     }
 
-    public override float GetLatestValue()
-    {
-      return Panel.CurrentVessel.heightFromTerrain;      
-    }
   }
 }
