@@ -10,3 +10,7 @@ arduino/Release/
 ksp-pluginTests/bin/
 ksp-pluginTests/obj/
 tester/obj/
+tests/bin/
+tester/bin/
+tests/obj/
+TestResults/
