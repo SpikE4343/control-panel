@@ -71,7 +71,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Items\Button\ButtonItem.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Items\Button\ButtonItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Items\Button\ButtonStatusItem.cs" />
     <Compile Include="Items\Button\MapViewButtonItem.cs" />
     <Compile Include="Items\Button\DockingViewButtonItem.cs" />
@@ -104,17 +107,13 @@
     <Compile Include="SerialPort\Win32CE\WinStream.cs" />
     <Compile Include="Items\Telemetry\digital\AltitudeTelemetryItem.cs" />
     <Compile Include="Items\Telemetry\analog\AnalogTelemetryPercentItem.cs" />
-    <Compile Include="Items\Telemetry\analog\EvResourceItem.cs" />
     <Compile Include="Items\Telemetry\analog\LiquidResourceItem.cs" />
     <Compile Include="Items\Telemetry\analog\MonoResourceItem.cs" />
-    <Compile Include="Items\Telemetry\analog\OxiResourceItem.cs" />
     <Compile Include="Items\Telemetry\digital\DigitalTelemetryItem.cs" />
     <Compile Include="Items\Telemetry\digital\NextNodeTimeTelemetryItem.cs" />
     <Compile Include="Items\Telemetry\digital\SpeedTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\TerrainHeightTelemetryItem.cs" />
     <Compile Include="Items\Telemetry\digital\VerticalSpeedTelemetryItem.cs" />
     <Compile Include="Items\Telemetry\TelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\ThrottleTelemetryItem.cs" />
     <Compile Include="UnityUtils.cs" />
   </ItemGroup>
   <ItemGroup>

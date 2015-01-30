@@ -70,12 +70,12 @@ namespace ControlPanelPlugin
                 panel.Add(new NextNodeTimeTelemetryItem (4, 2, 0, 8, 0));
 
                 //panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
-                panel.Add(new TerrainHeightTelemetryItem(6, 3, 4, 4, 3));
+                //panel.Add(new TerrainHeightTelemetryItem(6, 3, 4, 4, 3));
 
                 panel.Add(new LiquidResourceItem(0));
-                panel.Add(new OxiResourceItem(1));
+                //panel.Add(new OxiResourceItem(1));
                 panel.Add(new MonoResourceItem(2));
-                panel.Add(new EvResourceItem(3));
+                //panel.Add(new EvResourceItem(3));
                 panel.Start();
             }
 
