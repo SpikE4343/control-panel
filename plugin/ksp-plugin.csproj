@@ -79,6 +79,8 @@
     <Compile Include="Items\StageArmButtonItem.cs" />
     <Compile Include="Items\StageButtonItem.cs" />
     <Compile Include="Items\Telemetry\ValueFormat.cs" />
+    <Compile Include="Items\Telemetry\ValueFormats\AnalogMeterFormat.cs" />
+    <Compile Include="Items\Telemetry\ValueFormats\FloatValueFormat.cs" />
     <Compile Include="Network\ConnectionManager.cs" />
     <Compile Include="ControlPanel.cs" />
     <Compile Include="IVessel.cs" />
