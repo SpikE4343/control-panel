@@ -35,7 +35,7 @@ namespace ControlPanelPlugin.Telemetry
             if (alt != Value)
             {
                 //Value = alt;
-                ConnectionManager.Instance.Connection.SendTelemetryMessage(TelemetryId, Display, StartDigit, MaxDigits, Precision, Value);
+                PanelManager.Instance.Connection.SendTelemetryMessage(TelemetryId, Display, StartDigit, MaxDigits, Precision, Value);
                 return true;
             }
 

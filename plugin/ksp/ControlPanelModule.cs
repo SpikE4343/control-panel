@@ -37,11 +37,11 @@ namespace ControlPanelPlugin
             if (state == StartState.Editor || state == StartState.None)
                 return;
 
-            if (ConnectionManager.Instance.Panel == null)
+            if (PanelManager.Instance.Panel == null)
             {
                 panel = new ControlPanel();
 
-                ConnectionManager.Instance.Panel = panel;
+                PanelManager.Instance.Panel = panel;
 
                 createStatusItem(KSPActionGroup.RCS);
                 createStatusItem(KSPActionGroup.SAS);
@@ -79,7 +79,7 @@ namespace ControlPanelPlugin
                 panel.Start();
             }
 
-            panel = ConnectionManager.Instance.Panel;
+            panel = PanelManager.Instance.Panel;
             panel.CurrentVessel = kspVessel;
 
             StartCoroutine(UpdatePanelInput());

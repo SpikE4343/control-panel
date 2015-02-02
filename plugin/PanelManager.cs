@@ -5,22 +5,22 @@ using System.Text;
 
 namespace ControlPanelPlugin
 {
-  public class ConnectionManager
+  public class PanelManager
   {
-    private static ConnectionManager instance;
-    public static ConnectionManager Instance
+    private static PanelManager instance;
+    public static PanelManager Instance
     {
       get
       {
         if (instance == null)
-          instance = new ConnectionManager();
+          instance = new PanelManager();
 
         return instance;
       }
       private set { }
     }
 
-    public ConnectionManager()
+    public PanelManager()
     {
       Instance = this;
     }
@@ -64,6 +64,24 @@ namespace ControlPanelPlugin
       {
         Panel.Stop();
       }
+    }
+
+    public void Save(string file)
+    {
+      var output = new PanelSave();
+      if (Connection != null)
+      {
+        output.Connection.COM = Connection.COM;
+        output.Connection.Baud = Connection.Baud;
+      }
+      output.PanelItems = Panel.PanelItems;
+      Persistence.Save(file, output);
+    }
+
+    public void Load(string file)
+    {
+      var input = Persistence.Load<PanelSave>(file);
+      Panel.PanelItems = input.PanelItems;
     }
   }
 }

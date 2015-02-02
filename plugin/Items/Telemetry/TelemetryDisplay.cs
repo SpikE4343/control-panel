@@ -8,6 +8,13 @@ namespace ControlPanelPlugin.telemetry.display
   {
     [JsonIgnore]
     public float Value { get; set; }
+
+    [JsonIgnore]
+    public ControlPanel Panel { get; set; }
+
+    [JsonIgnore]
+    public PanelItem Item { get; set; }
+
     public abstract bool Update(float value);
     public abstract void Send();
   }

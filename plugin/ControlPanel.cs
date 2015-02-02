@@ -21,12 +21,10 @@ namespace ControlPanelPlugin
 
     Queue<string> LogLines = new Queue<string>();
 
-    public IVessel CurrentVessel;
+    public IVessel CurrentVessel { get; set; }
 
-    
-
-    public float InputUpdateInterval = 0.01f;
-    public float PanelUpdateInterval = 0.0625f;
+    public float InputUpdateInterval { get; set; }
+    public float PanelUpdateInterval { get; set; }
 
     static ControlPanel instance = null;
 
@@ -39,13 +37,15 @@ namespace ControlPanelPlugin
     private bool registered = false;
     public int DeviceFrame = 0;
 
-    public Constants.Panel.ViewMode viewMode = Constants.Panel.ViewMode.Staging;
-
-    public List<PanelItem> PanelItems = new List<PanelItem>();
+    public Constants.Panel.ViewMode viewMode { get; set; }
+    public List<PanelItem> PanelItems { get; set; }
 
     public ControlPanel()
     {
-      
+      PanelItems = new List<PanelItem>();
+      InputUpdateInterval = 0.01f;
+      PanelUpdateInterval = 0.0625f;
+      viewMode = Constants.Panel.ViewMode.Staging;
     }
 
     public void Add(PanelItem item)
@@ -190,7 +190,7 @@ namespace ControlPanelPlugin
     {
       if (!registered)
       {
-        var connection = ConnectionManager.Instance.Connection;
+        var connection = PanelManager.Instance.Connection;
         connection.RegisterHandler(SerialConnection.MsgType.AnalogInput, AnalogInputHandler);
         connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
         connection.RegisterHandler(SerialConnection.MsgType.Heartbeat, InputMessageHandler);
@@ -206,7 +206,7 @@ namespace ControlPanelPlugin
     {
       if (!registered)
       {
-        var connection = ConnectionManager.Instance.Connection;
+        var connection = PanelManager.Instance.Connection;
         connection.UnregisterHandler(SerialConnection.MsgType.AnalogInput, AnalogInputHandler);
         connection.UnregisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
         connection.UnregisterHandler(SerialConnection.MsgType.Heartbeat, InputMessageHandler);
@@ -215,7 +215,7 @@ namespace ControlPanelPlugin
       }
       running = false;
       HasOneHeartbeat = false;
-      ConnectionManager.Instance.Stop();
+      PanelManager.Instance.Stop();
     }
 
     public void UpdateState()
@@ -232,7 +232,7 @@ namespace ControlPanelPlugin
         CurrentVessel.mainThrottle = throttleValue;
       }
 
-      if (!ConnectionManager.Instance.Connection.IsOpen || !HasOneHeartbeat)
+      if (!PanelManager.Instance.Connection.IsOpen || !HasOneHeartbeat)
       {
         return;
       }
@@ -243,12 +243,23 @@ namespace ControlPanelPlugin
       }
     }
 
+    public bool ResendAll { get; set; }
     public void UpdateInput()
     {
+      ResendAll = false;
       if (CurrentVessel == null)
         return;
 
-      ConnectionManager.Instance.Update();
+      var wasConnected = PanelManager.Instance.Connection.Connected;
+
+      PanelManager.Instance.Update();
+
+      var connected = PanelManager.Instance.Connection.Connected;
+
+      if (!wasConnected && connected)
+      {
+        ResendAll = true;
+      }
     }
 
 
@@ -256,7 +267,7 @@ namespace ControlPanelPlugin
     Vector2 scrollPos = new Vector2();
     public void OnGUI()
     {
-      SerialConnection serial = ConnectionManager.Instance.Connection;
+      SerialConnection serial = PanelManager.Instance.Connection;
       //scrollPos = GUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical("box");
 
@@ -325,11 +336,7 @@ namespace ControlPanelPlugin
       //GUILayout.EndScrollView();
     }
 
-    class PanelSave
-    {
-      [JsonProperty("items")]
-      public List<PanelItem> PanelItems;
-    }
+
 
     public void Save(string file)
     {

@@ -14,3 +14,4 @@ tests/bin/
 tester/bin/
 tests/obj/
 TestResults/
+packages/

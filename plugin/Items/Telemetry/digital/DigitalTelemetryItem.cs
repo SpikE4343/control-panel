@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ControlPanelPlugin.telemetry.digital
 {
@@ -70,7 +70,7 @@ namespace ControlPanelPlugin.telemetry.digital
 
       public void Send()
       {
-        ConnectionManager.Instance.Connection.SendTelemetryMessage(Id, Display, StartDigit, MaxDigits, Precision, Value);
+        PanelManager.Instance.Connection.SendTelemetryMessage(Id, Display, StartDigit, MaxDigits, Precision, Value);
       }
 
       public virtual void SetupFormatting()

@@ -6,7 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows.Forms;
 
 namespace tester
@@ -19,15 +19,23 @@ namespace tester
     public event DisconnectHandler DisconnectPressed;
 
     private IVessel vessel;
-    public IVessel Vessel 
-    { 
-      get { return vessel; } 
-      set 
-      { 
-        propertyGrid1.SelectedObject = value; 
-        vessel = value; 
-      } 
-    } 
+    public IVessel Vessel
+    {
+      get { return vessel; }
+      set
+      {
+        vesselGrid.SelectedObject = value;
+        vessel = value;
+      }
+    }
+
+    public object Panel
+    {
+      set
+      {
+        panelGrid.SelectedObject = value;
+      }
+    }
 
     public Timer inputTimer = new Timer();
     public Timer vesselTimer = new Timer();
@@ -35,7 +43,13 @@ namespace tester
 
     public VesselWindow()
     {
+      vesselTimer.Tick += vesselTimer_Tick;
       InitializeComponent();
+    }
+
+    void vesselTimer_Tick(object sender, EventArgs e)
+    {
+      vesselGrid.Refresh();
     }
 
     public void StartTimers()
@@ -47,17 +61,22 @@ namespace tester
 
     private void connectionButton_Click(object sender, EventArgs e)
     {
-      if (ConnectionManager.Instance.Connection.Connected)
+      if (PanelManager.Instance.Connection.Connected)
       {
         if (DisconnectPressed != null)
         {
           DisconnectPressed();
         }
       }
-      else if( ConnectPressed != null )
+      else if (ConnectPressed != null)
       {
-        ConnectPressed(portText.Text, Int32.Parse(buadText.Text)); 
+        ConnectPressed(portText.Text, Int32.Parse(buadText.Text));
       }
+    }
+
+    private void VesselWindow_FormClosed(object sender, FormClosedEventArgs e)
+    {
+      Application.Exit();
     }
   }
 }

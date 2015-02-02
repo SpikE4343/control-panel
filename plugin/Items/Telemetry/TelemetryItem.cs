@@ -13,6 +13,18 @@ namespace ControlPanelPlugin.Telemetry
     [JsonIgnore]
     public float Value { get { return Display.Value; } }
 
+
+    ControlPanel panel;
+    public override ControlPanel Panel
+    {
+      get { return panel; }
+      set
+      {
+        panel = value;
+        Display.Panel = panel;
+      }
+    }
+
     public string Property { get; set; }
     private PropertyInfo property;
 
@@ -48,7 +60,7 @@ namespace ControlPanelPlugin.Telemetry
       if (Panel == null || Panel.CurrentVessel == null)
         return 0.0f;
 
-      return (float)property.GetValue(Panel.CurrentVessel);
+      return (float)property.GetValue(Panel.CurrentVessel, null);
     }
 
     public override bool Update()

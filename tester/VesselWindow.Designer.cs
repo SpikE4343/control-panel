@@ -28,7 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+      this.panelGrid = new System.Windows.Forms.PropertyGrid();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -37,20 +37,27 @@
       this.label2 = new System.Windows.Forms.Label();
       this.buadText = new System.Windows.Forms.TextBox();
       this.connectionButton = new System.Windows.Forms.Button();
+      this.tabControl1 = new System.Windows.Forms.TabControl();
+      this.tabPage1 = new System.Windows.Forms.TabPage();
+      this.tabPage2 = new System.Windows.Forms.TabPage();
+      this.vesselGrid = new System.Windows.Forms.PropertyGrid();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      this.tabControl1.SuspendLayout();
+      this.tabPage1.SuspendLayout();
+      this.tabPage2.SuspendLayout();
       this.SuspendLayout();
       // 
-      // propertyGrid1
+      // panelGrid
       // 
-      this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
-      this.propertyGrid1.Name = "propertyGrid1";
-      this.propertyGrid1.Size = new System.Drawing.Size(361, 283);
-      this.propertyGrid1.TabIndex = 0;
+      this.panelGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.panelGrid.Location = new System.Drawing.Point(3, 3);
+      this.panelGrid.Name = "panelGrid";
+      this.panelGrid.Size = new System.Drawing.Size(347, 251);
+      this.panelGrid.TabIndex = 0;
       // 
       // statusStrip1
       // 
@@ -72,7 +79,7 @@
       // 
       // splitContainer1.Panel2
       // 
-      this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
+      this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
       this.splitContainer1.Size = new System.Drawing.Size(547, 283);
       this.splitContainer1.SplitterDistance = 182;
       this.splitContainer1.TabIndex = 2;
@@ -136,6 +143,47 @@
       this.connectionButton.UseVisualStyleBackColor = true;
       this.connectionButton.Click += new System.EventHandler(this.connectionButton_Click);
       // 
+      // tabControl1
+      // 
+      this.tabControl1.Controls.Add(this.tabPage1);
+      this.tabControl1.Controls.Add(this.tabPage2);
+      this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tabControl1.Location = new System.Drawing.Point(0, 0);
+      this.tabControl1.Name = "tabControl1";
+      this.tabControl1.SelectedIndex = 0;
+      this.tabControl1.Size = new System.Drawing.Size(361, 283);
+      this.tabControl1.TabIndex = 1;
+      // 
+      // tabPage1
+      // 
+      this.tabPage1.Controls.Add(this.panelGrid);
+      this.tabPage1.Location = new System.Drawing.Point(4, 22);
+      this.tabPage1.Name = "tabPage1";
+      this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+      this.tabPage1.Size = new System.Drawing.Size(353, 257);
+      this.tabPage1.TabIndex = 0;
+      this.tabPage1.Text = "Panel";
+      this.tabPage1.UseVisualStyleBackColor = true;
+      // 
+      // tabPage2
+      // 
+      this.tabPage2.Controls.Add(this.vesselGrid);
+      this.tabPage2.Location = new System.Drawing.Point(4, 22);
+      this.tabPage2.Name = "tabPage2";
+      this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+      this.tabPage2.Size = new System.Drawing.Size(353, 257);
+      this.tabPage2.TabIndex = 1;
+      this.tabPage2.Text = "Vessel";
+      this.tabPage2.UseVisualStyleBackColor = true;
+      // 
+      // vesselGrid
+      // 
+      this.vesselGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.vesselGrid.Location = new System.Drawing.Point(3, 3);
+      this.vesselGrid.Name = "vesselGrid";
+      this.vesselGrid.Size = new System.Drawing.Size(347, 251);
+      this.vesselGrid.TabIndex = 1;
+      // 
       // VesselWindow
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -145,12 +193,16 @@
       this.Controls.Add(this.statusStrip1);
       this.Name = "VesselWindow";
       this.Text = "Control Panel Tester";
+      this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VesselWindow_FormClosed);
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
       this.splitContainer1.ResumeLayout(false);
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
+      this.tabControl1.ResumeLayout(false);
+      this.tabPage1.ResumeLayout(false);
+      this.tabPage2.ResumeLayout(false);
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -158,7 +210,7 @@
 
     #endregion
 
-    private System.Windows.Forms.PropertyGrid propertyGrid1;
+    private System.Windows.Forms.PropertyGrid panelGrid;
     private System.Windows.Forms.StatusStrip statusStrip1;
     private System.Windows.Forms.SplitContainer splitContainer1;
     private System.Windows.Forms.GroupBox groupBox1;
@@ -167,6 +219,10 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.TextBox buadText;
     private System.Windows.Forms.Button connectionButton;
+    private System.Windows.Forms.TabControl tabControl1;
+    private System.Windows.Forms.TabPage tabPage1;
+    private System.Windows.Forms.TabPage tabPage2;
+    private System.Windows.Forms.PropertyGrid vesselGrid;
 
   }
 }

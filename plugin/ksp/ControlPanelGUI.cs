@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using ControlPanelPlugin.telemetry;
 using ControlPanelPlugin.telemetry.analog;
 using ControlPanelPlugin.Telemetry;
@@ -32,7 +32,7 @@ namespace ControlPanelPlugin
 
       if (v == null)
       {
-        ConnectionManager.Instance.Stop();
+        PanelManager.Instance.Stop();
         updatePanel = false;
         return;
       }
@@ -42,21 +42,21 @@ namespace ControlPanelPlugin
         Log.Implementor = new UnityLogger();
       }
 
-      if (ConnectionManager.Instance.Connection == null)
+      if (PanelManager.Instance.Connection == null)
       {
-        var connection = new SerialConnection( "COM4", 9600 );
-        ConnectionManager.Instance.Connection = connection;
+        var connection = new SerialConnection("COM4", 9600);
+        PanelManager.Instance.Connection = connection;
       }
 
-      if (ConnectionManager.Instance.Panel == null)
+      if (PanelManager.Instance.Panel == null)
       {
         panel = new ControlPanel();
 
         panel.Load("panel.json");
 
-        ConnectionManager.Instance.Panel = panel;
+        PanelManager.Instance.Panel = panel;
 
-        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.RCS, false ));
+        panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.RCS, false));
         panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.SAS, false));
         panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.Stage, false));
         panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.Brakes, false));
@@ -104,14 +104,14 @@ namespace ControlPanelPlugin
       }
       else
       {
-        panel = ConnectionManager.Instance.Panel;
+        panel = PanelManager.Instance.Panel;
       }
 
       if (!updatePanel)
       {
         Log.Info("[Control Panel] starting panel");
         panel.CurrentVessel = kspVessel;
-        ConnectionManager.Instance.Start();
+        PanelManager.Instance.Start();
         updatePanel = true;
       }
 
@@ -170,13 +170,13 @@ namespace ControlPanelPlugin
     Rect windowPos = new Rect(20, 20, 200, 180);
     void OnGUI()
     {
-        windowPos = GUILayout.Window(12053, windowPos,
-                                        OnWindowGUI,
-                                        "Control Panel",
-                                        GUILayout.Width(200),
-                                        GUILayout.Height(180),
-                                        GUILayout.ExpandHeight(true),
-                                        GUILayout.ExpandWidth(true));
+      windowPos = GUILayout.Window(12053, windowPos,
+                                      OnWindowGUI,
+                                      "Control Panel",
+                                      GUILayout.Width(200),
+                                      GUILayout.Height(180),
+                                      GUILayout.ExpandHeight(true),
+                                      GUILayout.ExpandWidth(true));
     }
 
     void OnWindowGUI(int windowid)
@@ -197,7 +197,7 @@ namespace ControlPanelPlugin
       if (kspVessel.vessel != null)
       {
         GUILayout.BeginHorizontal();
-        GUILayout.Label(string.Format("Vessel: {0}",kspVessel.Name));
+        GUILayout.Label(string.Format("Vessel: {0}", kspVessel.Name));
         GUILayout.EndHorizontal();
       }
 
@@ -205,12 +205,12 @@ namespace ControlPanelPlugin
       GUILayout.EndVertical();
 
       GUILayout.BeginVertical("box");
-      var serial = ConnectionManager.Instance.Connection;
+      var serial = PanelManager.Instance.Connection;
       if (serial != null)
       {
         GUILayout.Label(string.Format("Cs: {0}", serial.CurrentConnectionState));
         GUILayout.Label(string.Format("Ds: {0}", serial.DesiredConnectionState));
-        GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite) );
+        GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite));
         GUILayout.Label(string.Format("RxB: {0}", serial.BytesToRead));
       }
 

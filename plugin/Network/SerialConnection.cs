@@ -43,6 +43,10 @@ namespace ControlPanelPlugin
     public ConnectionState CurrentConnectionState { get; set; }
     public ConnectionState DesiredConnectionState { get; set; }
 
+    public delegate void ConnectionStateChangeHandler(ConnectionState state);
+    public event ConnectionStateChangeHandler ConnectionStateChanged;
+
+
     public delegate void MessageHandler(MsgType type, byte size, BinaryReader stream);
 
     SerialPort stream;
@@ -106,6 +110,7 @@ namespace ControlPanelPlugin
     void UpdateConnectionState()
     {
       //Log.Debug("[ControlPanel] " + CurrentConnectionState + ", " + DesiredConnectionState);
+      var curr = CurrentConnectionState;
       switch (CurrentConnectionState)
       {
         case ConnectionState.Disconnected:
@@ -137,6 +142,12 @@ namespace ControlPanelPlugin
               break;
           }
           break;
+      }
+
+      if (curr != CurrentConnectionState &&
+          ConnectionStateChanged != null)
+      {
+        ConnectionStateChanged(CurrentConnectionState);
       }
     }
 

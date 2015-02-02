@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ControlPanelPlugin
 {
@@ -20,7 +20,7 @@ namespace ControlPanelPlugin
 
       // TODO: register on connection create
       //       Need connection established event on connection manager
-      var connection = ConnectionManager.Instance.Connection;
+      var connection = PanelManager.Instance.Connection;
       //connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
 
     }

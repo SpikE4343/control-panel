@@ -26,7 +26,7 @@ namespace ControlPanelPlugin.telemetry.display
       bool same = val == meterValue;
       meterValue = val;
 
-      if (!same)
+      if (!same || Panel.ResendAll)
       {
         Send();
       }
@@ -36,7 +36,7 @@ namespace ControlPanelPlugin.telemetry.display
 
     public override void Send()
     {
-      ConnectionManager.Instance.Connection.SendAnalogMeterMsg(meter, meterValue);
+      PanelManager.Instance.Connection.SendAnalogMeterMsg(meter, meterValue);
     }
 
   }

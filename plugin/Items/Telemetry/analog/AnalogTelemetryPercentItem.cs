@@ -35,7 +35,7 @@ namespace ControlPanelPlugin.telemetry.analog
 
     public void Send()
     {
-      ConnectionManager.Instance.Connection.SendAnalogMeterMsg(mMeter, mValue);
+      PanelManager.Instance.Connection.SendAnalogMeterMsg(mMeter, mValue);
     }
   }
 }

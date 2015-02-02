@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using System.Timers;
 using ControlPanelPlugin;
 using ControlPanelPlugin.telemetry;
@@ -40,15 +40,15 @@ namespace tester
         Log.Implementor = new ConsoleLogger();
       }
 
-      if (ConnectionManager.Instance.Connection == null)
+      if (PanelManager.Instance.Connection == null)
       {
-        ConnectionManager.Instance.Connection = new SerialConnection();
+        PanelManager.Instance.Connection = new SerialConnection();
       }
 
-      if (ConnectionManager.Instance.Panel == null)
+      if (PanelManager.Instance.Panel == null)
       {
         panel = new ControlPanel();
-        ConnectionManager.Instance.Panel = panel;
+        PanelManager.Instance.Panel = panel;
 
         //panel.Load("panel.json");
 
@@ -71,6 +71,13 @@ namespace tester
         display.Add(10, 2);
         display.Add(0, 3);
         panel.Add(new TelemetryItem("verticalSpeed", display));
+
+
+        display = new DigitalDisplay(0, 0, 0, 8);
+        display.Add(10000000, 0);
+        display.Add(1000000, 1);
+        display.Add(0, 2);
+        panel.Add(new TelemetryItem("altitude", display));
 
         /*
         createStatusItem(KSPActionGroup.RCS);
@@ -110,7 +117,7 @@ namespace tester
       }
       else
       {
-        panel = ConnectionManager.Instance.Panel;
+        panel = PanelManager.Instance.Panel;
       }
 
 
@@ -118,20 +125,21 @@ namespace tester
       {
         Log.Info("[Control Panel] starting panel");
         panel.CurrentVessel = kspVessel;
-        ConnectionManager.Instance.Start();
+        PanelManager.Instance.Start();
         updatePanel = true;
       }
-                                                                             
+
       if (!coroutinesActive)
       {
         coroutinesActive = true;
 
         window.Vessel = kspVessel;
+        window.Panel = panel;
         window.inputTimer.Interval = (int)(panel.InputUpdateInterval * 1000);
         window.panelTimer.Interval = (int)(panel.PanelUpdateInterval * 1000);
         window.vesselTimer.Interval = 100;
 
-        window.inputTimer.Tick += (s,e) => UpdatePanelInput();
+        window.inputTimer.Tick += (s, e) => UpdatePanelInput();
         window.panelTimer.Tick += (s, e) => UpdatePanel();
         window.vesselTimer.Tick += (s, e) => UpdateVessel();
 
@@ -144,45 +152,46 @@ namespace tester
 
     void window_ConnectPressed(string port, int baud)
     {
-        var connection = ConnectionManager.Instance.Connection;
+      var connection = PanelManager.Instance.Connection;
+      if (connection.Connected)
         connection.Stop();
 
-        connection.COM = port;
-        connection.Baud = baud;
+      connection.COM = port;
+      connection.Baud = baud;
 
-        connection.Start();
+      connection.Start();
     }
 
-    
-    
+
+
     public void UpdatePanelInput()
     {
-        if (updatePanel && kspVessel != null)
-        {
-          panel.UpdateInput();
-        }
+      if (updatePanel && kspVessel != null)
+      {
+        panel.UpdateInput();
+      }
 
-        //yield return new WaitForSeconds(panel.InputUpdateInterval);
+      //yield return new WaitForSeconds(panel.InputUpdateInterval);
     }
 
     public void UpdateVessel()
     {
-        if (updatePanel && kspVessel != null)
-        {
-          kspVessel.Update();
-        }
+      if (updatePanel && kspVessel != null)
+      {
+        kspVessel.Update();
+      }
 
-        //yield return new WaitForSeconds(kspVessel.UpdateInterval);
+      //yield return new WaitForSeconds(kspVessel.UpdateInterval);
     }
 
     public void UpdatePanel()
     {
-        if (updatePanel && kspVessel != null)
-        {
-          panel.UpdateState();
-        }
+      if (updatePanel && kspVessel != null)
+      {
+        panel.UpdateState();
+      }
 
-        // yield return new WaitForSeconds(panel.PanelUpdateInterval);
+      // yield return new WaitForSeconds(panel.PanelUpdateInterval);
     }
 
     void Stop()

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ControlPanelPlugin
 {
@@ -56,7 +56,7 @@ namespace ControlPanelPlugin
     {
       buffer[0] = (byte)id;
       buffer[1] = (byte)(state ? 1 : 0);
-      var serial = ConnectionManager.Instance.Connection;
+      var serial = PanelManager.Instance.Connection;
       serial.SendMessage(SerialConnection.MsgType.GroupState, buffer);
     }
   }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
 using ControlPanelPlugin;
 
 namespace tester
@@ -181,17 +181,9 @@ namespace tester
       }
     }
 
-    public float verticalSpeed
-    {
-      get
-      {
-        return 0.0f;
-      }
-      set
-      {
-        throw new NotImplementedException();
-      }
-    }
+    float vertSpd = 0.0f;
+    public float verticalSpeed { get; set; }
+
 
     public void EnterDockingMode()
     {

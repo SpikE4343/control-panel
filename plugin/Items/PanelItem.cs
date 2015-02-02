@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ControlPanelPlugin
 {
@@ -12,14 +11,14 @@ namespace ControlPanelPlugin
     private static byte[] buffer = new byte[2];
 
     [JsonIgnore]
-    public ControlPanel Panel { get; set; }
+    public virtual ControlPanel Panel { get; set; }
     public abstract bool Update();
 
     protected void SendState(int id, bool state)
     {
       buffer[0] = (byte)id;
       buffer[1] = (byte)(state ? 1 : 0);
-      var serial = ConnectionManager.Instance.Connection;
+      var serial = PanelManager.Instance.Connection;
       serial.SendMessage(SerialConnection.MsgType.GroupState, buffer);
     }
 
