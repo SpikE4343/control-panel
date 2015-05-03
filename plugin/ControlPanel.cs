@@ -12,6 +12,8 @@ using ControlPanelPlugin.Telemetry;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 
+// copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"
+
 namespace ControlPanelPlugin
 {
   public class ControlPanel

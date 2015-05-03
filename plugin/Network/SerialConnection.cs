@@ -17,6 +17,7 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using ControlPanelPlugin.Messages;
 
 namespace ControlPanelPlugin
 {
@@ -47,7 +48,7 @@ namespace ControlPanelPlugin
     public event ConnectionStateChangeHandler ConnectionStateChanged;
 
 
-    public delegate void MessageHandler(MsgType type, byte size, BinaryReader stream);
+    public delegate void MessageHandler(IMessage message);
 
     SerialPort stream;
     public string COM { get; set; }
@@ -170,6 +171,7 @@ namespace ControlPanelPlugin
         }
       }
 
+      MessageManager.Instance.SetStream(stream.BaseStream);
       streamReader = new BinaryReader(stream.BaseStream);
       streamWriter = new BinaryWriter(stream.BaseStream);//outStream);
       outFile = new FileStream("output.txt", FileMode.Create);
@@ -222,67 +224,21 @@ namespace ControlPanelPlugin
       try
       {
 #endif
-      if (!HasPendingMessage)
+      var msg = MessageManager.Instance.ReadMsg();
+      if (msg == null)
+        return;
+
+      List<MessageHandler> handlerList = handlers[(int)PendingType];
+      if (handlerList == null)
+        return;
+
+      foreach (var handler in handlerList)
       {
-        if (stream.BytesToRead < 4)
-          return;
-
-        //Console.Write((char)streamReader.PeekChar());
-        byte marker = streamReader.ReadByte();
-
-        if (marker != 'e')
-        {
-          //Console.Write((char)marker);
-          return;
-        }
-
-        char marker1 = (char)streamReader.ReadByte();
-        //Console.Write(marker);
-        if (marker1 != 'R')
-        {
-          return;
-        }
-
-        PendingType = (MsgType)streamReader.ReadByte();
-        //Console.Write((byte)PendingType);
-        PendingSize = streamReader.ReadByte();
-
-        //Console.Write(PendingSize);
-
-        HasPendingMessage = true;
+        handler(msg);
       }
 
-      if (HasPendingMessage && stream.BytesToRead >= PendingSize)
-      {
-        HasPendingMessage = false;
-        /*
-        if (PendingType != MsgType.Heartbeat)
-        {
-            byte[] buffer = new byte[4 + PendingSize];
-            buffer[0] = (byte)'e';
-            buffer[1] = (byte)'R';
-            buffer[2] = (byte)PendingType;
-            buffer[3] = PendingSize;
+      ObjectPool.Release((IPoolable)msg);
 
-            for (int i = 0; i < PendingSize; ++i)
-            {
-                buffer[i + 4] = streamReader.ReadByte();
-            }
-
-            Console.WriteLine(BitConverter.ToString(buffer));
-            return;
-        }*/
-
-
-        List<MessageHandler> handlerList = handlers[(int)PendingType];
-        if (handlerList != null)
-        {
-          foreach (var handler in handlerList)
-          {
-            handler(PendingType, PendingSize, streamReader);
-          }
-        }
-      }
 #if !DEBUG
       }
       catch (Exception e)

@@ -7,6 +7,9 @@ namespace ControlPanelPlugin
 {
   public class PanelManager
   {
+    public delegate void ConnectionSetHandler(SerialConnection connection);
+    public event ConnectionSetHandler ConnectionSet;
+
     private static PanelManager instance;
     public static PanelManager Instance
     {
@@ -25,7 +28,19 @@ namespace ControlPanelPlugin
       Instance = this;
     }
 
-    public SerialConnection Connection { get; set; }
+    private SerialConnection connection;
+    public SerialConnection Connection
+    {
+      get { return connection; }
+      set
+      {
+        connection = value;
+        if (ConnectionSet != null)
+        {
+          ConnectionSet(connection);
+        }
+      }
+    }
     public ControlPanel Panel { get; set; }
 
     public void Start()

@@ -88,18 +88,45 @@ namespace ControlPanelPlugin
         //// [3]: |7|6|5|4|3|2|1|0|
         //// [4]: |7|6|5|4|3|2|1|0|
 
-        panel.Add(new AltitudeTelemetryItem(0, 0, 0, 8, 2));
-        panel.Add(new SpeedTelemetryItem(1, 1, 0, 4, 3));
+        display = new DigitalDisplay(0, 0, 8, 2);
+        display.Add(10000000, 0);
+        display.Add(1000000, 1);
+        panel.Add(new TelemetryItem("altitude", display));
+
+        display = new DigitalDisplay(1, 0, 4, 3);
+        display.Add(1000, 0);
+        display.Add(100, 1);
+        display.Add(10, 2);
+        display.Add(0, 3);
+        panel.Add(new TelemetryItem("speed", display));
+
+        //panel.Add(new AltitudeTelemetryItem(0, 0, 0, 8, 2));
+        //panel.Add(new SpeedTelemetryItem(1, 1, 0, 4, 3));
         //panel.Add(new ThrottleTelemetryItem(3, 1, 5, 3, 0));
 
-        panel.Add(new NextNodeTimeTelemetryItem(4, 2, 0, 8, 0));
+        display = new TimeDigitalDisplay(2, 0, 8, 0);
+        panel.Add(new TelemetryItem("nextNodeSeconds", display));
+
+        //panel.Add(new NextNodeTimeTelemetryItem(4, 2, 0, 8, 0));
 
         //panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
         //panel.Add(new TerrainHeightTelemetryItem(6, 3, 4, 4, 3));
 
-        panel.Add(new LiquidResourceItem(0));
+        var analog = new AnalogMeterDisplay(0);
+        panel.Add(new TelemetryItem("liquidResourcePercent", analog));
+
+        analog = new AnalogMeterDisplay(1);
+        panel.Add(new TelemetryItem("oxiResourcePercent", analog));
+
+        analog = new AnalogMeterDisplay(2);
+        panel.Add(new TelemetryItem("monoResourcePercent", analog));
+
+        analog = new AnalogMeterDisplay(3);
+        panel.Add(new TelemetryItem("electricResourcePercent", analog));
+
+        //panel.Add(new LiquidResourceItem(0));
         //panel.Add(new OxiResourceItem(1));
-        panel.Add(new MonoResourceItem(2));
+        //panel.Add(new MonoResourceItem(2));
         //panel.Add(new EvResourceItem(3));
       }
       else

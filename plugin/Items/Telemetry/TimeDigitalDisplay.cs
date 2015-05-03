@@ -15,6 +15,12 @@ namespace ControlPanelPlugin.telemetry.display
     public int Minutes;
     public int Seconds;
 
+    public TimeDigitalDisplay(int id, int display, int startDigit, int maxDigits)
+      : base(id, display, startDigit, maxDigits)
+    {
+
+    }
+
     public override bool Update(float next)
     {
       float time = Mathf.Min(0.0f, next);

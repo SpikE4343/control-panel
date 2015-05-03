@@ -21,8 +21,20 @@ namespace ControlPanelPlugin
       // TODO: register on connection create
       //       Need connection established event on connection manager
       var connection = PanelManager.Instance.Connection;
-      //connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
+      if (connection != null)
+      {
+        connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
+      }
+      else
+      {
+        PanelManager.Instance.ConnectionSet += Instance_ConnectionSet;
+      }
 
+    }
+
+    void Instance_ConnectionSet(SerialConnection connection)
+    {
+      connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
     }
 
     protected void InputMessageHandler(SerialConnection.MsgType type, byte size, System.IO.BinaryReader stream)

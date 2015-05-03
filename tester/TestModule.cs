@@ -48,10 +48,10 @@ namespace tester
       if (PanelManager.Instance.Panel == null)
       {
         panel = new ControlPanel();
-        PanelManager.Instance.Panel = panel;
 
         //panel.Load("panel.json");
 
+        PanelManager.Instance.Panel = panel;
 
         panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.RCS, false));
         panel.Add(new ButtonStatusItem(Constants.Panel.SwitchId.None, KSPActionGroup.SAS, false));
@@ -72,48 +72,54 @@ namespace tester
         display.Add(0, 3);
         panel.Add(new TelemetryItem("verticalSpeed", display));
 
+        ////      [      ALT      ]
+        //// [0]: |7|6|5|4|3|2|1|0|
 
-        display = new DigitalDisplay(0, 0, 0, 8);
+        ////      [ Throt |  Spd  ]
+        //// [1]: |7|6|5|4|3|2|1|0|
+
+        ////      [ Next Node Time]                
+        //// [2]: |7|6|5|4|3|2|1|0|
+
+        ////      [ T.Ht  | V spd ]
+        //// [3]: |7|6|5|4|3|2|1|0|
+        //// [4]: |7|6|5|4|3|2|1|0|
+
+        display = new DigitalDisplay(0, 0, 8, 2);
         display.Add(10000000, 0);
         display.Add(1000000, 1);
-        display.Add(0, 2);
         panel.Add(new TelemetryItem("altitude", display));
 
-        /*
-        createStatusItem(KSPActionGroup.RCS);
-        createStatusItem(KSPActionGroup.SAS);
-        createStatusItem(KSPActionGroup.Stage);
-        createStatusItem(KSPActionGroup.Brakes);
-        createStatusItem(KSPActionGroup.Gear);
-        createStatusItem(KSPActionGroup.Light);
+        display = new DigitalDisplay(1, 0, 4, 3);
+        display.Add(1000, 0);
+        display.Add(100, 1);
+        display.Add(10, 2);
+        display.Add(0, 3);
+        panel.Add(new TelemetryItem("speed", display));
 
-        //      [      ALT      ]
-        // [0]: |7|6|5|4|3|2|1|0|
+        //panel.Add(new AltitudeTelemetryItem(0, 0, 0, 8, 2));
+        //panel.Add(new SpeedTelemetryItem(1, 1, 0, 4, 3));
+        //panel.Add(new ThrottleTelemetryItem(3, 1, 5, 3, 0));
 
-        //      [ Throt |  Spd  ]
-        // [1]: |7|6|5|4|3|2|1|0|
+        display = new TimeDigitalDisplay(2, 0, 8, 0);
+        panel.Add(new TelemetryItem("nextNodeSeconds", display));
 
-        //      [ Next Node Time]                
-        // [2]: |7|6|5|4|3|2|1|0|
+        //panel.Add(new NextNodeTimeTelemetryItem(4, 2, 0, 8, 0));
 
-        //      [ T.Ht  | V spd ]
-        // [3]: |7|6|5|4|3|2|1|0|
-        // [4]: |7|6|5|4|3|2|1|0|
+        //panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
+        //panel.Add(new TerrainHeightTelemetryItem(6, 3, 4, 4, 3));
 
-        panel.Add(new AltitudeTelemetryItem(0, 0, 0, 8, 2));
-        panel.Add(new SpeedTelemetryItem(1, 1, 0, 4, 3));
-        panel.Add(new ThrottleTelemetryItem(3, 1, 5, 3, 0));
+        var analog = new AnalogMeterDisplay(0);
+        panel.Add(new TelemetryItem("liquidResourcePercent", analog));
 
-        panel.Add(new NextNodeTimeTelemetryItem(4, 2, 0, 8, 0));
+        analog = new AnalogMeterDisplay(1);
+        panel.Add(new TelemetryItem("oxiResourcePercent", analog));
 
-        panel.Add(new VerticalSpeedTelemetryItem(5, 3, 0, 4, 3));
-        panel.Add(new TerrainHeightTelemetryItem(6, 3, 4, 4, 3));
+        analog = new AnalogMeterDisplay(2);
+        panel.Add(new TelemetryItem("monoResourcePercent", analog));
 
-        panel.Add(new LiquidResourceItem(0));
-        panel.Add(new OxiResourceItem(1));
-        panel.Add(new MonoResourceItem(2));
-        panel.Add(new EvResourceItem(3));
-         * */
+        analog = new AnalogMeterDisplay(3);
+        panel.Add(new TelemetryItem("electricResourcePercent", analog));
       }
       else
       {
