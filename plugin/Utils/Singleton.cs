@@ -17,7 +17,9 @@ namespace ControlPanelPlugin.Utils
 
     public static T Get<T>() where T : class
     {
-      return instances[typeof(T)] as T;
+      object s = null;
+      instances.TryGetValue(typeof(T), out s);
+      return s as T;
     }
 
     public static void Destroy<T>() where T : class

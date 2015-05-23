@@ -7,8 +7,9 @@ using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Messages;
 
 
-namespace ControlPanelPlugin.Telemetry.display
+namespace ControlPanelPlugin.Telemetry.Display
 {
+  [ClassSerializer("DigitalDisplay")]
   public class DigitalDisplay : TelemetryDisplay
   {
     public int TelemetryId;

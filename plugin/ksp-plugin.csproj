@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Items\Button\Action\ButtonAction.cs" />
     <Compile Include="Items\Button\ButtonItem.cs">
       <SubType>Code</SubType>
@@ -92,7 +94,7 @@
     <Compile Include="Items\Telemetry\TelemetryDisplay.cs" />
     <Compile Include="ControlPanel.cs" />
     <Compile Include="IVessel.cs" />
-    <Compile Include="ksp\KSPControlPanel.cs" />
+    <Compile Include="ksp\KSPPanelController.cs" />
     <Compile Include="ksp\KSPVessel.cs" />
     <Compile Include="Utils\EventDispatcher.cs" />
     <Compile Include="Utils\IBinaryConvertable.cs" />
@@ -112,14 +114,6 @@
     <Compile Include="SerialPort\Win32CE\PortCapabilities.cs" />
     <Compile Include="SerialPort\Win32CE\PortSettings.cs" />
     <Compile Include="SerialPort\Win32CE\WinStream.cs" />
-    <Compile Include="Items\Telemetry\digital\AltitudeTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\analog\AnalogTelemetryPercentItem.cs" />
-    <Compile Include="Items\Telemetry\analog\LiquidResourceItem.cs" />
-    <Compile Include="Items\Telemetry\analog\MonoResourceItem.cs" />
-    <Compile Include="Items\Telemetry\digital\DigitalTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\NextNodeTimeTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\SpeedTelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\digital\VerticalSpeedTelemetryItem.cs" />
     <Compile Include="Items\Telemetry\TelemetryItem.cs" />
     <Compile Include="UnityUtils.cs" />
     <Compile Include="Utils\IJsonConvertable.cs" />

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 
 using System.Windows.Forms;
+using ControlPanelPlugin.Utils;
 
 namespace tester
 {
@@ -61,7 +62,7 @@ namespace tester
 
     private void connectionButton_Click(object sender, EventArgs e)
     {
-      if (PanelManager.Instance.Connection.Connected)
+      if (Singleton.Get<Connection>().Connected)
       {
         if (DisconnectPressed != null)
         {
@@ -76,7 +77,7 @@ namespace tester
 
     private void VesselWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
-      Application.Exit();
+      System.Windows.Forms.Application.Exit();
     }
   }
 }

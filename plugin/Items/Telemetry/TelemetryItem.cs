@@ -1,6 +1,6 @@
 ﻿
 
-using ControlPanelPlugin.Telemetry.display;
+using ControlPanelPlugin.Telemetry.Display;
 using Newtonsoft.Json;
 using System.Reflection;
 using System.Collections.Generic;

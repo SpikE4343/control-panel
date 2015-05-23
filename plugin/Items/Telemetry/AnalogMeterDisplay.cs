@@ -4,8 +4,9 @@ using ControlPanelPlugin.Messages;
 using ControlPanelPlugin.Telemetry;
 using ControlPanelPlugin.Utils;
 
-namespace ControlPanelPlugin.Telemetry.display
+namespace ControlPanelPlugin.Telemetry.Display
 {
+  [ClassSerializer("AnalogMeterDisplay")]
   public class AnalogMeterDisplay : TelemetryDisplay
   {
     public byte meter = 255;

@@ -5,7 +5,7 @@ using ControlPanelPlugin.Telemetry;
 using ControlPanelPlugin.Utils;
 using Newtonsoft.Json;
 
-namespace ControlPanelPlugin.Telemetry.display
+namespace ControlPanelPlugin.Telemetry.Display
 {
   [ClassSerializer("TelemetryDisplay")]
   public abstract class TelemetryDisplay : IJsonConvertable

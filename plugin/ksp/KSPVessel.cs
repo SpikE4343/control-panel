@@ -113,8 +113,6 @@ namespace ControlPanelPlugin
       vessel.ActionGroups.SetGroup(group, value);
     }
 
-    public float UpdateInterval { get { return 1.0f; } }
-
     float nextNodeTime = 0.0f;
     public void Update()
     {

@@ -14,7 +14,7 @@ namespace ControlPanelPlugin.Utils
 
     public ClassSerializer()
     {
-
+      InitializeItems();
     }
 
     public T CreateItem<T>(string name) where T : class

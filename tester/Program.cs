@@ -18,7 +18,7 @@ namespace tester
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
 
-      var module = new TestModule();
+      var module = new TestPanelController();
       module.Start();
       
       Application.Run(module.window);

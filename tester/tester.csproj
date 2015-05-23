@@ -57,7 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestModule.cs" />
+    <Compile Include="TestPanelController.cs" />
     <Compile Include="VesselWindow.cs">
       <SubType>Form</SubType>
     </Compile>

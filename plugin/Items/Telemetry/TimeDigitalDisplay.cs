@@ -8,7 +8,7 @@ using UnityEngine;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Utils;
 
-namespace ControlPanelPlugin.Telemetry.display
+namespace ControlPanelPlugin.Telemetry.Display
 {
   [ClassSerializer("TimeDigitalDisplay")]
   public class TimeDigitalDisplay : DigitalDisplay

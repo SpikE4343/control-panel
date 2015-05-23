@@ -40,12 +40,18 @@ namespace ControlPanelPlugin.Items.Button.Action
 
     public override Dictionary<string, object> ToJson()
     {
-      return base.ToJson();
+      var json = base.ToJson();
+
+      json["group"] = KspGroup;
+
+      return json;
     }
 
     public override void FromJson(Dictionary<string, object> json)
     {
       base.FromJson(json);
+
+      KspGroup = (KSPActionGroup)json["group"];
     }
   }
 }

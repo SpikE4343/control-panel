@@ -1,6 +1,6 @@
 ﻿using System;
+using ControlPanelPlugin.Telemetry.Display;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ControlPanelPlugin.Telemetry.display;
 
 namespace tests
 {
@@ -23,7 +23,7 @@ namespace tests
     {
       var display = new AnalogMeterDisplay(1);
 
-      Assert.IsTrue( display.Update(10.0f) );
+      Assert.IsTrue(display.Update(10.0f));
 
       Assert.AreEqual(0.0f, display.Value);
     }

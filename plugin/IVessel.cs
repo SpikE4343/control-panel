@@ -36,8 +36,6 @@ namespace ControlPanelPlugin
         bool getActionGroup(KSPActionGroup group);
         void setActionGroup(KSPActionGroup group, bool value);
 
-        float UpdateInterval { get; }
-
         void Update();
     }
 }

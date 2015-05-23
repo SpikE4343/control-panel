@@ -12,6 +12,7 @@ using ControlPanelPlugin.Telemetry;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using ControlPanelPlugin.Utils;
+using ControlPanelPlugin.Messages;
 
 // copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"
 
@@ -19,15 +20,9 @@ namespace ControlPanelPlugin
 {
   public class ControlPanel : IJsonConvertable
   {
-    byte[] buffer = new byte[2];
     bool running = true;
 
-    Queue<string> LogLines = new Queue<string>();
-
     public IVessel CurrentVessel { get; set; }
-
-    public float InputUpdateInterval { get; set; }
-    public float PanelUpdateInterval { get; set; }
 
     public bool throttleEnabled = true;
     public bool stageArmed = false;
@@ -44,10 +39,35 @@ namespace ControlPanelPlugin
     public ControlPanel()
     {
       PanelItems = new List<PanelItem>();
-      InputUpdateInterval = 0.01f;
-      PanelUpdateInterval = 0.0625f;
       viewMode = Constants.Panel.ViewMode.Staging;
+
+      Singleton.Get<EventDispatcher>().Handler<LogInfoMsg>().OnEvent += OnLogInfoMsg;
+      Singleton.Get<EventDispatcher>().Handler<HeartbeatMsg>().OnEvent += OnHeartbeatMsg;
+      Singleton.Get<EventDispatcher>().Handler<AnalogInputMsg>().OnEvent += OnAnalogInputMsg;
     }
+
+    #region Message Handlers
+
+    private void OnLogInfoMsg(LogInfoMsg msg)
+    {
+      Log.Info("msg: {0}\n", msg.message);
+    }
+
+    private void OnHeartbeatMsg(HeartbeatMsg msg)
+    {
+      HasOneHeartbeat = true;
+      DeviceFrame = msg.frame;
+    }
+
+    private void OnAnalogInputMsg(AnalogInputMsg msg)
+    {
+      if (msg.id == 0)
+      {
+        throttleValue = msg.value / 100.0f;
+      }
+    }
+
+    #endregion
 
     public void Add(PanelItem item)
     {
@@ -56,167 +76,16 @@ namespace ControlPanelPlugin
     }
 
 
-    void AnalogInputHandler(Connection.MsgType type, byte size, System.IO.BinaryReader stream)
-    {
-      byte id = stream.ReadByte();
-      float input = stream.ReadSingle();
-      //Log.Info("Msg: {0}, id: {1}, input: {2}\n", (int)type, id, input);
-
-      if (id == 0)
-      {
-        throttleValue = input / 100.0f;
-      }
-    }
-
-    protected void InputMessageHandler(Connection.MsgType type, byte size, System.IO.BinaryReader stream)
-    {
-      //Log.Info("Msg type: {0}, size: {1}\n", type, size);
-      switch (type)
-      {
-        case Connection.MsgType.Heartbeat:
-          HasOneHeartbeat = true;
-          DeviceFrame = stream.ReadInt32();
-          //Log.Info("[Device] HB: frame: {0}\n", frame);
-          break;
-
-        case Connection.MsgType.GroupState:
-          {
-            byte id = stream.ReadByte();
-            byte state = stream.ReadByte();
-            //Log.Info("Msg: {0}, id: {1}, input: {2}\n", (int)type, id, state);
-            var switchId = (Constants.Panel.SwitchId)id;
-
-            HandleGroupState(switchId, state);
-          }
-          break;
-        case Connection.MsgType.LogInfo:
-          {
-            int len = stream.ReadInt16();
-            string msg = new string(stream.ReadChars(len));
-            Log.Info("msg: {0}\n", msg);
-            System.Console.WriteLine(msg);
-
-          }
-          break;
-      }
-    }
-
-    private void HandleGroupState(Constants.Panel.SwitchId switchId, byte state)
-    {
-      switch (switchId)
-      {
-        case Constants.Panel.SwitchId.SWITCH_SAS:
-        case Constants.Panel.SwitchId.SWITCH_RCS:
-        case Constants.Panel.SwitchId.SWITCH_GEAR:
-        case Constants.Panel.SwitchId.SWITCH_LIGHTS:
-        case Constants.Panel.SwitchId.SWITCH_BRAKES:
-          CurrentVessel.setActionGroup(Constants.Panel.getActionGroupFromId((int)switchId), state == 1);
-          break;
-
-
-        case Constants.Panel.SwitchId.SWITCH_STAGE:
-          if (stageArmed && canFireStage)
-          {
-            canFireStage = false;
-            CurrentVessel.ActiveNextStage();
-          }
-
-          //sendState((int)Constants.Panel.StatusId.STAGE_ARMED, canFireStage);
-          break;
-
-        case Constants.Panel.SwitchId.SWITCH_STAGE_ARM:
-          {
-            break;
-            bool last = stageArmed;
-            stageArmed = state == 1;
-
-            if (!canFireStage)
-              canFireStage = stageArmed;
-
-            if (last && !stageArmed && canFireStage)
-              canFireStage = false;
-
-            //sendState((int)Constants.Panel.StatusId.STAGE_ARMED, canFireStage);
-          }
-          break;
-
-        case Constants.Panel.SwitchId.SWITCH_THROTTLE_MOMENT:
-        case Constants.Panel.SwitchId.SWITCH_THROTTLE_TOGGLE:
-          throttleEnabled = state == 1;
-          break;
-
-        case Constants.Panel.SwitchId.SWITCH_DOCKING_MODE:
-          {
-            bool wasDock = viewMode == Constants.Panel.ViewMode.Docking;
-            viewMode = state == 1 ? Constants.Panel.ViewMode.Docking : Constants.Panel.ViewMode.Staging;
-            bool isDock = viewMode == Constants.Panel.ViewMode.Docking;
-
-            if (wasDock && !isDock)
-            {
-              CurrentVessel.ExitDockingMode();
-            }
-            else if (!wasDock && isDock)
-            {
-              CurrentVessel.EnterDockingMode();
-            }
-          }
-          break;
-
-        case Constants.Panel.SwitchId.SWITCH_MAP_MODE:
-          {
-            bool wasMap = viewMode == Constants.Panel.ViewMode.Map;
-            viewMode = state == 1 ? Constants.Panel.ViewMode.Map : Constants.Panel.ViewMode.Staging;
-            bool isMap = viewMode == Constants.Panel.ViewMode.Map;
-
-            if (wasMap && !isMap)
-            {
-              CurrentVessel.ExitMapView();
-            }
-            else if (!wasMap && isMap)
-            {
-              CurrentVessel.EnterMapView();
-            }
-          }
-          break;
-
-        case Constants.Panel.SwitchId.SWITCH_TRANS_CTRL:
-          break;
-
-        case Constants.Panel.SwitchId.SWITCH_FINE_CTRL:
-          break;
-      }
-    }
-
     public void Start()
     {
-      if (!registered)
-      {
-        var connection = PanelManager.Instance.Connection;
-        connection.RegisterHandler(Connection.MsgType.AnalogInput, AnalogInputHandler);
-        connection.RegisterHandler(Connection.MsgType.GroupState, InputMessageHandler);
-        connection.RegisterHandler(Connection.MsgType.Heartbeat, InputMessageHandler);
-        connection.RegisterHandler(Connection.MsgType.LogInfo, InputMessageHandler);
-        registered = true;
-      }
-
       running = true;
       HasOneHeartbeat = false;
     }
 
     public void Stop()
     {
-      if (!registered)
-      {
-        var connection = PanelManager.Instance.Connection;
-        connection.UnregisterHandler(Connection.MsgType.AnalogInput, AnalogInputHandler);
-        connection.UnregisterHandler(Connection.MsgType.GroupState, InputMessageHandler);
-        connection.UnregisterHandler(Connection.MsgType.Heartbeat, InputMessageHandler);
-        connection.UnregisterHandler(Connection.MsgType.LogInfo, InputMessageHandler);
-        registered = false;
-      }
       running = false;
       HasOneHeartbeat = false;
-      PanelManager.Instance.Stop();
     }
 
     public void UpdateState()
@@ -224,16 +93,10 @@ namespace ControlPanelPlugin
       if (CurrentVessel == null)
         return;
 
-      if (!throttleEnabled)
-      {
-        CurrentVessel.mainThrottle = 0;
-      }
-      else
-      {
-        CurrentVessel.mainThrottle = throttleValue;
-      }
+      CurrentVessel.mainThrottle = throttleEnabled ? throttleValue : 0;
 
-      if (!PanelManager.Instance.Connection.IsOpen || !HasOneHeartbeat)
+      var connection = Singleton.Get<Connection>();
+      if (connection == null || !connection.Connected || !HasOneHeartbeat)
       {
         return;
       }
@@ -244,6 +107,7 @@ namespace ControlPanelPlugin
       }
     }
 
+    bool wasConnected = false;
     public bool ResendAll { get; set; }
     public void UpdateInput()
     {
@@ -251,16 +115,19 @@ namespace ControlPanelPlugin
       if (CurrentVessel == null)
         return;
 
-      var wasConnected = PanelManager.Instance.Connection.Connected;
-
-      PanelManager.Instance.Update();
-
-      var connected = PanelManager.Instance.Connection.Connected;
+      bool connected = false;
+      var connection = Singleton.Get<Connection>();
+      if (connection != null)
+      {
+        connected = connection.Connected;
+      }
 
       if (!wasConnected && connected)
       {
         ResendAll = true;
       }
+
+      wasConnected = connected;
     }
 
 
@@ -268,7 +135,8 @@ namespace ControlPanelPlugin
     Vector2 scrollPos = new Vector2();
     public void OnGUI()
     {
-      Connection serial = PanelManager.Instance.Connection;
+      Connection serial = Singleton.Get<Connection>();
+      var config = Singleton.Get<Config>();
       //scrollPos = GUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical("box");
 
@@ -282,14 +150,14 @@ namespace ControlPanelPlugin
 
           GUILayout.BeginHorizontal();
           GUILayout.Label("Panel Up: ");
-          PanelUpdateInterval = GUILayout.HorizontalSlider(PanelUpdateInterval, 0.01f, 1.0f, GUILayout.Width(100));
-          GUILayout.Label("" + PanelUpdateInterval);
+          config.Intervals.PanelUpdate = GUILayout.HorizontalSlider(config.Intervals.PanelUpdate, 0.01f, 1.0f, GUILayout.Width(100));
+          GUILayout.Label("" + config.Intervals.PanelUpdate);
           GUILayout.EndHorizontal();
 
           GUILayout.BeginHorizontal();
           GUILayout.Label("Input Up: ");
-          InputUpdateInterval = GUILayout.HorizontalSlider(InputUpdateInterval, 0.005f, 0.5f, GUILayout.Width(100));
-          GUILayout.Label("" + InputUpdateInterval);
+          config.Intervals.InputUpdate = GUILayout.HorizontalSlider(config.Intervals.InputUpdate, 0.005f, 0.5f, GUILayout.Width(100));
+          GUILayout.Label("" + config.Intervals.InputUpdate);
           GUILayout.EndHorizontal();
 
           if (GUILayout.Button("Disconnect"))
@@ -337,31 +205,30 @@ namespace ControlPanelPlugin
       //GUILayout.EndScrollView();
     }
 
-
-
-    public void Save(string file)
-    {
-      var output = new PanelSave();
-      output.PanelItems = PanelItems;
-      Persistence.Save(file, output);
-    }
-
-    public void Load(string file)
-    {
-      var input = Persistence.Load<PanelSave>(file);
-      PanelItems = input.PanelItems;
-    }
-
     #region IJsonConvertable Members
 
     public Dictionary<string, object> ToJson()
     {
-      throw new NotImplementedException();
+      var json = new Dictionary<string, object>();
+
+      var itemsJson = new List<object>();
+      foreach (var item in PanelItems)
+      {
+        itemsJson.Add(Singleton.Get<ClassSerializer>().ToJson(item));
+      }
+
+      json.Add("panelItems", itemsJson);
+
+      return json;
     }
 
     public void FromJson(Dictionary<string, object> json)
     {
-      throw new NotImplementedException();
+      var itemsJson = (List<object>)json["panelItems"];
+      foreach (var item in itemsJson)
+      {
+        PanelItems.Add(Singleton.Get<ClassSerializer>().FromJson<PanelItem>(item as Dictionary<string, object>));
+      }
     }
 
     #endregion

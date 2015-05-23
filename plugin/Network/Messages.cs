@@ -67,6 +67,15 @@ namespace ControlPanelPlugin.Messages
       maxDigits = 0;
       value = 0;
     }
+
+    #region IMessage Members
+
+    public MsgType Type
+    {
+      get { return MsgType.Telemetry; }
+    }
+
+    #endregion
   }
 
   [ClassSerializer("GroupStateMsg")]
@@ -74,6 +83,15 @@ namespace ControlPanelPlugin.Messages
   {
     public byte id;
     public byte state = 0;
+
+    #region IMessage Members
+
+    public MsgType Type
+    {
+      get { return MsgType.GroupState; }
+    }
+
+    #endregion
 
     public void write(BinaryWriter stream)
     {
@@ -100,6 +118,15 @@ namespace ControlPanelPlugin.Messages
     public byte meter;
     public byte value = 0;
 
+    #region IMessage Members
+
+    public MsgType Type
+    {
+      get { return MsgType.AnalogMeterTelemetry; }
+    }
+
+    #endregion
+
     public void write(BinaryWriter stream)
     {
       stream.Write(meter);
@@ -124,6 +151,15 @@ namespace ControlPanelPlugin.Messages
   {
     public int frame;
 
+    #region IMessage Members
+
+    public MsgType Type
+    {
+      get { return MsgType.Heartbeat; }
+    }
+
+    #endregion
+
     public void write(BinaryWriter stream)
     {
       stream.Write(frame);
@@ -144,6 +180,15 @@ namespace ControlPanelPlugin.Messages
   public class LogInfoMsg : IMessage, IPoolable
   {
     public string message;
+
+    #region IMessage Members
+
+    public MsgType Type
+    {
+      get { return MsgType.LogInfo; }
+    }
+
+    #endregion
 
     public void write(BinaryWriter stream)
     {
@@ -167,7 +212,7 @@ namespace ControlPanelPlugin.Messages
   [ClassSerializer("AnalogInputMsg")]
   public class AnalogInputMsg : IMessage, IPoolable
   {
-    MsgType Type { get { return MsgType.AnalogInput; } }
+    public MsgType Type { get { return MsgType.AnalogInput; } }
 
     public byte id;
     public float value;
@@ -189,6 +234,10 @@ namespace ControlPanelPlugin.Messages
       id = 0;
       value = 0.0f;
     }
+
+
+
+
   }
 
   public struct MessageHeader

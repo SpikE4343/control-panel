@@ -12,7 +12,7 @@ namespace ControlPanelPlugin.Items.Button.Action
   [ClassSerializer("StageButtonAction")]
   public class StageButtonAction : ButtonAction
   {
-    protected override void HandleSwitchStateMsg(Constants.Panel.SwitchId switchId, bool state)
+    public override void StateChange()
     {
       if (Button.Panel.stageArmed && Button.Panel.canFireStage)
       {

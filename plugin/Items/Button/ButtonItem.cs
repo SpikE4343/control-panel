@@ -26,6 +26,16 @@ namespace ControlPanelPlugin.Items.Button
       set { state = value; Send(); }
     }
 
+    public ButtonItem()
+    {
+
+    }
+
+    public ButtonItem(ButtonAction action)
+    {
+      Action = action;
+    }
+
     public ButtonAction Action
     {
       get { return action; }
@@ -63,12 +73,19 @@ namespace ControlPanelPlugin.Items.Button
 
     public override Dictionary<string, object> ToJson()
     {
-      return base.ToJson();
+      var json = base.ToJson();
+
+      json.Add("action", Singleton.Get<ClassSerializer>().ToJson(Action));
+
+      return json;
     }
 
     public override void FromJson(Dictionary<string, object> json)
     {
       base.FromJson(json);
+
+      Action = Singleton.Get<ClassSerializer>().FromJson<ButtonAction>(json["action"] as Dictionary<string, object>);
+
     }
   }
 }

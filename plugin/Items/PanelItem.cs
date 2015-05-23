@@ -9,7 +9,7 @@ using ControlPanelPlugin.Utils;
 namespace ControlPanelPlugin
 {
   [ClassSerializer("PanelItem")]
-  public abstract class PanelItem
+  public abstract class PanelItem : IJsonConvertable
   {
     public virtual ControlPanel Panel { get; set; }
 
