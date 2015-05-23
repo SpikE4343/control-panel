@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ControlPanelPlugin.Items;
+using ControlPanelPlugin.Utils;
 
 namespace ControlPanelPlugin.Messages
 {
@@ -26,49 +28,7 @@ namespace ControlPanelPlugin.Messages
     void read(BinaryReader stream);
   }
 
-  public interface IPoolable
-  {
-    void Reset();
-  }
-
-  public class ObjectPool
-  {
-    private static Dictionary<Type, Queue<IPoolable>> messages = new Dictionary<Type, Queue<IPoolable>>();
-    public static T Grab<T>() where T : IPoolable, new()
-    {
-      Queue<IPoolable> queue;
-      if (messages.TryGetValue(typeof(T), out queue) &&
-          queue.Count > 0)
-      {
-        return (T)queue.Dequeue();
-      }
-      return new T();
-    }
-
-    public static object Grab(Type t)
-    {
-      Queue<IPoolable> queue;
-      if (messages.TryGetValue(t, out queue) &&
-          queue.Count > 0)
-      {
-        return queue.Dequeue();
-      }
-      return Activator.CreateInstance(t);
-    }
-
-    public static void Release(IPoolable msg)
-    {
-      Queue<IPoolable> queue;
-      if (!messages.TryGetValue(msg.GetType(), out queue))
-      {
-        queue = new Queue<IPoolable>();
-        messages.Add(msg.GetType(), queue);
-      }
-      msg.Reset();
-      queue.Enqueue(msg);
-    }
-  }
-
+  [ClassSerializer("TelemetryMsg")]
   public class TelemetryMsg : IMessage, IPoolable
   {
     public byte id;
@@ -109,6 +69,7 @@ namespace ControlPanelPlugin.Messages
     }
   }
 
+  [ClassSerializer("GroupStateMsg")]
   public class GroupStateMsg : IMessage, IPoolable
   {
     public byte id;
@@ -133,6 +94,7 @@ namespace ControlPanelPlugin.Messages
     }
   }
 
+  [ClassSerializer("AnalogMeterMsg")]
   public class AnalogMeterMsg : IMessage, IPoolable
   {
     public byte meter;
@@ -157,6 +119,7 @@ namespace ControlPanelPlugin.Messages
     }
   }
 
+  [ClassSerializer("HeartbeatMsg")]
   public class HeartbeatMsg : IMessage, IPoolable
   {
     public int frame;
@@ -177,6 +140,7 @@ namespace ControlPanelPlugin.Messages
     }
   }
 
+  [ClassSerializer("LogInfoMsg")]
   public class LogInfoMsg : IMessage, IPoolable
   {
     public string message;
@@ -200,6 +164,7 @@ namespace ControlPanelPlugin.Messages
     }
   }
 
+  [ClassSerializer("AnalogInputMsg")]
   public class AnalogInputMsg : IMessage, IPoolable
   {
     MsgType Type { get { return MsgType.AnalogInput; } }
@@ -244,25 +209,7 @@ namespace ControlPanelPlugin.Messages
     }
   }
 
-  public class Singleton<T> where T : new()
-  {
-    private static T instance;
-    public static T Instance
-    {
-      get
-      {
-        if (instance == null)
-        {
-          instance = new T();
-        }
-
-        return instance;
-      }
-    }
-  }
-
-
-  public class MessageManager : Singleton<MessageManager>
+  public class MessageManager
   {
     BinaryWriter msgWriter = new BinaryWriter(new MemoryStream());
     BinaryWriter writer = new BinaryWriter(new MemoryStream());
@@ -296,7 +243,7 @@ namespace ControlPanelPlugin.Messages
       if (BytesRemaining < 4)
         return false;
 
-      //Console.Write((char)streamReader.PeekChar());
+      //Console.Write((char)streamReader.PeekChar()); x 
       byte marker = reader.ReadByte();
 
       if (marker != 'e')
@@ -342,30 +289,33 @@ namespace ControlPanelPlugin.Messages
 
       var ms = msgWriter.BaseStream as MemoryStream;
       writer.Write(ms.GetBuffer());
+
+      Singleton.Get<ObjectPool>().Release((IPoolable)msg);
     }
 
-    public IMessage ReadMsg()
+    public void ReadMsg()
     {
       if (!HasPendingMessage)
       {
         if (!ReadHeader(reader, out PendingType, out PendingSize))
-          return null;
+          return;
 
         HasPendingMessage = true;
       }
 
       if (!HasPendingMessage || BytesRemaining < PendingSize)
       {
-        return null;
+        return;
       }
 
       HasPendingMessage = false;
 
       var msgType = (MsgType)PendingType;
-      IMessage msg = (IMessage)ObjectPool.Grab(msgCreator[msgType]);
+      var msg = Singleton.Get<ObjectPool>().Grab<IMessage>(msgCreator[msgType]);
       msg.read(reader);
 
-      return msg;
+      Singleton.Get<EventDispatcher>().Fire(msg);
+      Singleton.Get<ObjectPool>().Release((IPoolable)msg);
     }
   }
 }

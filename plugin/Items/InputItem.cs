@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ControlPanelPlugin.Items
 {
+  [ClassSerializer("InputItem")]
   public class InputItem : PanelItem
   {
 

@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using ControlPanelPlugin.telemetry;
-using ControlPanelPlugin.telemetry.analog;
+using ControlPanelPlugin.Telemetry;
+using ControlPanelPlugin.Telemetry.analog;
 using ControlPanelPlugin.Telemetry;
 using UnityEngine;
-using ControlPanelPlugin.telemetry.display;
+using ControlPanelPlugin.Telemetry.display;
 
 namespace ControlPanelPlugin
 {
   [KSPAddon(KSPAddon.Startup.Flight, false)]
-  public class ControlPanelGUI : MonoBehaviour
+  public class KSPControlPanel : MonoBehaviour
   {
     ControlPanel panel;
     KSPVessel kspVessel = new KSPVessel();
@@ -25,7 +25,17 @@ namespace ControlPanelPlugin
       GameEvents.onVesselChange.Add(onVesselChange);
     }
 
+    private void Initialize()
+    {
+      if (Log.Implementor == null)
+      {
+        Log.Implementor = new UnityLogger();
+      }
+
+    }
+
     bool coroutinesActive = false;
+
     void onVesselChange(Vessel v)
     {
       kspVessel.vessel = v;
@@ -44,7 +54,7 @@ namespace ControlPanelPlugin
 
       if (PanelManager.Instance.Connection == null)
       {
-        var connection = new SerialConnection("COM4", 9600);
+        var connection = new Connection("COM4", 9600);
         PanelManager.Instance.Connection = connection;
       }
 

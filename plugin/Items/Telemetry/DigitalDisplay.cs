@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ControlPanelPlugin.Utils;
+using ControlPanelPlugin.Messages;
 
 
-namespace ControlPanelPlugin.telemetry.display
+namespace ControlPanelPlugin.Telemetry.display
 {
   public class DigitalDisplay : TelemetryDisplay
   {
@@ -65,7 +67,35 @@ namespace ControlPanelPlugin.telemetry.display
 
     public override void Send()
     {
-      PanelManager.Instance.Connection.SendTelemetryMessage(TelemetryId, Display, StartDigit, MaxDigits, Precision, Value);
+      var msg = Singleton.Get<ObjectPool>().Grab<TelemetryMsg>();
+      msg.display = (byte)Display;
+      msg.id = (byte)TelemetryId;
+      msg.maxDigits = (byte)MaxDigits;
+      msg.startDigit = (byte)StartDigit;
+      msg.precision = (byte)Precision;
+      msg.value = (int)(Value * Math.Pow(10, Precision));
+
+      Singleton.Get<MessageManager>().WriteMsg(msg);
+    }
+
+    public override Dictionary<string, object> ToJson()
+    {
+      var json = base.ToJson();
+      json.Add("id", TelemetryId);
+      json.Add("display", Display);
+      json.Add("start", StartDigit);
+      json.Add("max", MaxDigits);
+      json.Add("precision", Precision);
+      return json;
+    }
+
+    public override void FromJson(Dictionary<string, object> json)
+    {
+      TelemetryId = (int)json["id"];
+      Display = (int)json["display"];
+      StartDigit = (int)json["start"];
+      MaxDigits = (int)json["max"];
+      Precision = (int)json["precision"];
     }
   }
 }

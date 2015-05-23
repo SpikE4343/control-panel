@@ -1,9 +1,9 @@
 ﻿///
 ///
-using ControlPanelPlugin.telemetry.digital;
+using ControlPanelPlugin.Telemetry.digital;
 using UnityEngine;
 
-namespace ControlPanelPlugin.telemetry
+namespace ControlPanelPlugin.Telemetry
 {
   public class NextNodeTimeTelemetryItem : DigitalTelemetryItem
   {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace ControlPanelPlugin.telemetry.analog
+namespace ControlPanelPlugin.Telemetry.analog
 {
     public class MonoResourceItem : AnalogTelemetryPercentItem
     {

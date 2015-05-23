@@ -5,9 +5,12 @@ using System.Linq;
 using System.Text;
 
 using UnityEngine;
+using ControlPanelPlugin.Items;
+using ControlPanelPlugin.Utils;
 
-namespace ControlPanelPlugin.telemetry.display
+namespace ControlPanelPlugin.Telemetry.display
 {
+  [ClassSerializer("TimeDigitalDisplay")]
   public class TimeDigitalDisplay : DigitalDisplay
   {
     public int Days;

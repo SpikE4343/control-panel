@@ -6,11 +6,11 @@ using System.Text;
 
 using System.Timers;
 using ControlPanelPlugin;
-using ControlPanelPlugin.telemetry;
-using ControlPanelPlugin.telemetry.analog;
+using ControlPanelPlugin.Telemetry;
+using ControlPanelPlugin.Telemetry.analog;
 using ControlPanelPlugin.Telemetry;
 using UnityEngine;
-using ControlPanelPlugin.telemetry.display;
+using ControlPanelPlugin.Telemetry.display;
 
 namespace tester
 {
@@ -42,7 +42,7 @@ namespace tester
 
       if (PanelManager.Instance.Connection == null)
       {
-        PanelManager.Instance.Connection = new SerialConnection();
+        PanelManager.Instance.Connection = new Connection();
       }
 
       if (PanelManager.Instance.Panel == null)

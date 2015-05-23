@@ -1,7 +1,10 @@
-﻿using ControlPanelPlugin;
+﻿using System.Collections.Generic;
+using ControlPanelPlugin;
+using ControlPanelPlugin.Messages;
 using ControlPanelPlugin.Telemetry;
+using ControlPanelPlugin.Utils;
 
-namespace ControlPanelPlugin.telemetry.display
+namespace ControlPanelPlugin.Telemetry.display
 {
   public class AnalogMeterDisplay : TelemetryDisplay
   {
@@ -36,7 +39,22 @@ namespace ControlPanelPlugin.telemetry.display
 
     public override void Send()
     {
-      PanelManager.Instance.Connection.SendAnalogMeterMsg(meter, meterValue);
+      var msg = Singleton.Get<ObjectPool>().Grab<AnalogMeterMsg>();
+      msg.meter = meter;
+      msg.value = meterValue;
+      Singleton.Get<MessageManager>().WriteMsg(msg);
+    }
+
+    public override Dictionary<string, object> ToJson()
+    {
+      var json = base.ToJson();
+      json.Add("meter", meter);
+      return json;
+    }
+
+    public override void FromJson(Dictionary<string, object> json)
+    {
+      meter = (byte)json["meter"];
     }
 
   }

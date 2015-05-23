@@ -1,16 +1,19 @@
 ﻿
 
-using ControlPanelPlugin.telemetry.display;
+using ControlPanelPlugin.Telemetry.display;
 using Newtonsoft.Json;
 using System.Reflection;
+using System.Collections.Generic;
+using ControlPanelPlugin.Utils;
+using ControlPanelPlugin.Items;
 namespace ControlPanelPlugin.Telemetry
 {
+  [ClassSerializer("TelemetryItem")]
   public class TelemetryItem : PanelItem
   {
     private static int nextId = 0;
     public int Id = nextId++;
 
-    [JsonIgnore]
     public float Value { get { return Display.Value; } }
 
 
@@ -67,6 +70,21 @@ namespace ControlPanelPlugin.Telemetry
     {
       float next = GetLatestValue();
       return Display.Update(next);
+    }
+
+
+    public override Dictionary<string, object> ToJson()
+    {
+      var json = base.ToJson();
+      json.Add("property", Property);
+      json.Add("display", Singleton.Get<ClassSerializer>().ToJson(Display));
+      return json;
+    }
+
+    public override void FromJson(Dictionary<string, object> json)
+    {
+      Property = (string)json["property"];
+      Display = Singleton.Get<ClassSerializer>().FromJson<TelemetryDisplay>(json["display"] as Dictionary<string, object>);
     }
   }
 }

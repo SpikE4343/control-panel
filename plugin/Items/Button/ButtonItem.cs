@@ -2,64 +2,73 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ControlPanelPlugin.Items;
+using ControlPanelPlugin.Items.Button;
+using ControlPanelPlugin.Items.Button.Action;
+using ControlPanelPlugin.Messages;
+using ControlPanelPlugin.Network;
+using ControlPanelPlugin.Utils;
 
 
-namespace ControlPanelPlugin
+namespace ControlPanelPlugin.Items.Button
 {
+  [ClassSerializer("ButtonItem")]
   public class ButtonItem : PanelItem
   {
+    protected bool state = false;
+
     public Constants.Panel.SwitchId Switch;
-    public bool State = false;
+    private ButtonAction action;
 
-
-
-    public ButtonItem(Constants.Panel.SwitchId button, bool state)
+    public bool State
     {
-      Switch = button;
-      this.State = state;
+      get { return state; }
+      set { state = value; Send(); }
+    }
 
-      // TODO: register on connection create
-      //       Need connection established event on connection manager
-      var connection = PanelManager.Instance.Connection;
-      if (connection != null)
+    public ButtonAction Action
+    {
+      get { return action; }
+      set { action = value; action.Button = this; }
+    }
+
+    public override void Initialize()
+    {
+      Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent += HandleMessage;
+    }
+
+    protected void HandleMessage(Messages.GroupStateMsg msg)
+    {
+      bool v = msg.state == 1;
+      if (v != state)
       {
-        connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
+        state = v;
+        Action.StateChange();
       }
-      else
-      {
-        PanelManager.Instance.ConnectionSet += Instance_ConnectionSet;
-      }
-
     }
 
-    void Instance_ConnectionSet(SerialConnection connection)
+    protected void Send()
     {
-      connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
-    }
+      var msg = Singleton.Get<ObjectPool>().Grab<GroupStateMsg>();
+      msg.id = (byte)Switch;
+      msg.state = (byte)(State ? 1 : 0);
 
-    protected void InputMessageHandler(SerialConnection.MsgType type, byte size, System.IO.BinaryReader stream)
-    {
-      if (type != SerialConnection.MsgType.GroupState)
-        return;
-
-      byte id = stream.ReadByte();
-      byte state = stream.ReadByte();
-      var switchId = (Constants.Panel.SwitchId)id;
-
-      if (switchId != Switch)
-        return;
-
-      HandleSwitchStateMsg(switchId, state == 1);
-    }
-
-    protected virtual void HandleSwitchStateMsg(Constants.Panel.SwitchId switchId, bool state)
-    {
-      State = state;
+      Singleton.Get<MessageManager>().WriteMsg(msg);
     }
 
     public override bool Update()
     {
-      return true;
+      return action.Update();
+    }
+
+    public override Dictionary<string, object> ToJson()
+    {
+      return base.ToJson();
+    }
+
+    public override void FromJson(Dictionary<string, object> json)
+    {
+      base.FromJson(json);
     }
   }
 }

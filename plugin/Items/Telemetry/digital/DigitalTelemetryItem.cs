@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace ControlPanelPlugin.telemetry.digital
+namespace ControlPanelPlugin.Telemetry.digital
 {
     public class DigitalTelemetryItem : TelemetryItem
     {

@@ -11,12 +11,13 @@ using OpenNETCF.IO.Ports;
 using ControlPanelPlugin.Telemetry;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using ControlPanelPlugin.Utils;
 
 // copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"
 
 namespace ControlPanelPlugin
 {
-  public class ControlPanel
+  public class ControlPanel : IJsonConvertable
   {
     byte[] buffer = new byte[2];
     bool running = true;
@@ -27,8 +28,6 @@ namespace ControlPanelPlugin
 
     public float InputUpdateInterval { get; set; }
     public float PanelUpdateInterval { get; set; }
-
-    static ControlPanel instance = null;
 
     public bool throttleEnabled = true;
     public bool stageArmed = false;
@@ -57,7 +56,7 @@ namespace ControlPanelPlugin
     }
 
 
-    void AnalogInputHandler(SerialConnection.MsgType type, byte size, System.IO.BinaryReader stream)
+    void AnalogInputHandler(Connection.MsgType type, byte size, System.IO.BinaryReader stream)
     {
       byte id = stream.ReadByte();
       float input = stream.ReadSingle();
@@ -69,18 +68,18 @@ namespace ControlPanelPlugin
       }
     }
 
-    protected void InputMessageHandler(SerialConnection.MsgType type, byte size, System.IO.BinaryReader stream)
+    protected void InputMessageHandler(Connection.MsgType type, byte size, System.IO.BinaryReader stream)
     {
       //Log.Info("Msg type: {0}, size: {1}\n", type, size);
       switch (type)
       {
-        case SerialConnection.MsgType.Heartbeat:
+        case Connection.MsgType.Heartbeat:
           HasOneHeartbeat = true;
           DeviceFrame = stream.ReadInt32();
           //Log.Info("[Device] HB: frame: {0}\n", frame);
           break;
 
-        case SerialConnection.MsgType.GroupState:
+        case Connection.MsgType.GroupState:
           {
             byte id = stream.ReadByte();
             byte state = stream.ReadByte();
@@ -90,7 +89,7 @@ namespace ControlPanelPlugin
             HandleGroupState(switchId, state);
           }
           break;
-        case SerialConnection.MsgType.LogInfo:
+        case Connection.MsgType.LogInfo:
           {
             int len = stream.ReadInt16();
             string msg = new string(stream.ReadChars(len));
@@ -193,10 +192,10 @@ namespace ControlPanelPlugin
       if (!registered)
       {
         var connection = PanelManager.Instance.Connection;
-        connection.RegisterHandler(SerialConnection.MsgType.AnalogInput, AnalogInputHandler);
-        connection.RegisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
-        connection.RegisterHandler(SerialConnection.MsgType.Heartbeat, InputMessageHandler);
-        connection.RegisterHandler(SerialConnection.MsgType.LogInfo, InputMessageHandler);
+        connection.RegisterHandler(Connection.MsgType.AnalogInput, AnalogInputHandler);
+        connection.RegisterHandler(Connection.MsgType.GroupState, InputMessageHandler);
+        connection.RegisterHandler(Connection.MsgType.Heartbeat, InputMessageHandler);
+        connection.RegisterHandler(Connection.MsgType.LogInfo, InputMessageHandler);
         registered = true;
       }
 
@@ -209,10 +208,10 @@ namespace ControlPanelPlugin
       if (!registered)
       {
         var connection = PanelManager.Instance.Connection;
-        connection.UnregisterHandler(SerialConnection.MsgType.AnalogInput, AnalogInputHandler);
-        connection.UnregisterHandler(SerialConnection.MsgType.GroupState, InputMessageHandler);
-        connection.UnregisterHandler(SerialConnection.MsgType.Heartbeat, InputMessageHandler);
-        connection.UnregisterHandler(SerialConnection.MsgType.LogInfo, InputMessageHandler);
+        connection.UnregisterHandler(Connection.MsgType.AnalogInput, AnalogInputHandler);
+        connection.UnregisterHandler(Connection.MsgType.GroupState, InputMessageHandler);
+        connection.UnregisterHandler(Connection.MsgType.Heartbeat, InputMessageHandler);
+        connection.UnregisterHandler(Connection.MsgType.LogInfo, InputMessageHandler);
         registered = false;
       }
       running = false;
@@ -269,7 +268,7 @@ namespace ControlPanelPlugin
     Vector2 scrollPos = new Vector2();
     public void OnGUI()
     {
-      SerialConnection serial = PanelManager.Instance.Connection;
+      Connection serial = PanelManager.Instance.Connection;
       //scrollPos = GUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical("box");
 
@@ -296,7 +295,7 @@ namespace ControlPanelPlugin
           if (GUILayout.Button("Disconnect"))
           {
             serial.Disconnect();
-            serial.DesiredConnectionState = SerialConnection.ConnectionState.Disconnected;
+            serial.DesiredConnectionState = Connection.State.Disconnected;
             HasOneHeartbeat = false;
           }
 
@@ -329,7 +328,7 @@ namespace ControlPanelPlugin
         {
           if (GUILayout.Button("Connect"))
           {
-            serial.DesiredConnectionState = SerialConnection.ConnectionState.Connected;
+            serial.DesiredConnectionState = Connection.State.Connected;
           }
         }
       }
@@ -352,6 +351,20 @@ namespace ControlPanelPlugin
       var input = Persistence.Load<PanelSave>(file);
       PanelItems = input.PanelItems;
     }
+
+    #region IJsonConvertable Members
+
+    public Dictionary<string, object> ToJson()
+    {
+      throw new NotImplementedException();
+    }
+
+    public void FromJson(Dictionary<string, object> json)
+    {
+      throw new NotImplementedException();
+    }
+
+    #endregion
   }
 
 }

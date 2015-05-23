@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ControlPanelPlugin.telemetry.display;
+using ControlPanelPlugin.Telemetry.display;
 
 namespace tests
 {
