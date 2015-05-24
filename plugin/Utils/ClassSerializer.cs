@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Boomlagoon.JSON;
 using ControlPanelPlugin.Utils;
 
 namespace ControlPanelPlugin.Utils
@@ -37,19 +38,19 @@ namespace ControlPanelPlugin.Utils
       return names[type];
     }
 
-    public Dictionary<string, object> ToJson(IJsonConvertable obj)
+    public JSONObject ToJson(IJsonConvertable obj)
     {
-      var json = new Dictionary<string, object>();
+      var json = new JSONObject();
       json.Add("type", GetItemName(obj.GetType()));
       json.Add("data", obj.ToJson());
       return json;
     }
 
-    public T FromJson<T>(Dictionary<string, object> json) where T : class
+    public T FromJson<T>(JSONObject json) where T : class
     {
-      string type = json["type"] as string;
+      string type = json["type"];
       object instance = Activator.CreateInstance(types[type]);
-      (instance as IJsonConvertable).FromJson(json["data"] as Dictionary<string, object>);
+      (instance as IJsonConvertable).FromJson(json["data"]);
       return (T)instance;
     }
 

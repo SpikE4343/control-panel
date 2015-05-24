@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Utils;
+using Boomlagoon.JSON;
 
 namespace ControlPanelPlugin
 {
@@ -25,12 +26,12 @@ namespace ControlPanelPlugin
 
     }
 
-    public virtual Dictionary<string, object> ToJson()
+    public virtual JSONObject ToJson()
     {
-      return new Dictionary<string, object>();
+      return new JSONObject();
     }
 
-    public virtual void FromJson(Dictionary<string, object> json)
+    public virtual void FromJson(JSONObject json)
     {
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Boomlagoon.JSON;
 using ControlPanelPlugin.Items.Button;
 using ControlPanelPlugin.Items.Button.Action;
 using ControlPanelPlugin.Messages;
@@ -26,7 +27,7 @@ namespace ControlPanelPlugin
       Singleton.Set(new ControlPanel());
       Singleton.Set(new Connection());
 
-      CreateDefaultLayout();
+      //CreateDefaultLayout();
     }
 
     public void Shutdown()
@@ -135,31 +136,31 @@ namespace ControlPanelPlugin
     public void Load(string file)
     {
       string text = File.ReadAllText(file);
-      FromJson(MiniJSON.Json.Deserialize(text) as Dictionary<string, object>);
+      FromJson(JSONObject.Parse(text));
     }
 
     public void Save(string file)
     {
-      string text = MiniJSON.Json.Serialize(ToJson());
+      string text = ToJson().ToString();
       File.WriteAllText(file, text);
     }
 
     #region IJsonConvertable Members
 
-    public Dictionary<string, object> ToJson()
+    public JSONObject ToJson()
     {
-      var json = new Dictionary<string, object>();
+      var json = new JSONObject();
       json.Add("config", Singleton.Get<Config>().ToJson());
       json.Add("connection", Singleton.Get<Connection>().ToJson());
       json.Add("panel", Singleton.Get<ControlPanel>().ToJson());
       return json;
     }
 
-    public void FromJson(Dictionary<string, object> json)
+    public void FromJson(JSONObject json)
     {
-      Singleton.Get<Config>().FromJson(json["config"] as Dictionary<string, object>);
-      Singleton.Get<Connection>().FromJson(json["connection"] as Dictionary<string, object>);
-      Singleton.Get<ControlPanel>().FromJson(json["panel"] as Dictionary<string, object>);
+      Singleton.Get<Config>().FromJson(json["config"]);
+      Singleton.Get<Connection>().FromJson(json["connection"]);
+      Singleton.Get<ControlPanel>().FromJson(json["panel"]);
     }
 
     #endregion

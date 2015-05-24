@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Boomlagoon.JSON;
 using ControlPanelPlugin;
 using ControlPanelPlugin.Messages;
 using ControlPanelPlugin.Telemetry;
@@ -19,7 +20,7 @@ namespace ControlPanelPlugin.Telemetry.Display
 
     public AnalogMeterDisplay(int meter)
     {
-      meter = (byte)meter;
+      this.meter = (byte)meter;
     }
 
     public override bool Update(float value)
@@ -46,16 +47,16 @@ namespace ControlPanelPlugin.Telemetry.Display
       Singleton.Get<MessageManager>().WriteMsg(msg);
     }
 
-    public override Dictionary<string, object> ToJson()
+    public override JSONObject ToJson()
     {
       var json = base.ToJson();
       json.Add("meter", meter);
       return json;
     }
 
-    public override void FromJson(Dictionary<string, object> json)
+    public override void FromJson(JSONObject json)
     {
-      meter = (byte)json["meter"];
+      meter = json["meter"];
     }
 
   }

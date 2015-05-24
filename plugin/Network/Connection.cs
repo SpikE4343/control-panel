@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using ControlPanelPlugin.Messages;
 using ControlPanelPlugin.Utils;
+using Boomlagoon.JSON;
 
 namespace ControlPanelPlugin
 {
@@ -181,18 +182,18 @@ namespace ControlPanelPlugin
 
     #region IJsonConvertable Members
 
-    public Dictionary<string, object> ToJson()
+    public JSONObject ToJson()
     {
-      var json = new Dictionary<string, object>();
+      var json = new JSONObject();
       json.Add("com", COM);
       json.Add("baud", Baud);
       return json;
     }
 
-    public void FromJson(Dictionary<string, object> json)
+    public void FromJson(JSONObject json)
     {
-      COM = (string)json["com"];
-      Baud = (int)json["baud"];
+      COM = json["com"];
+      Baud = json["baud"];
     }
 
     #endregion

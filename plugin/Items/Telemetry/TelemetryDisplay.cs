@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Boomlagoon.JSON;
 using ControlPanelPlugin;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Telemetry;
@@ -24,12 +25,12 @@ namespace ControlPanelPlugin.Telemetry.Display
 
     #region IJsonConvertable Members
 
-    public virtual Dictionary<string, object> ToJson()
+    public virtual JSONObject ToJson()
     {
-      return new Dictionary<string, object>();
+      return new JSONObject();
     }
 
-    public virtual void FromJson(Dictionary<string, object> json)
+    public virtual void FromJson(JSONObject json)
     {
 
     }

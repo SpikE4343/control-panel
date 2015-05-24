@@ -35,6 +35,8 @@ namespace tester
       var app = Singleton.Set(new ControlPanelPlugin.Application());
       app.Initialize();
 
+      app.Load("controlpanel.json");
+
       if (!coroutinesActive)
       {
         coroutinesActive = true;

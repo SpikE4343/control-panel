@@ -99,6 +99,7 @@
     <Compile Include="Utils\EventDispatcher.cs" />
     <Compile Include="Utils\IBinaryConvertable.cs" />
     <Compile Include="Utils\IPoolable.cs" />
+    <Compile Include="Utils\JSONObject.cs" />
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Network\Messages.cs" />
     <Compile Include="Items\PanelItem.cs" />
@@ -119,7 +120,6 @@
     <Compile Include="Utils\IJsonConvertable.cs" />
     <Compile Include="Utils\ObjectPool.cs" />
     <Compile Include="Utils\Singleton.cs" />
-    <Compile Include="Utils\MiniJson.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

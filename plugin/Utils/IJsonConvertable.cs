@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Boomlagoon.JSON;
 
 namespace ControlPanelPlugin.Utils
 {
   public interface IJsonConvertable
   {
-    Dictionary<string, object> ToJson();
-    void FromJson(Dictionary<string, object> json);
+    JSONObject ToJson();
+    void FromJson(JSONObject json);
   }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Boomlagoon.JSON;
 using ControlPanelPlugin.Utils;
 
 namespace ControlPanelPlugin
@@ -17,36 +18,36 @@ namespace ControlPanelPlugin
 
       #region IJsonConvertable Members
 
-      public Dictionary<string, object> ToJson()
+      public JSONObject ToJson()
       {
-        var json = new Dictionary<string, object>();
+        var json = new JSONObject();
         json.Add("input", InputUpdate);
         json.Add("panel", PanelUpdate);
         json.Add("vessel", VesselUpdate);
         return json;
       }
 
-      public void FromJson(Dictionary<string, object> json)
+      public void FromJson(JSONObject json)
       {
-        InputUpdate = (float)json["input"];
-        PanelUpdate = (float)json["panel"];
-        VesselUpdate = (float)json["vessel"];
+        InputUpdate = json["input"];
+        PanelUpdate = json["panel"];
+        VesselUpdate = json["vessel"];
       }
 
       #endregion
     }
     #region IJsonConvertable Members
 
-    public Dictionary<string, object> ToJson()
+    public JSONObject ToJson()
     {
-      var json = new Dictionary<string, object>();
+      var json = new JSONObject();
       json.Add("intervals", Intervals.ToJson());
       return json;
     }
 
-    public void FromJson(Dictionary<string, object> json)
+    public void FromJson(JSONObject json)
     {
-      Intervals.FromJson(json["intervals"] as Dictionary<string, object>);
+      Intervals.FromJson(json["intervals"]);
     }
 
     #endregion

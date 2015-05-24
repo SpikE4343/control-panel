@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Boomlagoon.JSON;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Items.Button;
 using ControlPanelPlugin.Utils;
@@ -13,6 +14,11 @@ namespace ControlPanelPlugin.Items.Button.Action
   public class ButtonStatusAction : ButtonAction
   {
     public KSPActionGroup KspGroup = KSPActionGroup.None;
+
+    public ButtonStatusAction()
+    {
+
+    }
 
     public ButtonStatusAction(KSPActionGroup group)
     {
@@ -38,20 +44,20 @@ namespace ControlPanelPlugin.Items.Button.Action
       return true;
     }
 
-    public override Dictionary<string, object> ToJson()
+    public override JSONObject ToJson()
     {
       var json = base.ToJson();
 
-      json["group"] = KspGroup;
+      json["group"] = Enum.GetName(typeof(KSPActionGroup), KspGroup);
 
       return json;
     }
 
-    public override void FromJson(Dictionary<string, object> json)
+    public override void FromJson(JSONObject json)
     {
       base.FromJson(json);
 
-      KspGroup = (KSPActionGroup)json["group"];
+      KspGroup = (KSPActionGroup)Enum.Parse(typeof(KSPActionGroup), json["group"]);
     }
   }
 }

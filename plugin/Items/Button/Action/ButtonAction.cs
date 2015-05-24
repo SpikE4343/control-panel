@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Boomlagoon.JSON;
 using ControlPanelPlugin.Utils;
 
 namespace ControlPanelPlugin.Items.Button.Action
@@ -17,12 +18,12 @@ namespace ControlPanelPlugin.Items.Button.Action
 
     #region IJsonConvertable Members
 
-    public virtual Dictionary<string, object> ToJson()
+    public virtual JSONObject ToJson()
     {
-      return new Dictionary<string, object>();
+      return new JSONObject();
     }
 
-    public virtual void FromJson(Dictionary<string, object> json)
+    public virtual void FromJson(JSONObject json)
     {
 
     }

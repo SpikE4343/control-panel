@@ -13,6 +13,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Messages;
+using Boomlagoon.JSON;
 
 // copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"
 
@@ -207,11 +208,11 @@ namespace ControlPanelPlugin
 
     #region IJsonConvertable Members
 
-    public Dictionary<string, object> ToJson()
+    public JSONObject ToJson()
     {
-      var json = new Dictionary<string, object>();
+      var json = new JSONObject();
 
-      var itemsJson = new List<object>();
+      var itemsJson = new JSONArray();
       foreach (var item in PanelItems)
       {
         itemsJson.Add(Singleton.Get<ClassSerializer>().ToJson(item));
@@ -222,12 +223,12 @@ namespace ControlPanelPlugin
       return json;
     }
 
-    public void FromJson(Dictionary<string, object> json)
+    public void FromJson(JSONObject json)
     {
-      var itemsJson = (List<object>)json["panelItems"];
+      JSONArray itemsJson = json["panelItems"];
       foreach (var item in itemsJson)
       {
-        PanelItems.Add(Singleton.Get<ClassSerializer>().FromJson<PanelItem>(item as Dictionary<string, object>));
+        PanelItems.Add(Singleton.Get<ClassSerializer>().FromJson<PanelItem>(item));
       }
     }
 

@@ -18,6 +18,11 @@ namespace ControlPanelPlugin.Telemetry.Display
     public int Minutes;
     public int Seconds;
 
+    public TimeDigitalDisplay()
+    {
+
+    }
+
     public TimeDigitalDisplay(int id, int display, int startDigit, int maxDigits)
       : base(id, display, startDigit, maxDigits)
     {

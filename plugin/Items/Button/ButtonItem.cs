@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Boomlagoon.JSON;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Items.Button;
 using ControlPanelPlugin.Items.Button.Action;
@@ -71,7 +72,7 @@ namespace ControlPanelPlugin.Items.Button
       return action.Update();
     }
 
-    public override Dictionary<string, object> ToJson()
+    public override JSONObject ToJson()
     {
       var json = base.ToJson();
 
@@ -80,11 +81,11 @@ namespace ControlPanelPlugin.Items.Button
       return json;
     }
 
-    public override void FromJson(Dictionary<string, object> json)
+    public override void FromJson(JSONObject json)
     {
       base.FromJson(json);
 
-      Action = Singleton.Get<ClassSerializer>().FromJson<ButtonAction>(json["action"] as Dictionary<string, object>);
+      Action = Singleton.Get<ClassSerializer>().FromJson<ButtonAction>(json["action"]);
 
     }
   }

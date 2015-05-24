@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Items;
+using Boomlagoon.JSON;
 namespace ControlPanelPlugin.Telemetry
 {
   [ClassSerializer("TelemetryItem")]
@@ -34,6 +35,11 @@ namespace ControlPanelPlugin.Telemetry
 
     public TelemetryDisplay Display { get; set; }
 
+    public TelemetryItem()
+    {
+
+    }
+
     public TelemetryItem(string propertyName, TelemetryDisplay display)
     {
       Display = display;
@@ -46,11 +52,6 @@ namespace ControlPanelPlugin.Telemetry
     {
       var vessel = typeof(IVessel);
       property = vessel.GetProperty(Property);
-    }
-
-    public TelemetryItem()
-    {
-
     }
 
     public virtual void OnGUI()
@@ -73,7 +74,7 @@ namespace ControlPanelPlugin.Telemetry
     }
 
 
-    public override Dictionary<string, object> ToJson()
+    public override JSONObject ToJson()
     {
       var json = base.ToJson();
       json.Add("property", Property);
@@ -81,10 +82,10 @@ namespace ControlPanelPlugin.Telemetry
       return json;
     }
 
-    public override void FromJson(Dictionary<string, object> json)
+    public override void FromJson(JSONObject json)
     {
-      Property = (string)json["property"];
-      Display = Singleton.Get<ClassSerializer>().FromJson<TelemetryDisplay>(json["display"] as Dictionary<string, object>);
+      Property = json["property"];
+      Display = Singleton.Get<ClassSerializer>().FromJson<TelemetryDisplay>(json["display"]);
     }
   }
 }

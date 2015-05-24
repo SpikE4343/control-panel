@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Messages;
+using Boomlagoon.JSON;
 
 
 namespace ControlPanelPlugin.Telemetry.Display
@@ -79,7 +80,7 @@ namespace ControlPanelPlugin.Telemetry.Display
       Singleton.Get<MessageManager>().WriteMsg(msg);
     }
 
-    public override Dictionary<string, object> ToJson()
+    public override JSONObject ToJson()
     {
       var json = base.ToJson();
       json.Add("id", TelemetryId);
@@ -90,13 +91,13 @@ namespace ControlPanelPlugin.Telemetry.Display
       return json;
     }
 
-    public override void FromJson(Dictionary<string, object> json)
+    public override void FromJson(JSONObject json)
     {
-      TelemetryId = (int)json["id"];
-      Display = (int)json["display"];
-      StartDigit = (int)json["start"];
-      MaxDigits = (int)json["max"];
-      Precision = (int)json["precision"];
+      TelemetryId = json["id"];
+      Display = json["display"];
+      StartDigit = json["start"];
+      MaxDigits = json["max"];
+      Precision = json["precision"];
     }
   }
 }
