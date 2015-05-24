@@ -22,22 +22,22 @@ namespace ControlPanelPlugin
 
       public enum SwitchId
       {
-        None,
-        SWITCH_RCS = 0,
-        SWITCH_SAS = 1,
-        SWITCH_STAGE = 2,
-        SWITCH_STAGE_ARM = 3,
-        SWITCH_DOCKING_MODE = 4,
-        SWITCH_MAP_MODE = 5,
-        SWITCH_THROTTLE_TOGGLE = 6,
-        SWITCH_BRAKES = 7,
-        SWITCH_GEAR = 8,
-        SWITCH_LIGHTS = 9,
-        SWITCH_TRANS_CTRL = 10,
-        SWITCH_FINE_CTRL = 11,
-        SWITCH_THROTTLE_MOMENT = 12,
+        None = -1,
+        Rcs = 0,
+        Sas = 1,
+        Stage = 2,
+        StageArm = 3,
+        DockingMode = 4,
+        MapMode = 5,
+        TrottleToggle = 6,
+        Brakes = 7,
+        Gear = 8,
+        Lights = 9,
+        TranslationCtrl = 10,
+        FineCtrl = 11,
+        ThrottleMoment = 12,
 
-        NUM_SWITCH
+        Num
       }
 
       public enum ViewMode
@@ -52,18 +52,18 @@ namespace ControlPanelPlugin
         switch (group)
         {
           case KSPActionGroup.RCS:
-            return (int)Constants.Panel.SwitchId.SWITCH_RCS;
+            return (int)Constants.Panel.SwitchId.Rcs;
           case KSPActionGroup.SAS:
-            return (int)Constants.Panel.SwitchId.SWITCH_SAS;
+            return (int)Constants.Panel.SwitchId.Sas;
           case KSPActionGroup.Stage:
-            return (int)Constants.Panel.SwitchId.SWITCH_STAGE;
+            return (int)Constants.Panel.SwitchId.Stage;
 
           case KSPActionGroup.Light:
-            return (int)Constants.Panel.SwitchId.SWITCH_LIGHTS;
+            return (int)Constants.Panel.SwitchId.Lights;
           case KSPActionGroup.Gear:
-            return (int)Constants.Panel.SwitchId.SWITCH_GEAR;
+            return (int)Constants.Panel.SwitchId.Gear;
           case KSPActionGroup.Brakes:
-            return (int)Constants.Panel.SwitchId.SWITCH_BRAKES;
+            return (int)Constants.Panel.SwitchId.Brakes;
         }
 
         return -1;
@@ -74,22 +74,22 @@ namespace ControlPanelPlugin
         var swid = (Constants.Panel.SwitchId)id;
         switch (swid)
         {
-          case Constants.Panel.SwitchId.SWITCH_RCS:
+          case Constants.Panel.SwitchId.Rcs:
             return KSPActionGroup.RCS;
 
-          case Constants.Panel.SwitchId.SWITCH_SAS:
+          case Constants.Panel.SwitchId.Sas:
             return KSPActionGroup.SAS;
 
-          case Constants.Panel.SwitchId.SWITCH_STAGE:
+          case Constants.Panel.SwitchId.Stage:
             return KSPActionGroup.Stage;
 
-          case Constants.Panel.SwitchId.SWITCH_LIGHTS:
+          case Constants.Panel.SwitchId.Lights:
             return KSPActionGroup.Light;
 
-          case Constants.Panel.SwitchId.SWITCH_GEAR:
+          case Constants.Panel.SwitchId.Gear:
             return KSPActionGroup.Gear;
 
-          case Constants.Panel.SwitchId.SWITCH_BRAKES:
+          case Constants.Panel.SwitchId.Brakes:
             return KSPActionGroup.Brakes;
         }
 

@@ -41,6 +41,9 @@ namespace ControlPanelPlugin
     public string COM { get; set; }
     public int Baud { get; set; }
 
+    public int BytesToWrite { get { return stream != null ? stream.BytesToWrite : 0; } }
+    public int BytesToRead { get { return stream != null ? stream.BytesToRead : 0; } }
+
     public bool Connected { get { return CurrentConnectionState == State.Connected && stream != null && stream.IsOpen; } }
 
     public Connection()

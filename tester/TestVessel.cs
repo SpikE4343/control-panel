@@ -104,8 +104,8 @@ namespace tester
       mAltitude = mAltitude + 0.5f;// *mainThrottle;
       mSpeed = mSpeed + 0.01f;// *mainThrottle;
       mLiquidFuel = (mLiquidFuel - 100.0f);
-      mOxiFuel -= 50.0f;
-      mMonoFuel -= 10.0f;
+      mOxiFuel -= 500.0f;
+      mMonoFuel -= 100.0f;
       mEvFuel -= 1.0f;
     }
 
@@ -216,7 +216,7 @@ namespace tester
     {
       get
       {
-        return 0.0f;
+        return liquidFuelPercent;
       }
       set
       {
@@ -228,7 +228,7 @@ namespace tester
     {
       get
       {
-        return 0.0f;
+        return oxiFuelPercent;
       }
       set
       {
@@ -240,7 +240,7 @@ namespace tester
     {
       get
       {
-        return 0.0f;
+        return monoFuelPercent;
       }
       set
       {
@@ -252,7 +252,7 @@ namespace tester
     {
       get
       {
-        return 0.0f;
+        return electricFuelPercent;
       }
       set
       {

@@ -10,7 +10,6 @@ using KSP;
 using OpenNETCF.IO.Ports;
 using ControlPanelPlugin.Telemetry;
 using System.Xml.Serialization;
-using Newtonsoft.Json;
 using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Messages;
 using Boomlagoon.JSON;
@@ -23,16 +22,19 @@ namespace ControlPanelPlugin
   {
     bool running = true;
 
-    public IVessel CurrentVessel { get; set; }
+    public IVessel CurrentVessel { get { return Singleton.Get<IVessel>(); } }
 
-    public bool throttleEnabled = true;
-    public bool stageArmed = false;
-    public bool canFireStage = false;
-    public float throttleValue = 0.0f;
+    public bool ThrottleEnabled { get; set; }
+    public bool StageArmed { get; set; }
+    public bool CanFireStage { get; set; }
+    public float ThrottleValue { get; set; }
 
-    private bool HasOneHeartbeat = false;
+    private bool HasOneHeartbeat { get; set; }
     private bool registered = false;
-    public int DeviceFrame = 0;
+    public int DeviceFrame { get; set; }
+
+    public int BytesToWrite { get { return Singleton.Get<Connection>().BytesToWrite; } }
+    public int BytesToRead { get { return Singleton.Get<Connection>().BytesToRead; } }
 
     public Constants.Panel.ViewMode viewMode { get; set; }
     public List<PanelItem> PanelItems { get; set; }
@@ -64,7 +66,7 @@ namespace ControlPanelPlugin
     {
       if (msg.id == 0)
       {
-        throttleValue = msg.value / 100.0f;
+        ThrottleValue = msg.value / 100.0f;
       }
     }
 
@@ -74,6 +76,7 @@ namespace ControlPanelPlugin
     {
       item.Panel = this;
       PanelItems.Add(item);
+      item.Initialize();
     }
 
 
@@ -94,7 +97,7 @@ namespace ControlPanelPlugin
       if (CurrentVessel == null)
         return;
 
-      CurrentVessel.mainThrottle = throttleEnabled ? throttleValue : 0;
+      CurrentVessel.mainThrottle = ThrottleEnabled ? ThrottleValue : 0;
 
       var connection = Singleton.Get<Connection>();
       if (connection == null || !connection.Connected || !HasOneHeartbeat)
@@ -147,7 +150,7 @@ namespace ControlPanelPlugin
       {
         if (serial.Connected)
         {
-          GUILayout.Label("T: " + throttleValue);
+          GUILayout.Label("T: " + ThrottleValue);
 
           GUILayout.BeginHorizontal();
           GUILayout.Label("Panel Up: ");
@@ -228,7 +231,7 @@ namespace ControlPanelPlugin
       JSONArray itemsJson = json["panelItems"];
       foreach (var item in itemsJson)
       {
-        PanelItems.Add(Singleton.Get<ClassSerializer>().FromJson<PanelItem>(item));
+        Add(Singleton.Get<ClassSerializer>().FromJson<PanelItem>(item));
       }
     }
 

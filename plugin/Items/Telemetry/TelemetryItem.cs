@@ -1,7 +1,6 @@
 ﻿
 
 using ControlPanelPlugin.Telemetry.Display;
-using Newtonsoft.Json;
 using System.Reflection;
 using System.Collections.Generic;
 using ControlPanelPlugin.Utils;
@@ -29,7 +28,16 @@ namespace ControlPanelPlugin.Telemetry
       }
     }
 
-    public string Property { get; set; }
+    private string propertyName;
+    public string Property
+    {
+      get { return propertyName; }
+      set
+      {
+        propertyName = value;
+        SetupProperty();
+      }
+    }
     private PropertyInfo property;
 
 

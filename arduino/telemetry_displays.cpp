@@ -8,9 +8,9 @@
 #include <assert.h>
 
 static LedControl ledControl = LedControl(LED_DATA_PIN, 
-                           LED_CLOCK_PIN, 
-                           LED_CS_PIN, 
-                           NUM_LED_DISPLAYS);
+                                          LED_CLOCK_PIN, 
+                                          LED_CS_PIN, 
+                                          NUM_LED_DISPLAYS);
 
 static TelemetryCmd cmds[MAX_TELEMETRY_ITEMS];
 static bool telemetryChanged = true;
@@ -23,7 +23,7 @@ void setLong( TelemetryCmd& cmd )
 
   for( int d = cmd.startDigit; d < end; ++d )
   {
-    
+
 
     int digit = num%10;
     bool decimalPoint = (d - cmd.startDigit) == cmd.precision;
@@ -45,7 +45,7 @@ void displayTelemetry( int id )
 {
   if( id < 0 || id >= MAX_TELEMETRY_ITEMS )
     return;
-    
+
   setLong( cmds[id] );
 }
 
@@ -83,6 +83,10 @@ void handle_telemetry_command()
   TelemetryCmd& cmd = cmds[id];
   cmd.read( Serial );
   telemetryChanged = true;
+
+  char msg[256];
+  int len = sprintf(msg, "telemetry: id %d, value: %l\n", id, cmd.value ); 
+  logMsg( msg, len );
 }
 
 void set_telemetry(int id, int display, int start, int maxDigits, int precision, long value )

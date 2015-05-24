@@ -18,6 +18,15 @@ namespace tester
     public delegate void ConnectHandler(string port, int baud);
     public event ConnectHandler ConnectPressed;
     public event DisconnectHandler DisconnectPressed;
+    public TestPanelController controller;
+
+    public void ConnectionStateChange(bool connected)
+    {
+      connectionButton.Text = connected ? "Disconnect" : "Connect";
+      connectionButton.Enabled = true;
+    }
+
+    bool connecting = false;
 
     private IVessel vessel;
     public IVessel Vessel
@@ -51,6 +60,7 @@ namespace tester
     void vesselTimer_Tick(object sender, EventArgs e)
     {
       vesselGrid.Refresh();
+      //panelGrid.Refresh();
     }
 
     public void StartTimers()
@@ -72,12 +82,19 @@ namespace tester
       else if (ConnectPressed != null)
       {
         ConnectPressed(portText.Text, Int32.Parse(buadText.Text));
+        connectionButton.Text = "Connecting...";
+        connectionButton.Enabled = false;
       }
     }
 
     private void VesselWindow_FormClosed(object sender, FormClosedEventArgs e)
     {
       System.Windows.Forms.Application.Exit();
+    }
+
+    private void saveButtonClicked(object sender, EventArgs e)
+    {
+      controller.Save();
     }
   }
 }

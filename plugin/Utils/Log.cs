@@ -10,19 +10,19 @@ namespace ControlPanelPlugin
   {
     public interface Implementation
     {
-      void Debug( string message, params object[] args );
-      void Info( string message, params object[] args );
-      void Error( string message, params object[] args );
+      void Debug(string message, params object[] args);
+      void Info(string message, params object[] args);
+      void Error(string message, params object[] args);
     }
 
     public static Implementation Implementor;
 
-    public static void Debug( string message, params object[] args)
+    public static void Debug(string message, params object[] args)
     {
-      if (Implementor == null )
+      if (Implementor == null)
         return;
 
-      Implementor.Debug(message, args);
+      Implementor.Debug(message + "\n", args);
     }
 
     public static void Info(string message, params object[] args)
@@ -30,7 +30,7 @@ namespace ControlPanelPlugin
       if (Implementor == null)
         return;
 
-      Implementor.Info(message, args);
+      Implementor.Info(message + "\n", args);
     }
 
     public static void Error(string message, params object[] args)
@@ -38,7 +38,7 @@ namespace ControlPanelPlugin
       if (Implementor == null)
         return;
 
-      Implementor.Error(message, args);
+      Implementor.Error(message + "\n", args);
     }
   }
 

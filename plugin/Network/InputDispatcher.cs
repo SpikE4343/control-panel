@@ -31,12 +31,24 @@ namespace ControlPanelPlugin.Network
 
     private void GroupStateMessageHandler(GroupStateMsg msg)
     {
-      groupStateHandlers[(Constants.Panel.SwitchId)msg.id].Fire(msg);
+      GroupStateEventHandler handler = null;
+      if (!groupStateHandlers.TryGetValue((Constants.Panel.SwitchId)msg.id, out handler))
+      {
+        return;
+      }
+
+      handler.Fire(msg);
     }
 
     public GroupStateEventHandler GroupStateHandler(Constants.Panel.SwitchId id)
     {
-      return groupStateHandlers[id];
+      GroupStateEventHandler handler = null;
+      if (!groupStateHandlers.TryGetValue(id, out handler))
+      {
+        handler = new GroupStateEventHandler();
+        groupStateHandlers.Add(id, handler);
+      }
+      return handler;
     }
   }
 }

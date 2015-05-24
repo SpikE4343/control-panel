@@ -27,7 +27,13 @@ namespace ControlPanelPlugin.Items.Button.Action
 
     public override void StateChange()
     {
+      bool state = Button.Panel.CurrentVessel.getActionGroup(KspGroup);
       Button.Panel.CurrentVessel.setActionGroup(KspGroup, Button.State);
+
+      if (Button.State != state)
+      {
+        Button.Send();
+      }
     }
 
     public override bool Update()

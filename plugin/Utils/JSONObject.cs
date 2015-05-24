@@ -216,47 +216,47 @@ namespace Boomlagoon.JSON
 
     public static implicit operator float(JSONValue value)
     {
-      return (float)value.Number;
+      return value == null ? 0.0f : (float)value.Number;
     }
 
     public static implicit operator double(JSONValue value)
     {
-      return (double)value.Number;
+      return value == null ? 0.0 : (double)value.Number;
     }
 
     public static implicit operator int(JSONValue value)
     {
-      return (int)value.Number;
+      return value == null ? 0 : (int)value.Number;
     }
 
     public static implicit operator byte(JSONValue value)
     {
-      return (byte)value.Number;
+      return value == null ? (byte)0 : (byte)value.Number;
     }
 
     public static implicit operator long(JSONValue value)
     {
-      return (long)value.Number;
+      return value == null ? 0L : (long)value.Number;
     }
 
     public static implicit operator bool(JSONValue value)
     {
-      return value.Boolean;
+      return value != null && value.Boolean;
     }
 
     public static implicit operator string(JSONValue value)
     {
-      return value.Str;
+      return value == null ? string.Empty : value.Str;
     }
 
     public static implicit operator JSONObject(JSONValue value)
     {
-      return value.Obj;
+      return value == null ? null : value.Obj;
     }
 
     public static implicit operator JSONArray(JSONValue value)
     {
-      return value.Array;
+      return value == null ? null : value.Array;
     }
 
     /// <returns>String representation of this JSONValue</returns>

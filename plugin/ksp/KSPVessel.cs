@@ -22,10 +22,10 @@ namespace ControlPanelPlugin
 
     public KSPVessel()
     {
-      nameToResourceMap.Add( Enum.GetName( typeof(ResourceTypes), ResourceTypes.LiquidFuel), ResourceTypes.LiquidFuel );
+      nameToResourceMap.Add(Enum.GetName(typeof(ResourceTypes), ResourceTypes.LiquidFuel), ResourceTypes.LiquidFuel);
       nameToResourceMap.Add(Enum.GetName(typeof(ResourceTypes), ResourceTypes.Oxidizer), ResourceTypes.Oxidizer);
       nameToResourceMap.Add(Enum.GetName(typeof(ResourceTypes), ResourceTypes.MonoPropellant), ResourceTypes.MonoPropellant);
-      nameToResourceMap.Add(Enum.GetName(typeof(ResourceTypes), ResourceTypes.ElectricCharge), ResourceTypes.ElectricCharge); 
+      nameToResourceMap.Add(Enum.GetName(typeof(ResourceTypes), ResourceTypes.ElectricCharge), ResourceTypes.ElectricCharge);
     }
 
     public Vessel vessel;
@@ -137,7 +137,7 @@ namespace ControlPanelPlugin
       {
         if (part.Resources.Count <= 0)
           continue;
-        
+
         foreach (PartResource partResource in part.Resources)
         {
           ResourceTypes type = ResourceTypes.NumResourceTypes;
@@ -145,7 +145,7 @@ namespace ControlPanelPlugin
             continue;
 
           HashSet<PartResource> list = null;
-          if (!resourceList.TryGetValue(type, out list) )
+          if (!resourceList.TryGetValue(type, out list))
           {
             list = new HashSet<PartResource>();
             resourceList.Add(type, list);
@@ -187,7 +187,7 @@ namespace ControlPanelPlugin
       if (!resourceList.TryGetValue(type, out rl) || rl == null)
         return 0.0f;
 
-      double amount=0.0, max=0.0;
+      double amount = 0.0, max = 0.0;
       foreach (var part in rl)
       {
         amount += part.amount;
@@ -280,11 +280,11 @@ namespace ControlPanelPlugin
         throw new NotImplementedException();
       }
     }
-    
+
 
     public bool TanslationControls { get; set; }
-    public bool FineControls 
-     {
+    public bool FineControls
+    {
       get
       {
         return FlightInputHandler.fetch.precisionMode;

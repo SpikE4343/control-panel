@@ -21,12 +21,14 @@ namespace ControlPanelPlugin
       Singleton.Set(new Config());
       Singleton.Set(new ObjectPool());
       Singleton.Set(new MessageManager());
-      Singleton.Set(new InputDispatcher());
+      var input = Singleton.Set(new InputDispatcher());
       Singleton.Set(new EventDispatcher());
       Singleton.Set(new ClassSerializer());
       Singleton.Set(new ControlPanel());
       Singleton.Set(new Connection());
 
+
+      input.Initialize();
       //CreateDefaultLayout();
     }
 
@@ -57,7 +59,9 @@ namespace ControlPanelPlugin
 
     public void UpdatePanel()
     {
+      Singleton.Get<Connection>().Update();
       Singleton.Get<ControlPanel>().UpdateState();
+
     }
 
     public void CreateDefaultLayout()

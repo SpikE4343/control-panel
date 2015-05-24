@@ -14,16 +14,16 @@ namespace ControlPanelPlugin.Items.Button.Action
   {
     public override void StateChange()
     {
-      bool last = Button.Panel.stageArmed;
-      Button.Panel.stageArmed = Button.State;
+      bool last = Button.Panel.StageArmed;
+      Button.Panel.StageArmed = Button.State;
 
-      if (!Button.Panel.canFireStage)
-        Button.Panel.canFireStage = Button.Panel.stageArmed;
+      if (!Button.Panel.CanFireStage)
+        Button.Panel.CanFireStage = Button.Panel.StageArmed;
 
-      if (last && !Button.Panel.stageArmed && Button.Panel.canFireStage)
-        Button.Panel.canFireStage = false;
+      if (last && !Button.Panel.StageArmed && Button.Panel.CanFireStage)
+        Button.Panel.CanFireStage = false;
 
-      Button.State = Button.Panel.canFireStage;
+      Button.State = Button.Panel.CanFireStage;
     }
   }
 }

@@ -22,7 +22,7 @@ void register_command( int cmd, int size, command_handler handler )
 
 void setup_commands()
 {
-  
+
 }
 
 struct Header
@@ -45,7 +45,7 @@ void update_commands()
     {
       if( Serial.available() < 4 )
         continue;
-    
+
       pendingHeader.msgId[0] = Serial.read();
       ++count;
       if( pendingHeader.msgId[0] != 'e' )
@@ -114,8 +114,10 @@ void logMsg( const char* msg, int len )
   return;
   if( !Serial )
     return;
-  
+
   char buffer[] = { 'e', 'R', CMD_LOG, (byte)len };
   Serial.write((uint8_t*)buffer, sizeof(buffer));
   Serial.write((uint8_t*)msg,len);
 }
+
+

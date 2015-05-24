@@ -2,22 +2,34 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Utils;
 
 namespace ControlPanelPlugin.Messages
 {
+  [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+  public class MessageSerializerAttribute : Attribute
+  {
+    public readonly MsgType Id;
+
+    public MessageSerializerAttribute(MsgType id)
+    {
+      Id = id;
+    }
+  }
+
   public enum MsgType
   {
     None,
     GroupState = 0,
-    Telemetry,
-    AnalogInput,
-    Action,
-    Heartbeat,
-    AnalogMeterTelemetry,
-    LogInfo,
+    Telemetry = 1,
+    AnalogInput = 2,
+    Action = 3,
+    Heartbeat = 4,
+    AnalogMeterTelemetry = 5,
+    LogInfo = 6,
     NumMessages
   }
 
@@ -29,6 +41,7 @@ namespace ControlPanelPlugin.Messages
   }
 
   [ClassSerializer("TelemetryMsg")]
+  [MessageSerializer(MsgType.Telemetry)]
   public class TelemetryMsg : IMessage, IPoolable
   {
     public byte id;
@@ -79,6 +92,7 @@ namespace ControlPanelPlugin.Messages
   }
 
   [ClassSerializer("GroupStateMsg")]
+  [MessageSerializer(MsgType.GroupState)]
   public class GroupStateMsg : IMessage, IPoolable
   {
     public byte id;
@@ -113,6 +127,7 @@ namespace ControlPanelPlugin.Messages
   }
 
   [ClassSerializer("AnalogMeterMsg")]
+  [MessageSerializer(MsgType.AnalogMeterTelemetry)]
   public class AnalogMeterMsg : IMessage, IPoolable
   {
     public byte meter;
@@ -147,6 +162,7 @@ namespace ControlPanelPlugin.Messages
   }
 
   [ClassSerializer("HeartbeatMsg")]
+  [MessageSerializer(MsgType.Heartbeat)]
   public class HeartbeatMsg : IMessage, IPoolable
   {
     public int frame;
@@ -177,6 +193,7 @@ namespace ControlPanelPlugin.Messages
   }
 
   [ClassSerializer("LogInfoMsg")]
+  [MessageSerializer(MsgType.LogInfo)]
   public class LogInfoMsg : IMessage, IPoolable
   {
     public string message;
@@ -210,6 +227,7 @@ namespace ControlPanelPlugin.Messages
   }
 
   [ClassSerializer("AnalogInputMsg")]
+  [MessageSerializer(MsgType.AnalogInput)]
   public class AnalogInputMsg : IMessage, IPoolable
   {
     public MsgType Type { get { return MsgType.AnalogInput; } }
@@ -234,10 +252,6 @@ namespace ControlPanelPlugin.Messages
       id = 0;
       value = 0.0f;
     }
-
-
-
-
   }
 
   public struct MessageHeader
@@ -265,13 +279,44 @@ namespace ControlPanelPlugin.Messages
     BinaryReader reader = new BinaryReader(new MemoryStream());
 
     private Stream stream { get { return reader.BaseStream; } }
-    private int BytesRemaining { get { return (int)(stream.Length - stream.Position); } }
+    private int BytesRemaining { get { return (int)(stream.Length); } }
 
     private bool HasPendingMessage = false;
     static Dictionary<MsgType, Type> msgCreator = new Dictionary<MsgType, Type>();
 
     MsgType PendingType = MsgType.None;
     byte PendingSize = 0;
+
+    public MessageManager()
+    {
+      InitializeItems();
+    }
+
+    private void InitializeItems()
+    {
+      foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+      {
+        foreach (var type in GetTypesWithPanelItemAttribute(typeof(MessageSerializerAttribute), assembly))
+        {
+          foreach (var attr in type.GetCustomAttributes(typeof(MessageSerializerAttribute), false))
+          {
+            var item = attr as MessageSerializerAttribute;
+            AddMessage(item.Id, type);
+          }
+        }
+      }
+    }
+
+    private IEnumerable<Type> GetTypesWithPanelItemAttribute(Type attr, Assembly assembly)
+    {
+      foreach (Type type in assembly.GetTypes())
+      {
+        if (type.GetCustomAttributes(attr, false).Length > 0)
+        {
+          yield return type;
+        }
+      }
+    }
 
     public void SetStream(Stream stream)
     {
@@ -330,14 +375,23 @@ namespace ControlPanelPlugin.Messages
       wrt.Write(size);
     }
 
+
+
     public void WriteMsg(IMessage msg)
     {
       msgWriter.Seek(0, SeekOrigin.Begin);
+      WriteHeader(msgWriter, (byte)msg.Type, 0);
       msg.write(msgWriter);
-      int size = (int)msgWriter.BaseStream.Position;
+      byte size = (byte)msgWriter.BaseStream.Position;
+      msgWriter.Seek(0, SeekOrigin.Begin);
+      WriteHeader(msgWriter, (byte)msg.Type, size);
+
+
 
       var ms = msgWriter.BaseStream as MemoryStream;
-      writer.Write(ms.GetBuffer());
+      writer.Write(ms.GetBuffer(), 0, (int)size + 4);
+
+      Log.Debug("write: {0}", BitConverter.ToString(ms.GetBuffer(), 0, (int)size + 4));
 
       Singleton.Get<ObjectPool>().Release((IPoolable)msg);
     }
@@ -362,6 +416,8 @@ namespace ControlPanelPlugin.Messages
       var msgType = (MsgType)PendingType;
       var msg = Singleton.Get<ObjectPool>().Grab<IMessage>(msgCreator[msgType]);
       msg.read(reader);
+
+      Log.Debug("read: {0}", msg);
 
       Singleton.Get<EventDispatcher>().Fire(msg);
       Singleton.Get<ObjectPool>().Release((IPoolable)msg);

@@ -44,18 +44,18 @@ namespace ControlPanelPlugin.Utils
       }
     }
 
-    public void Fire<T>(T m)
-    {
-      IEventHandler storage = null;
-      if (handlers.TryGetValue(typeof(T), out storage))
-      {
-        var handler = storage as EventHandler<T>;
-        if (handler != null)
-        {
-          handler.Fire(m);
-        }
-      }
-    }
+    //public void Fire<T>(T m)
+    //{
+    //  IEventHandler storage = null;
+    //  if (handlers.TryGetValue(typeof(T), out storage))
+    //  {
+    //    var handler = storage as EventHandler<T>;
+    //    if (handler != null)
+    //    {
+    //      handler.Fire(m);
+    //    }
+    //  }
+    //}
 
     public bool HasHandler<T>()
     {

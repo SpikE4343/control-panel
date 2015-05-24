@@ -31,6 +31,7 @@
       this.panelGrid = new System.Windows.Forms.PropertyGrid();
       this.statusStrip1 = new System.Windows.Forms.StatusStrip();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.button1 = new System.Windows.Forms.Button();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.label1 = new System.Windows.Forms.Label();
       this.portText = new System.Windows.Forms.TextBox();
@@ -75,6 +76,7 @@
       // 
       // splitContainer1.Panel1
       // 
+      this.splitContainer1.Panel1.Controls.Add(this.button1);
       this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
       // 
       // splitContainer1.Panel2
@@ -83,6 +85,16 @@
       this.splitContainer1.Size = new System.Drawing.Size(547, 283);
       this.splitContainer1.SplitterDistance = 182;
       this.splitContainer1.TabIndex = 2;
+      // 
+      // button1
+      // 
+      this.button1.Location = new System.Drawing.Point(8, 252);
+      this.button1.Name = "button1";
+      this.button1.Size = new System.Drawing.Size(75, 23);
+      this.button1.TabIndex = 6;
+      this.button1.Text = "Save";
+      this.button1.UseVisualStyleBackColor = true;
+      this.button1.Click += new System.EventHandler(this.saveButtonClicked);
       // 
       // groupBox1
       // 
@@ -135,7 +147,7 @@
       // 
       // connectionButton
       // 
-      this.connectionButton.Location = new System.Drawing.Point(104, 68);
+      this.connectionButton.Location = new System.Drawing.Point(8, 70);
       this.connectionButton.Name = "connectionButton";
       this.connectionButton.Size = new System.Drawing.Size(75, 23);
       this.connectionButton.TabIndex = 4;
@@ -223,6 +235,7 @@
     private System.Windows.Forms.TabPage tabPage1;
     private System.Windows.Forms.TabPage tabPage2;
     private System.Windows.Forms.PropertyGrid vesselGrid;
+    private System.Windows.Forms.Button button1;
 
   }
 }

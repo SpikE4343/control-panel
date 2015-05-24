@@ -58,7 +58,7 @@ namespace ControlPanelPlugin.Items.Button
       }
     }
 
-    protected void Send()
+    public void Send()
     {
       var msg = Singleton.Get<ObjectPool>().Grab<GroupStateMsg>();
       msg.id = (byte)Switch;
@@ -76,6 +76,7 @@ namespace ControlPanelPlugin.Items.Button
     {
       var json = base.ToJson();
 
+      json["switch"] = Enum.GetName(typeof(Constants.Panel.SwitchId), Switch);
       json.Add("action", Singleton.Get<ClassSerializer>().ToJson(Action));
 
       return json;
@@ -84,7 +85,7 @@ namespace ControlPanelPlugin.Items.Button
     public override void FromJson(JSONObject json)
     {
       base.FromJson(json);
-
+      Switch = (Constants.Panel.SwitchId)Enum.Parse(typeof(Constants.Panel.SwitchId), json["switch"]);
       Action = Singleton.Get<ClassSerializer>().FromJson<ButtonAction>(json["action"]);
 
     }
