@@ -9,6 +9,7 @@ using ControlPanelPlugin.Items.Button.Action;
 using ControlPanelPlugin.Messages;
 using ControlPanelPlugin.Network;
 using ControlPanelPlugin.Utils;
+using UnityEngine;
 
 
 namespace ControlPanelPlugin.Items.Button
@@ -32,9 +33,10 @@ namespace ControlPanelPlugin.Items.Button
 
     }
 
-    public ButtonItem(ButtonAction action)
+    public ButtonItem(Constants.Panel.SwitchId type, ButtonAction action)
     {
       Action = action;
+      Switch = type;
     }
 
     public ButtonAction Action
@@ -87,6 +89,18 @@ namespace ControlPanelPlugin.Items.Button
       base.FromJson(json);
       Switch = (Constants.Panel.SwitchId)Enum.Parse(typeof(Constants.Panel.SwitchId), json["switch"]);
       Action = Singleton.Get<ClassSerializer>().FromJson<ButtonAction>(json["action"]);
+
+    }
+
+    public override void OnGUI()
+    {
+      GUILayout.BeginHorizontal();
+
+      GUILayout.Label("Switch:");
+      GUILayout.Label(Switch.ToString());
+      GUILayout.Label(State ? "on" : "off");
+
+      GUILayout.EndHorizontal();
 
     }
   }

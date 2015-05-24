@@ -391,7 +391,7 @@ namespace ControlPanelPlugin.Messages
       var ms = msgWriter.BaseStream as MemoryStream;
       writer.Write(ms.GetBuffer(), 0, (int)size + 4);
 
-      Log.Debug("write: {0}", BitConverter.ToString(ms.GetBuffer(), 0, (int)size + 4));
+      //Log.Debug("write: {0}", BitConverter.ToString(ms.GetBuffer(), 0, (int)size + 4));
 
       Singleton.Get<ObjectPool>().Release((IPoolable)msg);
     }
@@ -417,7 +417,7 @@ namespace ControlPanelPlugin.Messages
       var msg = Singleton.Get<ObjectPool>().Grab<IMessage>(msgCreator[msgType]);
       msg.read(reader);
 
-      Log.Debug("read: {0}", msg);
+      //Log.Debug("read: {0}", msg);
 
       Singleton.Get<EventDispatcher>().Fire(msg);
       Singleton.Get<ObjectPool>().Release((IPoolable)msg);

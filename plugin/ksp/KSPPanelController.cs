@@ -29,8 +29,17 @@ namespace ControlPanelPlugin
         Log.Implementor = new UnityLogger();
       }
 
-      Singleton.Set(new Application()).Initialize();
+      var app = Singleton.Set(new Application());
+      app.Initialize();
 
+      app.Load("controlpanel.json");
+
+      if (Singleton.Get<ControlPanel>().PanelItems.Count == 0)
+      {
+        app.CreateDefaultLayout();
+      }
+
+      app.Save("controlpanel.json");
     }
 
     bool coroutinesActive = false;
@@ -45,6 +54,16 @@ namespace ControlPanelPlugin
       {
         updatePanel = false;
         return;
+      }
+
+      updatePanel = true;
+
+      if (!coroutinesActive)
+      {
+        coroutinesActive = true;
+        StartCoroutine(UpdatePanelInput());
+        StartCoroutine(UpdatePanel());
+        StartCoroutine(UpdateVessel());
       }
     }
 
@@ -127,8 +146,8 @@ namespace ControlPanelPlugin
       {
         GUILayout.Label(string.Format("Cs: {0}", serial.CurrentConnectionState));
         GUILayout.Label(string.Format("Ds: {0}", serial.DesiredConnectionState));
-        //GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite));
-        //GUILayout.Label(string.Format("RxB: {0}", serial.BytesToRead));
+        GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite));
+        GUILayout.Label(string.Format("RxB: {0}", serial.BytesToRead));
       }
 
       GUILayout.Label((serial != null && serial.Connected) ? "Connected" : "Disconnected");

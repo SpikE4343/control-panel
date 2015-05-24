@@ -48,6 +48,7 @@ namespace ControlPanelPlugin
 
     public void UpdateInput()
     {
+      //Log.Debug("Update Input");
       Singleton.Get<ControlPanel>().UpdateInput();
 
       var connection = Singleton.Get<Connection>();
@@ -68,17 +69,17 @@ namespace ControlPanelPlugin
     {
       var panel = Singleton.Get<ControlPanel>();
 
-      panel.Add(new ButtonItem(new ButtonStatusAction(KSPActionGroup.RCS)));
-      panel.Add(new ButtonItem(new ButtonStatusAction(KSPActionGroup.SAS)));
-      panel.Add(new ButtonItem(new ButtonStatusAction(KSPActionGroup.Stage)));
-      panel.Add(new ButtonItem(new ButtonStatusAction(KSPActionGroup.Brakes)));
-      panel.Add(new ButtonItem(new ButtonStatusAction(KSPActionGroup.Gear)));
-      panel.Add(new ButtonItem(new ButtonStatusAction(KSPActionGroup.Light)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Rcs, new ButtonStatusAction(KSPActionGroup.RCS)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Sas, new ButtonStatusAction(KSPActionGroup.SAS)));
+      //panel.Add(new ButtonItem(Constants.Panel.SwitchId.Stage, new ButtonStatusAction(KSPActionGroup.Stage)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Brakes, new ButtonStatusAction(KSPActionGroup.Brakes)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Gear, new ButtonStatusAction(KSPActionGroup.Gear)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Lights, new ButtonStatusAction(KSPActionGroup.Light)));
 
-      panel.Add(new ButtonItem(new MapViewButtonAction()));
-      panel.Add(new ButtonItem(new DockingViewButtonAction()));
-      panel.Add(new ButtonItem(new StageArmButtonAction()));
-      panel.Add(new ButtonItem(new StageButtonAction()));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.MapMode, new MapViewButtonAction()));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.DockingMode, new DockingViewButtonAction()));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.StageArm, new StageArmButtonAction()));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Stage, new StageButtonAction()));
 
       var display = new DigitalDisplay(5, 3, 0, 4);
       display.Add(1000, 0);
@@ -105,7 +106,7 @@ namespace ControlPanelPlugin
       display.Add(1000000, 1);
       panel.Add(new TelemetryItem("altitude", display));
 
-      display = new DigitalDisplay(1, 0, 4, 3);
+      display = new DigitalDisplay(1, 1, 4, 3);
       display.Add(1000, 0);
       display.Add(100, 1);
       display.Add(10, 2);
@@ -116,7 +117,7 @@ namespace ControlPanelPlugin
       //panel.Add(new SpeedTelemetryItem(1, 1, 0, 4, 3));
       //panel.Add(new ThrottleTelemetryItem(3, 1, 5, 3, 0));
 
-      display = new TimeDigitalDisplay(2, 0, 8, 0);
+      display = new TimeDigitalDisplay(2, 2, 8, 0);
       panel.Add(new TelemetryItem("nextNodeSeconds", display));
 
       //panel.Add(new NextNodeTimeTelemetryItem(4, 2, 0, 8, 0));
@@ -139,6 +140,9 @@ namespace ControlPanelPlugin
 
     public void Load(string file)
     {
+      if (!File.Exists(file))
+        return;
+
       string text = File.ReadAllText(file);
       FromJson(JSONObject.Parse(text));
     }
