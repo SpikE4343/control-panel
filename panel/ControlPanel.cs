@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Messages;
 using Boomlagoon.JSON;
+using ControlPanelPlugin.Items.Button;
 
 // copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"
 
@@ -133,13 +134,59 @@ namespace ControlPanelPlugin
       wasConnected = connected;
     }
 
-
-
+    Rect windowPos = new Rect(20, 20, 200, 180);
     Vector2 scrollPos = new Vector2();
     public void OnGUI()
     {
-      Connection serial = Singleton.Get<Connection>();
+      windowPos = GUILayout.Window(12053, windowPos,
+                                      OnWindowGUI,
+                                      "Control Panel",
+                                      GUILayout.Width(200),
+                                      GUILayout.Height(180),
+                                      GUILayout.ExpandHeight(true),
+                                      GUILayout.ExpandWidth(true));
+    }
+
+
+    bool editItems = false;
+    string fileName = "controlpanel";
+    string newPanelItem = "Telemetry";
+    bool pickNewItemOpen = false;
+
+    string[] panelItemTypes = new string[] { "Telemetry", "Button" };
+
+    void OnWindowGUI(int windowid)
+    {
+      var serial = Singleton.Get<Connection>();
       var config = Singleton.Get<Config>();
+
+      GUILayout.BeginVertical("box");
+      if (Singleton.Get<IVessel>() != null)
+      {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(string.Format("Vessel: {0}", Singleton.Get<IVessel>().Name));
+        GUILayout.EndHorizontal();
+      }
+      GUILayout.EndVertical();
+
+      GUILayout.BeginVertical("box");
+      if (serial != null)
+      {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(string.Format("Cs: {0}", serial.CurrentConnectionState));
+        GUILayout.Label(string.Format("Ds: {0}", serial.DesiredConnectionState));
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite));
+        GUILayout.Label(string.Format("RxB: {0}", serial.BytesToRead));
+        GUILayout.EndHorizontal();
+      }
+
+      GUILayout.Label((serial != null && serial.Connected) ? "Connected" : "Disconnected");
+      GUILayout.EndVertical();
+
+
       //scrollPos = GUILayout.BeginScrollView(scrollPos);
       GUILayout.BeginVertical("box");
 
@@ -169,22 +216,6 @@ namespace ControlPanelPlugin
             serial.DesiredConnectionState = Connection.State.Disconnected;
             HasOneHeartbeat = false;
           }
-
-          if (CurrentVessel != null)
-          {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(CurrentVessel.Name);
-            GUILayout.EndHorizontal();
-
-            GUILayout.Label(string.Format("Lq: {0:0.00}%", CurrentVessel.liquidResourcePercent));
-            GUILayout.Label(string.Format("Ox: {0:0.00}%", CurrentVessel.oxiResourcePercent));
-            GUILayout.Label(string.Format("Mo: {0:0.00}%", CurrentVessel.monoResourcePercent));
-            GUILayout.Label(string.Format("Ev: {0:0.00}%", CurrentVessel.electricResourcePercent));
-
-            GUILayout.Label(string.Format("NN: {0:00.00}", CurrentVessel.nextNodeSeconds));
-
-            
-          }
         }
         else
         {
@@ -194,20 +225,82 @@ namespace ControlPanelPlugin
           }
         }
 
-        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height( 500), GUILayout.Width(200));
+
+        fileName = GUILayout.TextField(fileName);
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Load"))
+        {
+          Singleton.Get<Application>().Load(fileName + ".json");
+        }
+
+        if (GUILayout.Button("Save"))
+        {
+          Singleton.Get<Application>().Save(fileName + ".json");
+        }
+
+        GUILayout.EndHorizontal();
+      }
+
+      if (GUILayout.Button("Edit Items"))
+      {
+        editItems = !editItems;
+      }
+
+      if (editItems)
+      {
+        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(500), GUILayout.Width(200));
         GUILayout.BeginVertical();
         GUILayout.Label("Telemetry items");
 
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button(newPanelItem))
+        {
+          pickNewItemOpen = !pickNewItemOpen;
+        }
+
+        if (GUILayout.Button("+"))
+        {
+          if (newPanelItem == "Telemetry")
+          {
+            Add(new TelemetryItem());
+          }
+          else if (newPanelItem == "Button")
+          {
+            Add(new ButtonItem());
+          }
+
+        }
+        GUILayout.EndHorizontal();
+
+        if (pickNewItemOpen)
+        {
+          foreach (var name in panelItemTypes)
+          {
+            if (GUILayout.Button(name))
+            {
+              pickNewItemOpen = false;
+              newPanelItem = name;
+            }
+          }
+        }
+
         foreach (var item in PanelItems)
         {
+          GUILayout.BeginVertical("box");
           item.OnGUI();
+          GUILayout.EndVertical();
         }
+
         GUILayout.EndVertical();
         GUILayout.EndScrollView();
       }
 
       GUILayout.EndVertical();
       //GUILayout.EndScrollView();
+
+      GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 
     #region IJsonConvertable Members

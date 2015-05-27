@@ -47,6 +47,11 @@ namespace ControlPanelPlugin.Telemetry.Display
       Singleton.Get<MessageManager>().WriteMsg(msg);
     }
 
+    public override void OnGUI()
+    {
+      meter = (byte)UnityUtils.GUIIntField("meter", meter);
+    }
+
     public override JSONObject ToJson()
     {
       var json = base.ToJson();

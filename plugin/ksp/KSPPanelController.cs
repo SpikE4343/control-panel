@@ -108,50 +108,9 @@ namespace ControlPanelPlugin
       }
     }
 
-    Rect windowPos = new Rect(20, 20, 200, 180);
     void OnGUI()
     {
-      windowPos = GUILayout.Window(12053, windowPos,
-                                      OnWindowGUI,
-                                      "Control Panel",
-                                      GUILayout.Width(200),
-                                      GUILayout.Height(180),
-                                      GUILayout.ExpandHeight(true),
-                                      GUILayout.ExpandWidth(true));
-    }
-
-    void OnWindowGUI(int windowid)
-    {
-      DrawGUI();
       Singleton.Get<ControlPanel>().OnGUI();
-      GUI.DragWindow(new Rect(0, 0, 10000, 10000));
-    }
-
-    void DrawGUI()
-    {
-      GUILayout.BeginVertical("box");
-      if (kspVessel.vessel != null)
-      {
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(string.Format("Vessel: {0}", kspVessel.Name));
-        GUILayout.EndHorizontal();
-      }
-
-
-      GUILayout.EndVertical();
-
-      GUILayout.BeginVertical("box");
-      var serial = Singleton.Get<Connection>();
-      if (serial != null)
-      {
-        GUILayout.Label(string.Format("Cs: {0}", serial.CurrentConnectionState));
-        GUILayout.Label(string.Format("Ds: {0}", serial.DesiredConnectionState));
-        GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite));
-        GUILayout.Label(string.Format("RxB: {0}", serial.BytesToRead));
-      }
-
-      GUILayout.Label((serial != null && serial.Connected) ? "Connected" : "Disconnected");
-      GUILayout.EndVertical();
     }
 
     void Stop()

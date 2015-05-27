@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Items;
 using Boomlagoon.JSON;
+using UnityEngine;
 namespace ControlPanelPlugin.Telemetry
 {
   [ClassSerializer("TelemetryItem")]
@@ -14,7 +15,7 @@ namespace ControlPanelPlugin.Telemetry
     private static int nextId = 0;
     public int Id = nextId++;
 
-    public float Value { get { return Display.Value; } }
+    public float Value { get { return Display != null ? Display.Value : 0.0f ; } }
 
 
     ControlPanel panel;
@@ -24,7 +25,8 @@ namespace ControlPanelPlugin.Telemetry
       set
       {
         panel = value;
-        Display.Panel = panel;
+        if (Display != null)
+          Display.Panel = panel;
       }
     }
 
@@ -38,10 +40,20 @@ namespace ControlPanelPlugin.Telemetry
         SetupProperty();
       }
     }
+
     private PropertyInfo property;
 
+    private TelemetryDisplay display;
+    public TelemetryDisplay Display
+    {
+      get { return display; }
 
-    public TelemetryDisplay Display { get; set; }
+      set
+      {
+        display = value;
+        display.Panel = Panel;
+      }
+    }
 
     public TelemetryItem()
     {
@@ -62,9 +74,26 @@ namespace ControlPanelPlugin.Telemetry
       property = vessel.GetProperty(Property);
     }
 
-    public virtual void OnGUI()
+    bool expanded = false;
+    public override void OnGUI()
     {
+      GUILayout.BeginVertical();
+      GUILayout.BeginHorizontal();
 
+      if (GUILayout.Button(expanded ? "-" : "+", "label"))
+      {
+        expanded = !expanded;
+      }
+      GUILayout.Label(propertyName + ":");
+      GUILayout.Label(Value.ToString());
+      GUILayout.EndHorizontal();
+
+      if (expanded && Display != null)
+      {
+        Display.OnGUI();
+      }
+
+      GUILayout.EndVertical();
     }
 
     public virtual float GetLatestValue()

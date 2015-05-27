@@ -121,27 +121,36 @@ namespace ControlPanelPlugin.Items.Button
     {
       GUILayout.BeginHorizontal();
 
-      if (switchSelectionOpen || GUILayout.Button(Switch.ToString(), GUILayout.Width(200)))
+      State = GUILayout.Toggle(State, "");
+
+      bool pressed = GUILayout.Button(Switch.ToString());
+      if (switchSelectionOpen || pressed)
       {
-        switchSelectionOpen = true;
-        GUILayout.BeginVertical("box");
-        var names = Enum.GetNames(typeof(Constants.Panel.SwitchId));
-        foreach (var name in names)
+        if (switchSelectionOpen && pressed)
         {
-          if (name == Switch.ToString())
-            continue;
-
-          if (GUILayout.Button(name))
-          {
-            switchSelectionOpen = false;
-            Switch = (Constants.Panel.SwitchId)Enum.Parse(typeof(Constants.Panel.SwitchId), name);
-          }
+          switchSelectionOpen = false;
         }
+        else
+        {
+          switchSelectionOpen = true;
+          GUILayout.BeginVertical("box");
+          var names = Enum.GetNames(typeof(Constants.Panel.SwitchId));
+          foreach (var name in names)
+          {
+            if (name == Switch.ToString())
+              continue;
 
-        GUILayout.EndVertical();
+            if (GUILayout.Button(name))
+            {
+              switchSelectionOpen = false;
+              Switch = (Constants.Panel.SwitchId)Enum.Parse(typeof(Constants.Panel.SwitchId), name);
+            }
+          }
+          GUILayout.EndVertical();
+        }
       }
 
-      State = GUILayout.Toggle(State, "");
+
       //GUILayout.Label(State ? "on" : "off");
 
       GUILayout.EndHorizontal();

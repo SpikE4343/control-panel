@@ -16,5 +16,17 @@ namespace ControlPanelPlugin
       GUILayout.Label(value);
       GUILayout.EndHorizontal();
     }
+
+    public static int GUIIntField(string label, int value)
+    {
+      GUILayout.BeginHorizontal();
+      GUILayout.Label(label);
+      string text = GUILayout.TextField(value.ToString());
+      GUILayout.EndHorizontal();
+
+      int result = value;
+      Int32.TryParse(text, out result);
+      return result;
+    }
   }
 }

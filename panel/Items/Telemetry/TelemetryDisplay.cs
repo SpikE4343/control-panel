@@ -4,6 +4,7 @@ using ControlPanelPlugin;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Telemetry;
 using ControlPanelPlugin.Utils;
+using UnityEngine;
 
 namespace ControlPanelPlugin.Telemetry.Display
 {
@@ -18,6 +19,11 @@ namespace ControlPanelPlugin.Telemetry.Display
 
     public abstract bool Update(float value);
     public abstract void Send();
+
+    public virtual void OnGUI()
+    {
+      GUILayout.Label("Value: " + Value);
+    }
 
     #region IJsonConvertable Members
 

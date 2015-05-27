@@ -6,6 +6,7 @@ using System.Text;
 using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Messages;
 using Boomlagoon.JSON;
+using UnityEngine;
 
 
 namespace ControlPanelPlugin.Telemetry.Display
@@ -78,6 +79,15 @@ namespace ControlPanelPlugin.Telemetry.Display
       msg.value = (int)(Value * Math.Pow(10, Precision));
 
       Singleton.Get<MessageManager>().WriteMsg(msg);
+    }
+
+    public override void OnGUI()
+    {
+      TelemetryId = UnityUtils.GUIIntField("id", TelemetryId);
+      Display = UnityUtils.GUIIntField("display", Display);
+      StartDigit = UnityUtils.GUIIntField("start", StartDigit);
+      MaxDigits = UnityUtils.GUIIntField("max", MaxDigits);
+      Precision = UnityUtils.GUIIntField("precision", Precision);
     }
 
     public override JSONObject ToJson()
