@@ -33,8 +33,8 @@ namespace ControlPanelPlugin
     void EnterDockingMode();
     void ExitDockingMode();
 
-    bool getActionGroup(KSPActionGroup group);
-    void setActionGroup(KSPActionGroup group, bool value);
+    bool getActionGroup(Constants.Panel.ActionGroup group);
+    void setActionGroup(Constants.Panel.ActionGroup group, bool value);
 
     void Update();
   }

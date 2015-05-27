@@ -26,7 +26,7 @@ namespace tester
 
     private int mStage = 1;
 
-    private Dictionary<KSPActionGroup, bool> actionGroups = new Dictionary<KSPActionGroup, bool>();
+    private Dictionary<Constants.Panel.ActionGroup, bool> actionGroups = new Dictionary<Constants.Panel.ActionGroup, bool>();
 
     public string Name
     {
@@ -84,7 +84,7 @@ namespace tester
 
     }
 
-    public bool getActionGroup(KSPActionGroup group)
+    public bool getActionGroup(Constants.Panel.ActionGroup group)
     {
       if (actionGroups.ContainsKey(group))
         return actionGroups[group];
@@ -92,7 +92,7 @@ namespace tester
       return false;
     }
 
-    public void setActionGroup(KSPActionGroup group, bool value)
+    public void setActionGroup(Constants.Panel.ActionGroup group, bool value)
     {
       actionGroups[group] = value;
     }
@@ -200,14 +200,14 @@ namespace tester
     public bool TanslationControls { get; set; }
     public bool FineControls { get; set; }
 
-    List<Vessel.ActiveResource> activeResources = new List<Vessel.ActiveResource>();
-    public List<Vessel.ActiveResource> ActiveResources
-    {
-      get
-      {
-        return activeResources;
-      }
-    }
+    //List<Vessel.ActiveResource> activeResources = new List<Vessel.ActiveResource>();
+    //public List<Vessel.ActiveResource> ActiveResources
+    //{
+    //  get
+    //  {
+    //    return activeResources;
+    //  }
+    //}
 
     #region IVessel Members
 

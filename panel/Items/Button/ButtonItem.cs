@@ -18,14 +18,43 @@ namespace ControlPanelPlugin.Items.Button
   public class ButtonItem : PanelItem
   {
     protected bool state = false;
+    protected bool listening = false;
 
-    public Constants.Panel.SwitchId Switch;
+    private Constants.Panel.SwitchId switchType = Constants.Panel.SwitchId.None;
+    public Constants.Panel.SwitchId Switch
+    {
+      get { return switchType; }
+      set
+      {
+        if (value != switchType)
+        {
+          if (listening)
+          {
+            Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent -= HandleMessage;
+          }
+
+          switchType = value;
+          listening = true;
+          Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent += HandleMessage;
+        }
+      }
+    }
     private ButtonAction action;
 
     public bool State
     {
       get { return state; }
-      set { state = value; Send(); }
+      set
+      {
+        bool changed = state != value;
+        state = value;
+
+        if (changed)
+        {
+          Action.StateChange();
+          Send();
+        }
+      }
     }
 
     public ButtonItem()
@@ -43,11 +72,6 @@ namespace ControlPanelPlugin.Items.Button
     {
       get { return action; }
       set { action = value; action.Button = this; }
-    }
-
-    public override void Initialize()
-    {
-      Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent += HandleMessage;
     }
 
     protected void HandleMessage(Messages.GroupStateMsg msg)
@@ -92,13 +116,33 @@ namespace ControlPanelPlugin.Items.Button
 
     }
 
+    bool switchSelectionOpen = false;
     public override void OnGUI()
     {
       GUILayout.BeginHorizontal();
 
-      GUILayout.Label("Switch:");
-      GUILayout.Label(Switch.ToString());
-      GUILayout.Label(State ? "on" : "off");
+      if (switchSelectionOpen || GUILayout.Button(Switch.ToString(), GUILayout.Width(200)))
+      {
+        switchSelectionOpen = true;
+        GUILayout.BeginVertical("box");
+        var names = Enum.GetNames(typeof(Constants.Panel.SwitchId));
+        foreach (var name in names)
+        {
+          if (name == Switch.ToString())
+            continue;
+
+          if (GUILayout.Button(name))
+          {
+            switchSelectionOpen = false;
+            Switch = (Constants.Panel.SwitchId)Enum.Parse(typeof(Constants.Panel.SwitchId), name);
+          }
+        }
+
+        GUILayout.EndVertical();
+      }
+
+      State = GUILayout.Toggle(State, "");
+      //GUILayout.Label(State ? "on" : "off");
 
       GUILayout.EndHorizontal();
 

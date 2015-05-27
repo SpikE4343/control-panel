@@ -15,3 +15,5 @@ tester/bin/
 tests/obj/
 TestResults/
 packages/
+panel/obj/
+panel/bin/

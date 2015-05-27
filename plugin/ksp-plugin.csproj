@@ -21,6 +21,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,34 +34,50 @@
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug UI Tester|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug UI Tester\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug UI Tester|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug UI Tester\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\external\ksp\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.core">
-      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\nunit.core.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="nunit.core.interfaces">
-      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\nunit.core.interfaces.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.util">
-      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\nunit.util.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NUnit.VisualStudio.TestAdapter">
-      <HintPath>..\packages\NUnitTestAdapter.1.1\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Assembly-CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
@@ -68,62 +85,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="Application.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="Items\Button\Action\ButtonAction.cs" />
-    <Compile Include="Items\Button\Action\ThrottleToggleAction.cs" />
-    <Compile Include="Items\Button\ButtonItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Button\Action\ButtonStatusAction.cs" />
-    <Compile Include="Items\Button\Action\MapViewButtonAction.cs" />
-    <Compile Include="Items\Button\Action\DockingViewButtonAction.cs" />
-    <Compile Include="Items\Button\Action\StageArmButtonAction.cs" />
-    <Compile Include="Items\Button\Action\StageButtonAction.cs" />
-    <Compile Include="Items\InputItem.cs" />
-    <Compile Include="Network\InputDispatcher.cs" />
-    <Compile Include="Utils\ClassSerializerAttribute.cs" />
-    <Compile Include="Utils\ClassSerializer.cs" />
-    <Compile Include="Items\Telemetry\AnalogMeterDisplay.cs" />
-    <Compile Include="Items\Telemetry\TimeDigitalDisplay.cs" />
-    <Compile Include="Items\Telemetry\DigitalDisplay.cs" />
-    <Compile Include="Items\Telemetry\TelemetryDisplay.cs" />
-    <Compile Include="ControlPanel.cs" />
-    <Compile Include="IVessel.cs" />
     <Compile Include="ksp\KSPPanelController.cs" />
     <Compile Include="ksp\KSPVessel.cs" />
-    <Compile Include="Utils\EventDispatcher.cs" />
-    <Compile Include="Utils\IBinaryConvertable.cs" />
-    <Compile Include="Utils\IPoolable.cs" />
-    <Compile Include="Utils\JSONObject.cs" />
-    <Compile Include="Utils\Log.cs" />
-    <Compile Include="Network\Messages.cs" />
-    <Compile Include="Items\PanelItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Network\Connection.cs" />
-    <Compile Include="SerialPort\ISerialStreamCtrl.cs" />
-    <Compile Include="SerialPort\NetStream.cs" />
-    <Compile Include="SerialPort\SerialPort.cs" />
-    <Compile Include="SerialPort\SerialPortEnums.cs" />
-    <Compile Include="SerialPort\Win32CE\CommAPI.cs" />
-    <Compile Include="SerialPort\Win32CE\DCB.cs" />
-    <Compile Include="SerialPort\Win32CE\Port.cs" />
-    <Compile Include="SerialPort\Win32CE\PortCapabilities.cs" />
-    <Compile Include="SerialPort\Win32CE\PortSettings.cs" />
-    <Compile Include="SerialPort\Win32CE\WinStream.cs" />
-    <Compile Include="Items\Telemetry\TelemetryItem.cs" />
-    <Compile Include="UnityUtils.cs" />
-    <Compile Include="Utils\IJsonConvertable.cs" />
-    <Compile Include="Utils\ObjectPool.cs" />
-    <Compile Include="Utils\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\panel\panel.csproj">
+      <Project>{5ac3e20f-a124-404f-9d84-7588c538d349}</Project>
+      <Name>panel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

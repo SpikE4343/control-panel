@@ -5,7 +5,6 @@ using System.Collections.Generic;
 //using System.IO.Ports;
 using System;
 using System.Threading;
-using KSP;
 
 using OpenNETCF.IO.Ports;
 using ControlPanelPlugin.Telemetry;
@@ -184,17 +183,8 @@ namespace ControlPanelPlugin
 
             GUILayout.Label(string.Format("NN: {0:00.00}", CurrentVessel.nextNodeSeconds));
 
-            GUILayout.BeginVertical();
-            GUILayout.Label("Telemetry items");
-
-            foreach (var item in PanelItems)
-            {
-              item.OnGUI();
-            }
-            GUILayout.EndVertical();
+            
           }
-
-
         }
         else
         {
@@ -203,6 +193,17 @@ namespace ControlPanelPlugin
             serial.DesiredConnectionState = Connection.State.Connected;
           }
         }
+
+        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height( 500), GUILayout.Width(200));
+        GUILayout.BeginVertical();
+        GUILayout.Label("Telemetry items");
+
+        foreach (var item in PanelItems)
+        {
+          item.OnGUI();
+        }
+        GUILayout.EndVertical();
+        GUILayout.EndScrollView();
       }
 
       GUILayout.EndVertical();

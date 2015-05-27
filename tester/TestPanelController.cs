@@ -11,10 +11,7 @@ namespace tester
     TestVessel kspVessel = new TestVessel();
     bool updatePanel = false;
 
-    private void createStatusItem(KSPActionGroup group)
-    {
-      //panel.Add(group, false);
-    }
+   
 
     bool coroutinesActive = false;
     public void Start()

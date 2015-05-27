@@ -6,6 +6,7 @@ using Boomlagoon.JSON;
 using ControlPanelPlugin.Items;
 using ControlPanelPlugin.Items.Button;
 using ControlPanelPlugin.Utils;
+using panel;
 
 
 namespace ControlPanelPlugin.Items.Button.Action
@@ -13,14 +14,14 @@ namespace ControlPanelPlugin.Items.Button.Action
   [ClassSerializer("ButtonStatusAction")]
   public class ButtonStatusAction : ButtonAction
   {
-    public KSPActionGroup KspGroup = KSPActionGroup.None;
+    public Constants.Panel.ActionGroup KspGroup = Constants.Panel.ActionGroup.None;
 
     public ButtonStatusAction()
     {
 
     }
 
-    public ButtonStatusAction(KSPActionGroup group)
+    public ButtonStatusAction(Constants.Panel.ActionGroup group)
     {
       KspGroup = group;
     }
@@ -38,7 +39,7 @@ namespace ControlPanelPlugin.Items.Button.Action
 
     public override bool Update()
     {
-      if (KspGroup == KSPActionGroup.None)
+      if (KspGroup == Constants.Panel.ActionGroup.None)
         return true;
 
       bool state = Button.Panel.CurrentVessel.getActionGroup(KspGroup);
@@ -54,7 +55,7 @@ namespace ControlPanelPlugin.Items.Button.Action
     {
       var json = base.ToJson();
 
-      json["group"] = Enum.GetName(typeof(KSPActionGroup), KspGroup);
+      json["group"] = Enum.GetName(typeof(Constants.Panel.ActionGroup), KspGroup);
 
       return json;
     }
@@ -63,7 +64,7 @@ namespace ControlPanelPlugin.Items.Button.Action
     {
       base.FromJson(json);
 
-      KspGroup = (KSPActionGroup)Enum.Parse(typeof(KSPActionGroup), json["group"]);
+      KspGroup = (Constants.Panel.ActionGroup)Enum.Parse(typeof(Constants.Panel.ActionGroup), json["group"]);
     }
   }
 }

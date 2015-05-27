@@ -35,6 +35,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug UI Tester|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug UI Tester\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -58,6 +68,10 @@
     <Compile Include="AnalogMeterDisplayTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\panel\panel.csproj">
+      <Project>{5ac3e20f-a124-404f-9d84-7588c538d349}</Project>
+      <Name>panel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\plugin\ksp-plugin.csproj">
       <Project>{0c426753-6c1c-4424-9738-3c2cd972be3d}</Project>
       <Name>ksp-plugin</Name>

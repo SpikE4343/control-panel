@@ -69,12 +69,12 @@ namespace ControlPanelPlugin
     {
       var panel = Singleton.Get<ControlPanel>();
 
-      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Rcs, new ButtonStatusAction(KSPActionGroup.RCS)));
-      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Sas, new ButtonStatusAction(KSPActionGroup.SAS)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Rcs, new ButtonStatusAction(Constants.Panel.ActionGroup.RCS)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Sas, new ButtonStatusAction(Constants.Panel.ActionGroup.SAS)));
       //panel.Add(new ButtonItem(Constants.Panel.SwitchId.Stage, new ButtonStatusAction(KSPActionGroup.Stage)));
-      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Brakes, new ButtonStatusAction(KSPActionGroup.Brakes)));
-      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Gear, new ButtonStatusAction(KSPActionGroup.Gear)));
-      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Lights, new ButtonStatusAction(KSPActionGroup.Light)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Brakes, new ButtonStatusAction(Constants.Panel.ActionGroup.Brakes)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Gear, new ButtonStatusAction(Constants.Panel.ActionGroup.Gear)));
+      panel.Add(new ButtonItem(Constants.Panel.SwitchId.Lights, new ButtonStatusAction(Constants.Panel.ActionGroup.Light)));
 
       panel.Add(new ButtonItem(Constants.Panel.SwitchId.MapMode, new MapViewButtonAction()));
       panel.Add(new ButtonItem(Constants.Panel.SwitchId.DockingMode, new DockingViewButtonAction()));

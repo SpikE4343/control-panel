@@ -103,14 +103,37 @@ namespace ControlPanelPlugin
       FlightUIModeController.Instance.SetMode(FlightUIMode.STAGING);
     }
 
-    public bool getActionGroup(KSPActionGroup group)
+
+    public static KSPActionGroup getIdForActionGroup(Constants.Panel.ActionGroup group)
     {
-      return vessel.ActionGroups[group];
+      switch (group)
+      {
+        case Constants.Panel.ActionGroup.RCS:
+          return KSPActionGroup.RCS;
+        case Constants.Panel.ActionGroup.SAS:
+          return KSPActionGroup.SAS;
+        case Constants.Panel.ActionGroup.Stage:
+          return KSPActionGroup.Stage;
+
+        case Constants.Panel.ActionGroup.Light:
+          return KSPActionGroup.Light;
+        case Constants.Panel.ActionGroup.Gear:
+          return KSPActionGroup.Gear;
+        case Constants.Panel.ActionGroup.Brakes:
+          return KSPActionGroup.Brakes;
+      }
+
+      return KSPActionGroup.None;
     }
 
-    public void setActionGroup(KSPActionGroup group, bool value)
+    public bool getActionGroup(Constants.Panel.ActionGroup group)
     {
-      vessel.ActionGroups.SetGroup(group, value);
+      return vessel.ActionGroups[getIdForActionGroup(group)];
+    }
+
+    public void setActionGroup(Constants.Panel.ActionGroup group, bool value)
+    {
+      vessel.ActionGroups.SetGroup(getIdForActionGroup(group), value);
     }
 
     float nextNodeTime = 0.0f;

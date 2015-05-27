@@ -40,6 +40,17 @@ namespace ControlPanelPlugin
         Num
       }
 
+      public enum ActionGroup
+      {
+        RCS,
+        SAS,
+        Stage,
+        Light,
+        Gear,
+        Brakes,
+        None,
+      }
+
       public enum ViewMode
       {
         Map,
@@ -47,54 +58,61 @@ namespace ControlPanelPlugin
         Docking
       }
 
-      public static int getIdForActionGroup(KSPActionGroup group)
+      public static int getIdForActionGroup(ActionGroup group)
       {
         switch (group)
         {
-          case KSPActionGroup.RCS:
+          case ActionGroup.RCS:
             return (int)Constants.Panel.SwitchId.Rcs;
-          case KSPActionGroup.SAS:
+          case ActionGroup.SAS:
             return (int)Constants.Panel.SwitchId.Sas;
-          case KSPActionGroup.Stage:
+          case ActionGroup.Stage:
             return (int)Constants.Panel.SwitchId.Stage;
 
-          case KSPActionGroup.Light:
+          case ActionGroup.Light:
             return (int)Constants.Panel.SwitchId.Lights;
-          case KSPActionGroup.Gear:
+          case ActionGroup.Gear:
             return (int)Constants.Panel.SwitchId.Gear;
-          case KSPActionGroup.Brakes:
+          case ActionGroup.Brakes:
             return (int)Constants.Panel.SwitchId.Brakes;
         }
 
         return -1;
       }
 
-      public static KSPActionGroup getActionGroupFromId(int id)
+
+
+      public static ActionGroup getActionGroupFromId(int id)
       {
         var swid = (Constants.Panel.SwitchId)id;
         switch (swid)
         {
           case Constants.Panel.SwitchId.Rcs:
-            return KSPActionGroup.RCS;
+            return ActionGroup.RCS;
 
           case Constants.Panel.SwitchId.Sas:
-            return KSPActionGroup.SAS;
+            return ActionGroup.SAS;
 
           case Constants.Panel.SwitchId.Stage:
-            return KSPActionGroup.Stage;
+            return ActionGroup.Stage;
 
           case Constants.Panel.SwitchId.Lights:
-            return KSPActionGroup.Light;
+            return ActionGroup.Light;
 
           case Constants.Panel.SwitchId.Gear:
-            return KSPActionGroup.Gear;
+            return ActionGroup.Gear;
 
           case Constants.Panel.SwitchId.Brakes:
-            return KSPActionGroup.Brakes;
+            return ActionGroup.Brakes;
         }
 
-        return KSPActionGroup.None;
+        return ActionGroup.None;
       }
     }
   }
+}
+
+namespace panel
+{
+
 }
