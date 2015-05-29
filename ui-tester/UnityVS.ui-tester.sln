@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.ui-tester.CSharp", "UnityVS.ui-tester.CSharp.csproj", "{6BC4B803-C206-47C9-B658-E1C62807FA8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BC4B803-C206-47C9-B658-E1C62807FA8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BC4B803-C206-47C9-B658-E1C62807FA8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BC4B803-C206-47C9-B658-E1C62807FA8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BC4B803-C206-47C9-B658-E1C62807FA8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

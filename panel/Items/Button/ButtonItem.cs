@@ -123,7 +123,7 @@ namespace ControlPanelPlugin.Items.Button
 
       State = GUILayout.Toggle(State, "");
 
-      bool pressed = GUILayout.Button(Switch.ToString());
+      bool pressed = GUILayout.Button(Switch.ToString(), GUILayout.Width(150));
       if (switchSelectionOpen || pressed)
       {
         if (switchSelectionOpen && pressed)

@@ -148,6 +148,7 @@ namespace ControlPanelPlugin
     }
 
 
+
     bool editItems = false;
     string fileName = "controlpanel";
     string newPanelItem = "Telemetry";
@@ -177,18 +178,23 @@ namespace ControlPanelPlugin
         GUILayout.Label(string.Format("Ds: {0}", serial.DesiredConnectionState));
         GUILayout.EndHorizontal();
 
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite));
-        GUILayout.Label(string.Format("RxB: {0}", serial.BytesToRead));
-        GUILayout.EndHorizontal();
+        if (serial.Connected)
+        {
+          GUILayout.BeginHorizontal();
+          GUILayout.Label(string.Format("TxB: {0}", serial.BytesToWrite));
+          GUILayout.Label(string.Format("RxB: {0}", serial.BytesToRead));
+          GUILayout.EndHorizontal();
+        }
+
+        serial.COM = UnityUtils.GUIStringField("COM", serial.COM);
+        serial.Baud = UnityUtils.GUIIntField("Baud", serial.Baud);
       }
 
       GUILayout.Label((serial != null && serial.Connected) ? "Connected" : "Disconnected");
-      GUILayout.EndVertical();
 
 
       //scrollPos = GUILayout.BeginScrollView(scrollPos);
-      GUILayout.BeginVertical("box");
+      //GUILayout.BeginVertical("box");
 
       GUILayout.Toggle(HasOneHeartbeat, "Has One HB");
 
@@ -224,32 +230,40 @@ namespace ControlPanelPlugin
             serial.DesiredConnectionState = Connection.State.Connected;
           }
         }
-
-
-        fileName = GUILayout.TextField(fileName);
-        GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Load"))
-        {
-          Singleton.Get<Application>().Load(fileName + ".json");
-        }
-
-        if (GUILayout.Button("Save"))
-        {
-          Singleton.Get<Application>().Save(fileName + ".json");
-        }
-
-        GUILayout.EndHorizontal();
       }
+
+      GUILayout.EndVertical();
+      GUILayout.BeginVertical("box");
+
+      fileName = GUILayout.TextField(fileName);
+      GUILayout.BeginHorizontal();
+
+      if (GUILayout.Button("Load"))
+      {
+        Singleton.Get<Application>().Load(fileName + ".json");
+      }
+
+      if (GUILayout.Button("Save"))
+      {
+        Singleton.Get<Application>().Save(fileName + ".json");
+      }
+
+      GUILayout.EndHorizontal();
 
       if (GUILayout.Button("Edit Items"))
       {
         editItems = !editItems;
       }
 
+      GUILayout.EndVertical();
+
+
+
       if (editItems)
       {
-        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(500), GUILayout.Width(200));
+        GUILayout.BeginVertical("box");
+
+        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(300), GUILayout.Width(400));
         GUILayout.BeginVertical();
         GUILayout.Label("Telemetry items");
 
@@ -295,9 +309,10 @@ namespace ControlPanelPlugin
 
         GUILayout.EndVertical();
         GUILayout.EndScrollView();
+        GUILayout.EndVertical();
       }
 
-      GUILayout.EndVertical();
+
       //GUILayout.EndScrollView();
 
       GUI.DragWindow(new Rect(0, 0, 10000, 10000));

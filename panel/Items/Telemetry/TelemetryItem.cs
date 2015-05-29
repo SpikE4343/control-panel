@@ -15,7 +15,7 @@ namespace ControlPanelPlugin.Telemetry
     private static int nextId = 0;
     public int Id = nextId++;
 
-    public float Value { get { return Display != null ? Display.Value : 0.0f ; } }
+    public float Value { get { return Display != null ? Display.Value : 0.0f; } }
 
 
     ControlPanel panel;
@@ -77,6 +77,11 @@ namespace ControlPanelPlugin.Telemetry
     bool expanded = false;
     public override void OnGUI()
     {
+      GUIStyle s = new GUIStyle();
+      s.stretchHeight = false;
+      s.alignment = TextAnchor.LowerRight;
+      s.normal.textColor = Color.white;
+
       GUILayout.BeginVertical();
       GUILayout.BeginHorizontal();
 
@@ -84,8 +89,19 @@ namespace ControlPanelPlugin.Telemetry
       {
         expanded = !expanded;
       }
-      GUILayout.Label(propertyName + ":");
-      GUILayout.Label(Value.ToString());
+
+      if (expanded)
+      {
+        propertyName = GUILayout.TextField(propertyName);
+      }
+      else
+      {
+        GUILayout.Label(propertyName, s, GUILayout.ExpandWidth(true));
+      }
+
+
+
+      GUILayout.Label(Value.ToString(), s);
       GUILayout.EndHorizontal();
 
       if (expanded && Display != null)
@@ -98,7 +114,7 @@ namespace ControlPanelPlugin.Telemetry
 
     public virtual float GetLatestValue()
     {
-      if (Panel == null || Panel.CurrentVessel == null)
+      if (Panel == null || Panel.CurrentVessel == null || property == null)
         return 0.0f;
 
       return (float)property.GetValue(Panel.CurrentVessel, null);

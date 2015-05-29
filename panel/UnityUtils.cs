@@ -17,6 +17,15 @@ namespace ControlPanelPlugin
       GUILayout.EndHorizontal();
     }
 
+    public static string GUIStringField(string label, string value)
+    {
+      GUILayout.BeginHorizontal();
+      GUILayout.Label(label);
+      string text = GUILayout.TextField(value);
+      GUILayout.EndHorizontal();
+      return text;
+    }
+
     public static int GUIIntField(string label, int value)
     {
       GUILayout.BeginHorizontal();
