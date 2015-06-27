@@ -15,6 +15,11 @@ namespace ControlPanelPlugin
 
     }
 
+    public virtual void Shutdown()
+    {
+
+    }
+
     public virtual void OnGUI()
     {
 

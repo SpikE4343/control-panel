@@ -20,11 +20,6 @@ void register_command( int cmd, int size, command_handler handler )
   Commands[ cmd ] = (Command){ size, handler };
 }
 
-void setup_commands()
-{
-
-}
-
 struct Header
 {
   char msgId[2];

@@ -18,3 +18,5 @@ packages/
 panel/obj/
 panel/bin/
 ui-tester/Library/
+ui-tester/Temp/
+ui-tester/obj/

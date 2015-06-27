@@ -14,6 +14,8 @@ enum MeterId
   NUM_METERS
 };
 
+void set_analog_meter_mapping( char meter, char pin );
+
 void setup_analog_telemetry();
 void handle_analog_telemetrycommand();
 void update_analog_telemetry();

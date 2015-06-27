@@ -186,8 +186,11 @@ namespace ControlPanelPlugin
           GUILayout.EndHorizontal();
         }
 
-        serial.COM = UnityUtils.GUIStringField("COM", serial.COM);
-        serial.Baud = UnityUtils.GUIIntField("Baud", serial.Baud);
+        if (!editItems)
+        {
+          serial.COM = UnityUtils.GUIStringField("COM", serial.COM);
+          serial.Baud = UnityUtils.GUIIntField("Baud", serial.Baud);
+        }
       }
 
       GUILayout.Label((serial != null && serial.Connected) ? "Connected" : "Disconnected");
@@ -204,17 +207,20 @@ namespace ControlPanelPlugin
         {
           GUILayout.Label("T: " + ThrottleValue);
 
-          GUILayout.BeginHorizontal();
-          GUILayout.Label("Panel Up: ");
-          config.Intervals.PanelUpdate = GUILayout.HorizontalSlider(config.Intervals.PanelUpdate, 0.01f, 1.0f, GUILayout.Width(100));
-          GUILayout.Label("" + config.Intervals.PanelUpdate);
-          GUILayout.EndHorizontal();
+          if (!editItems)
+          {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Panel Up: ");
+            config.Intervals.PanelUpdate = GUILayout.HorizontalSlider(config.Intervals.PanelUpdate, 0.01f, 1.0f, GUILayout.Width(100));
+            GUILayout.Label("" + config.Intervals.PanelUpdate);
+            GUILayout.EndHorizontal();
 
-          GUILayout.BeginHorizontal();
-          GUILayout.Label("Input Up: ");
-          config.Intervals.InputUpdate = GUILayout.HorizontalSlider(config.Intervals.InputUpdate, 0.005f, 0.5f, GUILayout.Width(100));
-          GUILayout.Label("" + config.Intervals.InputUpdate);
-          GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Input Up: ");
+            config.Intervals.InputUpdate = GUILayout.HorizontalSlider(config.Intervals.InputUpdate, 0.005f, 0.5f, GUILayout.Width(100));
+            GUILayout.Label("" + config.Intervals.InputUpdate);
+            GUILayout.EndHorizontal();
+          }
 
           if (GUILayout.Button("Disconnect"))
           {
@@ -263,7 +269,7 @@ namespace ControlPanelPlugin
       {
         GUILayout.BeginVertical("box");
 
-        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(300), GUILayout.Width(400));
+        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(400), GUILayout.Width(500));
         GUILayout.BeginVertical();
         GUILayout.Label("Telemetry items");
 
@@ -318,6 +324,15 @@ namespace ControlPanelPlugin
       GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 
+    public void Clear()
+    {
+      foreach (var item in PanelItems)
+      {
+        item.Shutdown();
+      }
+      PanelItems.Clear();
+    }
+
     #region IJsonConvertable Members
 
     public JSONObject ToJson()
@@ -337,6 +352,7 @@ namespace ControlPanelPlugin
 
     public void FromJson(JSONObject json)
     {
+      Clear();
       JSONArray itemsJson = json["panelItems"];
       foreach (var item in itemsJson)
       {

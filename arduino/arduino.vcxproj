@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug UI Tester|Win32">
-      <Configuration>Debug UI Tester</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -14,38 +10,12 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="analog_input.cpp" />
-    <ClCompile Include="commands.cpp" />
-    <ClCompile Include="status_lights.cpp" />
-    <ClCompile Include="switch_controls.cpp" />
-    <ClCompile Include="telemetry_analog_meter.cpp" />
-    <ClCompile Include="telemetry_displays.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="analog_input.h" />
-    <ClInclude Include="commands.h" />
-    <ClInclude Include="status_lights.h" />
-    <ClInclude Include="switch_controls.h" />
-    <ClInclude Include="telemetry_analog_meter.h" />
-    <ClInclude Include="telemetry_displays.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="arduino.ino" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0F8F9422-174E-4776-80D5-E597B66D8D25}</ProjectGuid>
-    <RootNamespace>controlpanel</RootNamespace>
-    <ProjectName>arduino</ProjectName>
+    <ProjectGuid>{E74B38CC-9211-4F40-90AC-DC90A5019DF3}</ProjectGuid>
+    <RootNamespace>arduino</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug UI Tester|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
@@ -64,9 +34,6 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug UI Tester|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -76,16 +43,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug UI Tester|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Arduino\hardware\tools\avr\i686-pc-mingw32\avr\include;C:\Program Files %28x86%29\Arduino\hardware\arduino\avr\cores\arduino;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -97,6 +55,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -104,6 +63,35 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="arduino.ino">
+      <FileType>CppCode</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="commands.cpp" />
+    <ClCompile Include="status_lights.cpp" />
+    <ClCompile Include="switch_controls.cpp" />
+    <ClCompile Include="telemetry_analog_meter.cpp" />
+    <ClCompile Include="telemetry_displays.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commands.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="status_lights.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="switch_controls.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="telemetry_analog_meter.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClInclude Include="telemetry_displays.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -65,11 +65,11 @@
     <Compile Include="Items\Button\ButtonItem.cs" />
     <Compile Include="Items\InputItem.cs" />
     <Compile Include="Items\PanelItem.cs" />
-    <Compile Include="Items\Telemetry\AnalogMeterDisplay.cs" />
-    <Compile Include="Items\Telemetry\DigitalDisplay.cs" />
-    <Compile Include="Items\Telemetry\TelemetryDisplay.cs" />
+    <Compile Include="Items\Telemetry\Display\AnalogMeterDisplay.cs" />
+    <Compile Include="Items\Telemetry\Display\DigitalDisplay.cs" />
+    <Compile Include="Items\Telemetry\Display\TelemetryDisplay.cs" />
     <Compile Include="Items\Telemetry\TelemetryItem.cs" />
-    <Compile Include="Items\Telemetry\TimeDigitalDisplay.cs" />
+    <Compile Include="Items\Telemetry\Display\TimeDigitalDisplay.cs" />
     <Compile Include="IVessel.cs" />
     <Compile Include="Network\Connection.cs" />
     <Compile Include="Network\InputDispatcher.cs" />

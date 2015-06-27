@@ -34,6 +34,7 @@ typedef struct
   unsigned long changeTime;
 } Switch;
 
+void set_switch_mapping( char id, char pin );
 void setup_switches();
 void update_switches();
 bool get_switch_state(int id );

@@ -92,16 +92,16 @@ namespace ControlPanelPlugin.Telemetry
 
       if (expanded)
       {
-        propertyName = GUILayout.TextField(propertyName);
+        propertyName = GUILayout.TextField(propertyName, s);
       }
       else
       {
+        s.alignment = TextAnchor.MiddleLeft;
         GUILayout.Label(propertyName, s, GUILayout.ExpandWidth(true));
       }
 
-
-
-      GUILayout.Label(Value.ToString(), s);
+      s.alignment = TextAnchor.LowerRight;
+      GUILayout.Label(Value.ToString(), s, GUILayout.Width(100));
       GUILayout.EndHorizontal();
 
       if (expanded && Display != null)
@@ -123,6 +123,9 @@ namespace ControlPanelPlugin.Telemetry
     public override bool Update()
     {
       float next = GetLatestValue();
+      if (Display == null)
+        return true;
+
       return Display.Update(next);
     }
 

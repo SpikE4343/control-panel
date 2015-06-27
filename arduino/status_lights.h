@@ -31,6 +31,8 @@ void update_status_groups();
 
 void handle_status_group_command();
 
+void set_status_group_mapping( char status, char pin );
+
 
 #endif
 

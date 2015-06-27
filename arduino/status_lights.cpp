@@ -7,25 +7,31 @@
 
 static StatusGroup groups[NUM_STATUS];
 
+void update_pin( char pin )
+{
+  digitalWrite( pin, groups[pin].state ? HIGH : LOW );
+}
+
+void set_status_group_mapping( char status, char pin )
+{
+  groups[status] =  (StatusGroup){ pin, 0 };
+  pinMode(pin, OUTPUT);
+  update_pin(pin);
+}
+
 void setup_status_groups()
 {
   register_command( CMD_GROUP_STATE, 2, &handle_status_group_command );
 
   // status leds
-  groups[STATUS_RCS]          = (StatusGroup){ 23, 1 }; // 0, 0
-  groups[STATUS_SAS]          = (StatusGroup){ 25, 1 }; // 1, 0
-  groups[STATUS_STAGE]        = (StatusGroup){ 27, 1 }; // 1, 2
-  groups[STATUS_STAGE_ARMED]  = (StatusGroup){ 29, 1 }; // 1, 3
-  groups[STATUS_THROTTLE]     = (StatusGroup){ 33, 1 }; // 0, 2
-  groups[5]                   = (StatusGroup){ 35, 1 }; // 0, 3
-  groups[6]                   = (StatusGroup){ 37, 1 }; // 0, 0
-  groups[7]                   = (StatusGroup){ 39, 1 }; // 0, 1
-     
-  for( int p=0; p < NUM_STATUS; ++p )
-  {
-    pinMode(groups[p].pin, OUTPUT);
-    digitalWrite( groups[p].pin, groups[p].state ? HIGH : LOW );
-  }
+  set_status_group_mapping( STATUS_RCS, 23 );
+  set_status_group_mapping( STATUS_SAS, 25 );
+  set_status_group_mapping( STATUS_STAGE, 27 );
+  set_status_group_mapping( STATUS_STAGE_ARMED, 29 );
+  set_status_group_mapping( STATUS_THROTTLE, 33 );
+  set_status_group_mapping( 5, 35 );
+  set_status_group_mapping( 6, 37 );
+  set_status_group_mapping( 7, 39 );
 }
 
 void update_status_groups()
@@ -43,7 +49,7 @@ void handle_status_group_command()
 
   if( id < 0 || id >= NUM_STATUS  )
     return;
-    
+
   groups[id].state = state;
   digitalWrite( groups[id].pin, groups[id].state ? HIGH : LOW );
 }

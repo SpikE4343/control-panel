@@ -1,75 +1,66 @@
-// 
-// 
-// 
-
+#include <stdio.h> 
 #include "switch_controls.h"
 #include "commands.h"
 
 #define switchPauseMs 100
-#define mapswitch(id, pin) switches[id] = (Switch){pin, 0, 0 }
 
 static Switch switches[NUM_SWITCH];
 
+void set_switch_mapping( char id, char pin )
+{
+  switches[id] = (Switch){pin, 0, 0 };
+  pinMode(switches[id].pin, INPUT);
+  switches[id].state = digitalRead(switches[id].pin );
+}
+
 void setup_switches()
 {
-  mapswitch( SWITCH_THROTTLE_TOGGLE,  30 );
-  mapswitch( SWITCH_DOCKING_MODE,     32 );
-  mapswitch( SWITCH_RCS,              34 );
-  mapswitch( SWITCH_SAS,              36 );
-  mapswitch( SWITCH_MAP_MODE,         38 );
-  mapswitch( SWITCH_BRAKES,           40 );
-
-  mapswitch( SWITCH_TRANS_CTRL,       44 );
-  mapswitch( SWITCH_STAGE,            46 );
-  mapswitch( SWITCH_LIGHTS,           48 );
-  mapswitch( SWITCH_FINE_CTRL,        50 );
-  mapswitch( SWITCH_THROTTLE_MOMENT,  28 );
-
-  //mapswitch( SWITCH_STAGE_ARM,        30 );
-  mapswitch( SWITCH_GEAR,             42 );
-
-  for( int p=0; p < NUM_SWITCH; ++p )
-  {
-    pinMode(switches[p].pin, INPUT);
-    switches[p].state = digitalRead(switches[p].pin );
-  }
+  set_switch_mapping( SWITCH_THROTTLE_TOGGLE,  30 );
+  set_switch_mapping( SWITCH_DOCKING_MODE,     32 );
+  set_switch_mapping( SWITCH_RCS,              34 );
+  set_switch_mapping( SWITCH_SAS,              36 );
+  set_switch_mapping( SWITCH_MAP_MODE,         38 );
+  set_switch_mapping( SWITCH_BRAKES,           40 );
+  //set_switch_mapping
+  set_switch_mapping( SWITCH_TRANS_CTRL,       44 );
+  set_switch_mapping( SWITCH_STAGE,            46 );
+  set_switch_mapping( SWITCH_LIGHTS,           48 );
+  set_switch_mapping( SWITCH_FINE_CTRL,        50 );
+  set_switch_mapping( SWITCH_THROTTLE_MOMENT,  28 );
+  //set_switch_mapping
+  //set_switch_mapping( SWITCH_STAGE_ARM,        30 );
+  set_switch_mapping( SWITCH_GEAR,             42 );
 }
-#include <stdio.h> 
 
-//#define ARDUINO_DEBUG
+void update_switch( char id )
+{
+  Switch& sw = switches[id];
+  if( sw.pin == 0 )
+    return;
+
+  // too soon
+  if( (now() - sw.changeTime) < switchPauseMs )
+    return;
+
+  int state = digitalRead( sw.pin );
+
+  // no change
+  if( state == sw.state )
+    return;
+
+  sw.state = state;
+  sw.changeTime = now();
+  char gsMsg[] = { 'e', 'R', CMD_GROUP_STATE, 2, id, state };
+
+  Serial.write((uint8_t*)gsMsg, sizeof(gsMsg));
+}
 
 void update_switches()
 {
   for( int p=0; p < NUM_SWITCH; ++p )
   {
-    if( switches[p].pin == 0 )
-      continue;
-
-    int state = digitalRead( switches[p].pin );
-
-    if( state != switches[p].state && (now() - switches[p].changeTime) > switchPauseMs  )
-    {
-      switches[p].state = state;
-      switches[p].changeTime = now();
-
-
-      char buffer[] = { 'e', 'R', CMD_GROUP_STATE, 2, p, state };
-      Serial.write((uint8_t*)buffer, sizeof(buffer));
-
-      char msg[256];
-      int len = sprintf(msg, "switch: %u, state: %u\n", switches[p].pin, state ); 
-      logMsg( msg, len );
-#ifdef ARDUINO_DEBUG
-      Serial.print("[");
-      Serial.print((int)switches[p].pin);
-      Serial.print(",");
-      Serial.print(state);
-      Serial.println("]");
-#endif
-    }
+    update_switch(p);
   }
-
-  //Serial.flush();
 }
 
 bool get_switch_state(int id )

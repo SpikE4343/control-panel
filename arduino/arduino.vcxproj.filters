@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="arduino.ino" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="commands.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,33 +33,22 @@
     <ClCompile Include="telemetry_displays.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="analog_input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commands.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="status_lights.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="switch_controls.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="telemetry_analog_meter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="telemetry_displays.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="analog_input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="arduino.ino">
-      <Filter>Source Files</Filter>
-    </None>
+    <ClInclude Include="status_lights.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="switch_controls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="telemetry_analog_meter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="telemetry_displays.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

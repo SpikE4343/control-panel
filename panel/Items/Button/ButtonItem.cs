@@ -26,20 +26,32 @@ namespace ControlPanelPlugin.Items.Button
       get { return switchType; }
       set
       {
-        if (value != switchType)
-        {
-          if (listening)
-          {
-            Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent -= HandleMessage;
-          }
+        if (value == switchType)
+          return;
 
-          switchType = value;
-          listening = true;
-          Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent += HandleMessage;
-        }
+        RemoveMessageHandler();
+        switchType = value;
+        AddMessageHandler();
       }
     }
     private ButtonAction action;
+
+    private void AddMessageHandler()
+    {
+      if (listening)
+        return;
+
+      listening = true;
+      Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent += HandleMessage;
+    }
+
+    private void RemoveMessageHandler()
+    {
+      if (!listening)
+        return;
+
+      Singleton.Get<InputDispatcher>().GroupStateHandler(Switch).OnEvent -= HandleMessage;
+    }
 
     public bool State
     {
@@ -49,11 +61,13 @@ namespace ControlPanelPlugin.Items.Button
         bool changed = state != value;
         state = value;
 
-        if (changed)
-        {
+        if (!changed)
+          return;
+
+        if (Action != null)
           Action.StateChange();
-          Send();
-        }
+
+        Send();
       }
     }
 
@@ -80,7 +94,8 @@ namespace ControlPanelPlugin.Items.Button
       if (v != state)
       {
         state = v;
-        Action.StateChange();
+        if (Action != null)
+          Action.StateChange();
       }
     }
 
@@ -95,7 +110,15 @@ namespace ControlPanelPlugin.Items.Button
 
     public override bool Update()
     {
+      if (action == null)
+        return true;
+
       return action.Update();
+    }
+
+    public override void Shutdown()
+    {
+      RemoveMessageHandler();
     }
 
     public override JSONObject ToJson()
@@ -150,6 +173,7 @@ namespace ControlPanelPlugin.Items.Button
         }
       }
 
+      GUILayout.Button(Action != null ? Action.ToString() : "Action", GUILayout.Width(150));
 
       //GUILayout.Label(State ? "on" : "off");
 

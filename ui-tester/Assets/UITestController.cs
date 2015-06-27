@@ -58,7 +58,7 @@ public class UITestController : MonoBehaviour
   // coroutine for polling input
   IEnumerator UpdatePanelInput()
   {
-    while (active)
+    while (coroutinesActive)
     {
       if (updatePanel)
       {
@@ -71,7 +71,7 @@ public class UITestController : MonoBehaviour
 
   IEnumerator UpdateVessel()
   {
-    while (active)
+    while (coroutinesActive)
     {
       if (updatePanel)
       {
@@ -85,7 +85,7 @@ public class UITestController : MonoBehaviour
   // coroutine for updating state/sending data to panel
   IEnumerator UpdatePanel()
   {
-    while (active)
+    while (coroutinesActive)
     {
       if (updatePanel)
       {

@@ -4,26 +4,35 @@
 #include "telemetry_analog_meter.h"
 
 
-int values[NUM_METERS];
+char values[NUM_METERS];
 bool changed[NUM_METERS];
-int pins[NUM_METERS] = { 5, 6, 7, 8, 9, 10, 11 }; 
-int pin = 2;
+char pins[NUM_METERS] = { 5, 6, 7, 8, 9, 10, 11 }; 
+char pin = 2;
+
+void set_analog_meter_mapping( char meter, char pin )
+{
+  pins[meter] = pin;
+  values[meter] = 0;
+  pinMode(pins[meter], OUTPUT);
+}
 
 void setup_analog_telemetry()
 {
   memset(values, 0, sizeof(int)*NUM_METERS);
   memset(changed, 0, sizeof(bool)*NUM_METERS);
- 
+
   register_command( 
     CMD_ANALOG_TELEMETRY, 
     sizeof(byte)*2, 
     &handle_analog_telemetrycommand );
 
-  for( int m = 0; m < NUM_METERS; ++m )
-  {
-    values[m] = 255;
-    pinMode(pins[m], OUTPUT);
-  }
+  set_analog_meter_mapping( 0, 5 );
+  set_analog_meter_mapping( 1, 6 );
+  set_analog_meter_mapping( 2, 7 );
+  set_analog_meter_mapping( 3, 8 );
+  set_analog_meter_mapping( 4, 9 );
+  set_analog_meter_mapping( 5, 10 );
+  set_analog_meter_mapping( 6, 11 );
 }
 
 void handle_analog_telemetrycommand()
@@ -32,7 +41,7 @@ void handle_analog_telemetrycommand()
   byte value = Serial.read();
 
   if( meter < 0 || meter > NUM_METERS )
-      return;
+    return;
 
   values[meter] = value;
 }

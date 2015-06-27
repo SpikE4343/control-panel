@@ -9,11 +9,11 @@ namespace ControlPanelPlugin
 {
   public class UnityUtils
   {
-    public static void GUIField(string label, string value)
+    public static void GUIField(string label, string value, int width = 100)
     {
       GUILayout.BeginHorizontal();
       GUILayout.Label(label);
-      GUILayout.Label(value);
+      GUILayout.Label(value, GUILayout.Width(width));
       GUILayout.EndHorizontal();
     }
 
@@ -26,11 +26,11 @@ namespace ControlPanelPlugin
       return text;
     }
 
-    public static int GUIIntField(string label, int value)
+    public static int GUIIntField(string label, int value, int width = 100)
     {
       GUILayout.BeginHorizontal();
       GUILayout.Label(label);
-      string text = GUILayout.TextField(value.ToString());
+      string text = GUILayout.TextField(value.ToString(), GUILayout.Width(width));
       GUILayout.EndHorizontal();
 
       int result = value;
