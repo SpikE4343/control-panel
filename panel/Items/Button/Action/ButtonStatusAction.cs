@@ -16,6 +16,8 @@ namespace ControlPanelPlugin.Items.Button.Action
   {
     public Constants.Panel.ActionGroup KspGroup = Constants.Panel.ActionGroup.None;
 
+    public override string Name { get { return string.Format( "Status: {0}", KspGroup.ToString()); } }
+
     public ButtonStatusAction()
     {
 

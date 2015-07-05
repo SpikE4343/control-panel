@@ -104,6 +104,7 @@ public class UITestController : MonoBehaviour
   void Stop()
   {
     Log.Info("[Control Panel] stopping panel");
+    Singleton.Get<ControlPanelPlugin.Application>().Shutdown();
   }
 }
 

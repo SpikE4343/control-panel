@@ -36,6 +36,7 @@ void setup()
   setup_telemetry();
   setup_switches();
   setup_analog_telemetry();
+  setup_analog_inputs();
 
   Serial.begin(BAUD);
   while( !Serial ){}

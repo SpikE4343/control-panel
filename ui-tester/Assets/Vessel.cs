@@ -101,12 +101,13 @@ namespace tester
 
     public void Update()
     {
-      mAltitude = mAltitude + 0.5f;// *mainThrottle;
+      mAltitude = mAltitude + 0.2f;// *mainThrottle;
       mSpeed = mSpeed + 0.01f;// *mainThrottle;
       mLiquidFuel = (mLiquidFuel - 100.0f);
       mOxiFuel -= 500.0f;
       mMonoFuel -= 100.0f;
       mEvFuel -= 1.0f;
+      verticalSpeed += 0.1f;
     }
 
     public float liquidFuelPercent

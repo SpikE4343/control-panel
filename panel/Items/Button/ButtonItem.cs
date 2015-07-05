@@ -144,7 +144,7 @@ namespace ControlPanelPlugin.Items.Button
     {
       GUILayout.BeginHorizontal();
 
-      State = GUILayout.Toggle(State, "");
+
 
       bool pressed = GUILayout.Button(Switch.ToString(), GUILayout.Width(150));
       if (switchSelectionOpen || pressed)
@@ -173,8 +173,10 @@ namespace ControlPanelPlugin.Items.Button
         }
       }
 
-      GUILayout.Button(Action != null ? Action.ToString() : "Action", GUILayout.Width(150));
+      GUILayout.Button(Action != null ? Action.Name : "Action", GUILayout.Width(150));
 
+      GUILayout.FlexibleSpace();
+      State = GUILayout.Toggle(State, "");
       //GUILayout.Label(State ? "on" : "off");
 
       GUILayout.EndHorizontal();

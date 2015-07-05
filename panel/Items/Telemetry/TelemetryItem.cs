@@ -85,7 +85,7 @@ namespace ControlPanelPlugin.Telemetry
       GUILayout.BeginVertical();
       GUILayout.BeginHorizontal();
 
-      if (GUILayout.Button(expanded ? "-" : "+", "label"))
+      if (GUILayout.Button(expanded ? "-" : "+", GUILayout.Width(25)))
       {
         expanded = !expanded;
       }
@@ -102,6 +102,7 @@ namespace ControlPanelPlugin.Telemetry
 
       s.alignment = TextAnchor.LowerRight;
       GUILayout.Label(Value.ToString(), s, GUILayout.Width(100));
+
       GUILayout.EndHorizontal();
 
       if (expanded && Display != null)

@@ -21,3 +21,6 @@ void handle_analog_telemetrycommand();
 void update_analog_telemetry();
 
 #endif
+
+
+

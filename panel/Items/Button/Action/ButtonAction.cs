@@ -10,6 +10,8 @@ namespace ControlPanelPlugin.Items.Button.Action
   public abstract class ButtonAction : IJsonConvertable
   {
     public ButtonItem Button;
+
+    public virtual string Name { get { return GetType().Name; } }
     public abstract void StateChange();
     public virtual bool Update()
     {

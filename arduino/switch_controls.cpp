@@ -68,3 +68,6 @@ bool get_switch_state(int id )
   return switches[id].state == 1;
 }
 
+
+
+

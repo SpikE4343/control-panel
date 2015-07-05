@@ -25,7 +25,7 @@ void setup_status_groups()
 
   // status leds
   set_status_group_mapping( STATUS_RCS, 23 );
-  set_status_group_mapping( STATUS_SAS, 25 );
+  set_status_group_mapping( STATUS_SAS, 39 );
   set_status_group_mapping( STATUS_STAGE, 27 );
   set_status_group_mapping( STATUS_STAGE_ARMED, 29 );
   set_status_group_mapping( STATUS_THROTTLE, 33 );
@@ -53,3 +53,6 @@ void handle_status_group_command()
   groups[id].state = state;
   digitalWrite( groups[id].pin, groups[id].state ? HIGH : LOW );
 }
+
+
+

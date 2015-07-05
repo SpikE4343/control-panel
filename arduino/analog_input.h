@@ -22,3 +22,6 @@ void set_analog_input_mapping( char input, char pin );
 void update_analog_inputs();
 void setup_analog_inputs();
 #endif
+
+
+

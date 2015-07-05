@@ -20,27 +20,37 @@ namespace ControlPanelPlugin
 {
   public class ControlPanel : IJsonConvertable
   {
-    bool running = true;
+    private bool running = true;
+    private bool editItems = false;
+    private string fileName = "controlpanel";
+    private string newPanelItem = "Telemetry";
+    private bool pickNewItemOpen = false;
+    private string[] panelItemTypes = new string[] { "Telemetry", "Button" };
+    private Rect windowPos = new Rect(20, 20, 200, 180);
+    private Vector2 scrollPos = new Vector2();
+    private bool wasConnected = false;
+    private bool registered = false;
+
+    #region Properties
 
     public IVessel CurrentVessel { get { return Singleton.Get<IVessel>(); } }
-
     public bool ThrottleEnabled { get; set; }
     public bool StageArmed { get; set; }
     public bool CanFireStage { get; set; }
     public float ThrottleValue { get; set; }
-
-    private bool HasOneHeartbeat { get; set; }
-    private bool registered = false;
+    public bool HasOneHeartbeat { get; private set; }
     public int DeviceFrame { get; set; }
-
     public int BytesToWrite { get { return Singleton.Get<Connection>().BytesToWrite; } }
     public int BytesToRead { get { return Singleton.Get<Connection>().BytesToRead; } }
-
     public Constants.Panel.ViewMode viewMode { get; set; }
     public List<PanelItem> PanelItems { get; set; }
+    public bool ResendAll { get; set; }
+
+    #endregion
 
     public ControlPanel()
     {
+      StageArmed = true;
       PanelItems = new List<PanelItem>();
       viewMode = Constants.Panel.ViewMode.Staging;
 
@@ -64,6 +74,7 @@ namespace ControlPanelPlugin
 
     private void OnAnalogInputMsg(AnalogInputMsg msg)
     {
+      //Log.Debug("{0}: {1}, {2}", msg, msg.id, msg.value);
       if (msg.id == 0)
       {
         ThrottleValue = msg.value / 100.0f;
@@ -72,6 +83,8 @@ namespace ControlPanelPlugin
 
     #endregion
 
+    #region Items
+
     public void Add(PanelItem item)
     {
       item.Panel = this;
@@ -79,6 +92,24 @@ namespace ControlPanelPlugin
       item.Initialize();
     }
 
+    public void Remove(PanelItem item)
+    {
+      item.Shutdown();
+      PanelItems.Remove(item);
+    }
+
+    public void Clear()
+    {
+      foreach (var item in PanelItems)
+      {
+        item.Shutdown();
+      }
+      PanelItems.Clear();
+    }
+
+    #endregion
+
+    #region Running
 
     public void Start()
     {
@@ -92,6 +123,9 @@ namespace ControlPanelPlugin
       HasOneHeartbeat = false;
     }
 
+    #endregion
+
+    #region Update Calls
     public void UpdateState()
     {
       if (CurrentVessel == null)
@@ -111,8 +145,6 @@ namespace ControlPanelPlugin
       }
     }
 
-    bool wasConnected = false;
-    public bool ResendAll { get; set; }
     public void UpdateInput()
     {
       ResendAll = false;
@@ -133,9 +165,9 @@ namespace ControlPanelPlugin
 
       wasConnected = connected;
     }
+    #endregion
 
-    Rect windowPos = new Rect(20, 20, 200, 180);
-    Vector2 scrollPos = new Vector2();
+    #region GUI
     public void OnGUI()
     {
       windowPos = GUILayout.Window(12053, windowPos,
@@ -146,15 +178,6 @@ namespace ControlPanelPlugin
                                       GUILayout.ExpandHeight(true),
                                       GUILayout.ExpandWidth(true));
     }
-
-
-
-    bool editItems = false;
-    string fileName = "controlpanel";
-    string newPanelItem = "Telemetry";
-    bool pickNewItemOpen = false;
-
-    string[] panelItemTypes = new string[] { "Telemetry", "Button" };
 
     void OnWindowGUI(int windowid)
     {
@@ -194,50 +217,23 @@ namespace ControlPanelPlugin
       }
 
       GUILayout.Label((serial != null && serial.Connected) ? "Connected" : "Disconnected");
-
-
-      //scrollPos = GUILayout.BeginScrollView(scrollPos);
-      //GUILayout.BeginVertical("box");
-
       GUILayout.Toggle(HasOneHeartbeat, "Has One HB");
 
-      if (serial != null)
+      OnSerialGUI();
+      OnPersistGUI();
+
+      if (editItems)
       {
-        if (serial.Connected)
-        {
-          GUILayout.Label("T: " + ThrottleValue);
-
-          if (!editItems)
-          {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Panel Up: ");
-            config.Intervals.PanelUpdate = GUILayout.HorizontalSlider(config.Intervals.PanelUpdate, 0.01f, 1.0f, GUILayout.Width(100));
-            GUILayout.Label("" + config.Intervals.PanelUpdate);
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Input Up: ");
-            config.Intervals.InputUpdate = GUILayout.HorizontalSlider(config.Intervals.InputUpdate, 0.005f, 0.5f, GUILayout.Width(100));
-            GUILayout.Label("" + config.Intervals.InputUpdate);
-            GUILayout.EndHorizontal();
-          }
-
-          if (GUILayout.Button("Disconnect"))
-          {
-            serial.Disconnect();
-            serial.DesiredConnectionState = Connection.State.Disconnected;
-            HasOneHeartbeat = false;
-          }
-        }
-        else
-        {
-          if (GUILayout.Button("Connect"))
-          {
-            serial.DesiredConnectionState = Connection.State.Connected;
-          }
-        }
+        OnItemsGUI();
       }
 
+      //GUILayout.EndScrollView();
+
+      GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+    }
+
+    private void OnPersistGUI()
+    {
       GUILayout.EndVertical();
       GUILayout.BeginVertical("box");
 
@@ -262,76 +258,102 @@ namespace ControlPanelPlugin
       }
 
       GUILayout.EndVertical();
+    }
 
+    private void OnSerialGUI()
+    {
+      var serial = Singleton.Get<Connection>();
+      if (serial == null)
+        return;
 
-
-      if (editItems)
+      if (!serial.Connected)
       {
-        GUILayout.BeginVertical("box");
+        if (GUILayout.Button("Connect"))
+        {
+          serial.DesiredConnectionState = Connection.State.Connected;
+        }
+        return;
+      }
 
-        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(400), GUILayout.Width(500));
-        GUILayout.BeginVertical();
-        GUILayout.Label("Telemetry items");
+      GUILayout.Label("T: " + ThrottleValue);
+      var config = Singleton.Get<Config>();
 
+      if (!editItems)
+      {
         GUILayout.BeginHorizontal();
-
-        if (GUILayout.Button(newPanelItem))
-        {
-          pickNewItemOpen = !pickNewItemOpen;
-        }
-
-        if (GUILayout.Button("+"))
-        {
-          if (newPanelItem == "Telemetry")
-          {
-            Add(new TelemetryItem());
-          }
-          else if (newPanelItem == "Button")
-          {
-            Add(new ButtonItem());
-          }
-
-        }
+        GUILayout.Label("Panel Up: ");
+        config.Intervals.PanelUpdate = GUILayout.HorizontalSlider(config.Intervals.PanelUpdate, 0.01f, 1.0f, GUILayout.Width(100));
+        GUILayout.Label("" + config.Intervals.PanelUpdate);
         GUILayout.EndHorizontal();
 
-        if (pickNewItemOpen)
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Input Up: ");
+        config.Intervals.InputUpdate = GUILayout.HorizontalSlider(config.Intervals.InputUpdate, 0.005f, 0.5f, GUILayout.Width(100));
+        GUILayout.Label("" + config.Intervals.InputUpdate);
+        GUILayout.EndHorizontal();
+      }
+
+      if (GUILayout.Button("Disconnect"))
+      {
+        serial.Disconnect();
+        serial.DesiredConnectionState = Connection.State.Disconnected;
+        HasOneHeartbeat = false;
+      }
+    }
+
+    private void OnItemsGUI()
+    {
+      GUILayout.BeginVertical("box");
+
+      scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(400), GUILayout.Width(500));
+      GUILayout.BeginVertical();
+      GUILayout.Label("Telemetry items");
+
+      GUILayout.BeginHorizontal();
+
+      if (GUILayout.Button(newPanelItem))
+      {
+        pickNewItemOpen = !pickNewItemOpen;
+      }
+
+      if (GUILayout.Button("+"))
+      {
+        if (newPanelItem == "Telemetry")
         {
-          foreach (var name in panelItemTypes)
+          Add(new TelemetryItem());
+        }
+        else if (newPanelItem == "Button")
+        {
+          Add(new ButtonItem());
+        }
+
+      }
+      GUILayout.EndHorizontal();
+
+      if (pickNewItemOpen)
+      {
+        foreach (var name in panelItemTypes)
+        {
+          if (GUILayout.Button(name))
           {
-            if (GUILayout.Button(name))
-            {
-              pickNewItemOpen = false;
-              newPanelItem = name;
-            }
+            pickNewItemOpen = false;
+            newPanelItem = name;
           }
         }
-
-        foreach (var item in PanelItems)
-        {
-          GUILayout.BeginVertical("box");
-          item.OnGUI();
-          GUILayout.EndVertical();
-        }
-
-        GUILayout.EndVertical();
-        GUILayout.EndScrollView();
-        GUILayout.EndVertical();
       }
 
-
-      //GUILayout.EndScrollView();
-
-      GUI.DragWindow(new Rect(0, 0, 10000, 10000));
-    }
-
-    public void Clear()
-    {
       foreach (var item in PanelItems)
       {
-        item.Shutdown();
+        GUILayout.BeginVertical("box");
+        item.OnGUI();
+        GUILayout.EndVertical();
       }
-      PanelItems.Clear();
+
+      GUILayout.EndVertical();
+      GUILayout.EndScrollView();
+      GUILayout.EndVertical();
     }
+    #endregion
 
     #region IJsonConvertable Members
 
