@@ -10,7 +10,7 @@ using UnityEngine;
 namespace ControlPanelPlugin.Telemetry
 {
   [ClassSerializer("TelemetryItem")]
-  public class TelemetryItem : PanelItem
+  public class TelemetryItem : VesselPropertyItem
   {
     private static int nextId = 0;
     public int Id = nextId++;
@@ -29,19 +29,6 @@ namespace ControlPanelPlugin.Telemetry
           Display.Panel = panel;
       }
     }
-
-    private string propertyName;
-    public string Property
-    {
-      get { return propertyName; }
-      set
-      {
-        propertyName = value;
-        SetupProperty();
-      }
-    }
-
-    private PropertyInfo property;
 
     private TelemetryDisplay display;
     public TelemetryDisplay Display
@@ -64,14 +51,6 @@ namespace ControlPanelPlugin.Telemetry
     {
       Display = display;
       Property = propertyName;
-
-      SetupProperty();
-    }
-
-    public void SetupProperty()
-    {
-      var vessel = typeof(IVessel);
-      property = vessel.GetProperty(Property);
     }
 
     bool expanded = false;
@@ -92,12 +71,12 @@ namespace ControlPanelPlugin.Telemetry
 
       if (expanded)
       {
-        propertyName = GUILayout.TextField(propertyName, s);
+        Property = GUILayout.TextField(Property, s);
       }
       else
       {
         s.alignment = TextAnchor.MiddleLeft;
-        GUILayout.Label(propertyName, s, GUILayout.ExpandWidth(true));
+        GUILayout.Label(Property, s, GUILayout.ExpandWidth(true));
       }
 
       s.alignment = TextAnchor.LowerRight;
@@ -115,10 +94,7 @@ namespace ControlPanelPlugin.Telemetry
 
     public virtual float GetLatestValue()
     {
-      if (Panel == null || Panel.CurrentVessel == null || property == null)
-        return 0.0f;
-
-      return (float)property.GetValue(Panel.CurrentVessel, null);
+      return PropertyValue;
     }
 
     public override bool Update()
@@ -134,14 +110,13 @@ namespace ControlPanelPlugin.Telemetry
     public override JSONObject ToJson()
     {
       var json = base.ToJson();
-      json.Add("property", Property);
       json.Add("display", Singleton.Get<ClassSerializer>().ToJson(Display));
       return json;
     }
 
     public override void FromJson(JSONObject json)
     {
-      Property = json["property"];
+      base.FromJson(json);
       Display = Singleton.Get<ClassSerializer>().FromJson<TelemetryDisplay>(json["display"]);
     }
   }

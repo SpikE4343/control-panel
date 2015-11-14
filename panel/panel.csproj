@@ -57,12 +57,14 @@
     <Compile Include="ControlPanel.cs" />
     <Compile Include="Items\Button\Action\ButtonAction.cs" />
     <Compile Include="Items\Button\Action\ButtonStatusAction.cs" />
+    <Compile Include="Items\Button\Action\VesselPropertyAction.cs" />
     <Compile Include="Items\Button\Action\DockingViewButtonAction.cs" />
     <Compile Include="Items\Button\Action\MapViewButtonAction.cs" />
     <Compile Include="Items\Button\Action\StageArmButtonAction.cs" />
     <Compile Include="Items\Button\Action\StageButtonAction.cs" />
     <Compile Include="Items\Button\Action\ThrottleToggleAction.cs" />
     <Compile Include="Items\Button\ButtonItem.cs" />
+    <Compile Include="Items\VesselPropertyItem.cs" />
     <Compile Include="Items\InputItem.cs" />
     <Compile Include="Items\PanelItem.cs" />
     <Compile Include="Items\Telemetry\Display\AnalogMeterDisplay.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Utils\ClassSerializer.cs" />
     <Compile Include="Utils\ClassSerializerAttribute.cs" />
     <Compile Include="Utils\EventDispatcher.cs" />
+    <Compile Include="Utils\Gui\ComboBox.cs" />
     <Compile Include="Utils\IBinaryConvertable.cs" />
     <Compile Include="Utils\IJsonConvertable.cs" />
     <Compile Include="Utils\IPoolable.cs" />

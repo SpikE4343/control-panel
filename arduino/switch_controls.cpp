@@ -15,21 +15,18 @@ void set_switch_mapping( char id, char pin )
 
 void setup_switches()
 {
+  set_switch_mapping( SWITCH_THROTTLE_MOMENT,  28 );
   set_switch_mapping( SWITCH_THROTTLE_TOGGLE,  30 );
   set_switch_mapping( SWITCH_DOCKING_MODE,     32 );
   set_switch_mapping( SWITCH_RCS,              34 );
   set_switch_mapping( SWITCH_SAS,              36 );
   set_switch_mapping( SWITCH_MAP_MODE,         38 );
   set_switch_mapping( SWITCH_BRAKES,           40 );
-  //set_switch_mapping
+  set_switch_mapping( SWITCH_GEAR,             42 );
   set_switch_mapping( SWITCH_TRANS_CTRL,       44 );
   set_switch_mapping( SWITCH_STAGE,            46 );
   set_switch_mapping( SWITCH_LIGHTS,           48 );
-  set_switch_mapping( SWITCH_FINE_CTRL,        50 );
-  set_switch_mapping( SWITCH_THROTTLE_MOMENT,  28 );
-  //set_switch_mapping
-  //set_switch_mapping( SWITCH_STAGE_ARM,        30 );
-  set_switch_mapping( SWITCH_GEAR,             42 );
+  set_switch_mapping( SWITCH_FINE_CTRL,        52 );
 }
 
 void update_switch( char id )

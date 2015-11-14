@@ -9,6 +9,7 @@ using ControlPanelPlugin.Items.Button.Action;
 using ControlPanelPlugin.Messages;
 using ControlPanelPlugin.Network;
 using ControlPanelPlugin.Utils;
+using ControlPanelPlugin.Utils.Gui;
 using UnityEngine;
 
 
@@ -140,37 +141,19 @@ namespace ControlPanelPlugin.Items.Button
     }
 
     bool switchSelectionOpen = false;
+    int switchSelection = 0;
+    Vector2 switchScroll;
+    ComboBox switchGUI = new ComboBox(Enum.GetNames(typeof(Constants.Panel.SwitchId)));
+
     public override void OnGUI()
     {
+      switchGUI.Selection = (int)Switch;
       GUILayout.BeginHorizontal();
 
-
-
-      bool pressed = GUILayout.Button(Switch.ToString(), GUILayout.Width(150));
-      if (switchSelectionOpen || pressed)
+      if (switchGUI.Show())
       {
-        if (switchSelectionOpen && pressed)
-        {
-          switchSelectionOpen = false;
-        }
-        else
-        {
-          switchSelectionOpen = true;
-          GUILayout.BeginVertical("box");
-          var names = Enum.GetNames(typeof(Constants.Panel.SwitchId));
-          foreach (var name in names)
-          {
-            if (name == Switch.ToString())
-              continue;
-
-            if (GUILayout.Button(name))
-            {
-              switchSelectionOpen = false;
-              Switch = (Constants.Panel.SwitchId)Enum.Parse(typeof(Constants.Panel.SwitchId), name);
-            }
-          }
-          GUILayout.EndVertical();
-        }
+        switchSelectionOpen = false;
+        Switch = (Constants.Panel.SwitchId)Enum.Parse(typeof(Constants.Panel.SwitchId), switchGUI.SelectedItem);
       }
 
       GUILayout.Button(Action != null ? Action.Name : "Action", GUILayout.Width(150));

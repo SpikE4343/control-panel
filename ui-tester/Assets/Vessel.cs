@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using ControlPanelPlugin;
+using UnityEngine;
 
 namespace tester
 {
@@ -97,17 +98,27 @@ namespace tester
       actionGroups[group] = value;
     }
 
-    public float UpdateInterval { get { return 0.01f; } }
+    #region IVessel Members
+
+    public float UpdateInterval { get { return 0.1f; } }
 
     public void Update()
     {
-      mAltitude = mAltitude + 0.2f;// *mainThrottle;
-      mSpeed = mSpeed + 0.01f;// *mainThrottle;
-      mLiquidFuel = (mLiquidFuel - 100.0f);
-      mOxiFuel -= 500.0f;
-      mMonoFuel -= 100.0f;
-      mEvFuel -= 1.0f;
-      verticalSpeed += 0.1f;
+      mAltitude = mAltitude + 0.2f * mainThrottle;
+      mSpeed = mSpeed + 0.01f * mainThrottle;
+      mLiquidFuel = (mLiquidFuel - 100.0f) * mainThrottle;
+      mOxiFuel -= 500.0f * mainThrottle;
+      mMonoFuel -= 100.0f * mainThrottle;
+      mEvFuel -= 1.0f * mainThrottle;
+      verticalSpeed += 0.1f * mainThrottle;
+      nodeSeconds -= UpdateInterval;
+      terrainHeight -= 0.1f * mainThrottle;
+
+      if (nodeSeconds < 0.0f)
+        nodeSeconds = 2.0f * 24.0f * 60.0f * 60.0f;
+
+      if (terrainHeight < 0.0f)
+        terrainHeight = 1000.0f;
     }
 
     public float liquidFuelPercent
@@ -202,7 +213,7 @@ namespace tester
     public bool FineControls { get; set; }
 
 
-    #region IVessel Members
+
 
 
     public float liquidResourcePercent
@@ -253,11 +264,12 @@ namespace tester
       }
     }
 
+    private float terrainHeight = 0.0f;
     public float heightFromTerrain
     {
       get
       {
-        return 0.0f;
+        return terrainHeight;
       }
       set
       {
@@ -265,10 +277,8 @@ namespace tester
       }
     }
 
-    public float nextNodeSeconds
-    {
-      get { return 0.0f; }
-    }
+    private float nodeSeconds = 0.0f;
+    public float nextNodeSeconds { get { return nodeSeconds; } }
 
     #endregion
   }

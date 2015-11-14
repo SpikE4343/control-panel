@@ -51,6 +51,7 @@ namespace ControlPanelPlugin
     public ControlPanel()
     {
       StageArmed = true;
+      CanFireStage = true;
       PanelItems = new List<PanelItem>();
       viewMode = Constants.Panel.ViewMode.Staging;
 

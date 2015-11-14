@@ -29,7 +29,7 @@ namespace ControlPanelPlugin
         StageArm = 3,
         DockingMode = 4,
         MapMode = 5,
-        TrottleToggle = 6,
+        ThrottleToggle = 6,
         Brakes = 7,
         Gear = 8,
         Lights = 9,

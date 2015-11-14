@@ -16,11 +16,11 @@ namespace ControlPanelPlugin.Items.Button.Action
     {
       if (Button.Panel.StageArmed && Button.Panel.CanFireStage)
       {
-        Button.Panel.CanFireStage = false;
+        //Button.Panel.CanFireStage = false;
         Button.Panel.CurrentVessel.ActiveNextStage();
       }
 
-      Button.State = Button.Panel.CanFireStage;
+      //Button.State = Button.Panel.CanFireStage;
     }
   }
 }
