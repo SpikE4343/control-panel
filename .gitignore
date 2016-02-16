@@ -20,3 +20,6 @@ panel/bin/
 ui-tester/Library/
 ui-tester/Temp/
 ui-tester/obj/
+ui-tester/ui-tester.CSharp.csproj
+ui-tester/ui-tester.sln
+.vs/

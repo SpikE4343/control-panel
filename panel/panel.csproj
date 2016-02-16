@@ -64,6 +64,7 @@
     <Compile Include="Items\Button\Action\StageButtonAction.cs" />
     <Compile Include="Items\Button\Action\ThrottleToggleAction.cs" />
     <Compile Include="Items\Button\ButtonItem.cs" />
+    <Compile Include="Items\Status\StatusItem.cs" />
     <Compile Include="Items\VesselPropertyItem.cs" />
     <Compile Include="Items\InputItem.cs" />
     <Compile Include="Items\PanelItem.cs" />

@@ -13,6 +13,7 @@ using ControlPanelPlugin.Utils;
 using ControlPanelPlugin.Messages;
 using Boomlagoon.JSON;
 using ControlPanelPlugin.Items.Button;
+using ControlPanelPlugin.Items.Status;
 
 // copy /Y $(TargetPath) "C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\GameData\Controlpanel\Plugins\$(TargetFileName)"
 
@@ -20,12 +21,34 @@ namespace ControlPanelPlugin
 {
   public class ControlPanel : IJsonConvertable
   {
+    private class PanelItemCreator
+    {
+      public string Title;
+      public Func<PanelItem> Creator;
+    }
+
     private bool running = true;
     private bool editItems = false;
     private string fileName = "controlpanel";
-    private string newPanelItem = "Telemetry";
+
     private bool pickNewItemOpen = false;
-    private string[] panelItemTypes = new string[] { "Telemetry", "Button" };
+    private PanelItemCreator SelectedItemCreator;
+
+    private PanelItemCreator[] panelItemTypes = new PanelItemCreator[] { 
+      new PanelItemCreator(){
+        Title = "Telemetry",
+        Creator = () => { return new TelemetryItem(); }
+      },
+      new PanelItemCreator(){
+        Title = "Button",
+        Creator = () => { return new ButtonItem(); }
+      },
+      new PanelItemCreator(){
+        Title = "Status",
+        Creator = () => { return new StatusItem(); }
+      }
+    };
+
     private Rect windowPos = new Rect(20, 20, 200, 180);
     private Vector2 scrollPos = new Vector2();
     private bool wasConnected = false;
@@ -308,37 +331,30 @@ namespace ControlPanelPlugin
 
       scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(400), GUILayout.Width(500));
       GUILayout.BeginVertical();
-      GUILayout.Label("Telemetry items");
+      GUILayout.Label("Panel items");
 
       GUILayout.BeginHorizontal();
 
-      if (GUILayout.Button(newPanelItem))
+      if (GUILayout.Button(SelectedItemCreator != null ? SelectedItemCreator.Title : "New"))
       {
         pickNewItemOpen = !pickNewItemOpen;
       }
 
       if (GUILayout.Button("+"))
       {
-        if (newPanelItem == "Telemetry")
-        {
-          Add(new TelemetryItem());
-        }
-        else if (newPanelItem == "Button")
-        {
-          Add(new ButtonItem());
-        }
-
+        Add(SelectedItemCreator.Creator());
       }
       GUILayout.EndHorizontal();
 
       if (pickNewItemOpen)
       {
-        foreach (var name in panelItemTypes)
+        for (int i = 0; i < panelItemTypes.Length; ++i)
         {
-          if (GUILayout.Button(name))
+          var creator = panelItemTypes[i];
+          if (GUILayout.Button(creator.Title))
           {
+            SelectedItemCreator = creator;
             pickNewItemOpen = false;
-            newPanelItem = name;
           }
         }
       }

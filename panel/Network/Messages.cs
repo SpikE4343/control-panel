@@ -407,9 +407,7 @@ namespace ControlPanelPlugin.Messages
       }
 
       if (!HasPendingMessage || BytesRemaining < PendingSize)
-      {
         return;
-      }
 
       HasPendingMessage = false;
 

@@ -12,7 +12,7 @@ namespace ControlPanelPlugin
     {
       public enum StatusId
       {
-        None,
+        None=-1,
         RCS = 0,
         SAS = 1,
         STAGE = 2,
