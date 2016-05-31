@@ -4,3 +4,6 @@
 [submodule "arduino/HID"]
 	path = arduino/HID
 	url = https://github.com/NicoHood/HID.git
+[submodule "arduino/UnoJoy"]
+	path = arduino/UnoJoy
+	url = https://github.com/AlanChatham/UnoJoy.git
