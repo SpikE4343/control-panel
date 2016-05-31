@@ -1,0 +1,6 @@
+[submodule "arduino/hoodloader2"]
+	path = arduino/hoodloader2
+	url = https://github.com/NicoHood/HoodLoader2.git
+[submodule "arduino/HID"]
+	path = arduino/HID
+	url = https://github.com/NicoHood/HID.git
