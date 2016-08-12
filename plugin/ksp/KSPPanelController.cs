@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using ControlPanelPlugin.Messages;
-using ControlPanelPlugin.Network;
-using ControlPanelPlugin.Telemetry;
-using ControlPanelPlugin.Telemetry.Display;
+﻿/// 
+///
+///
+using System.Collections;
 using ControlPanelPlugin.Utils;
 using UnityEngine;
 
@@ -29,6 +28,9 @@ namespace ControlPanelPlugin
         Log.Implementor = new UnityLogger();
       }
 
+      if ( Singleton.Get<Application>() != null )
+        return;
+
       var app = Singleton.Set(new Application());
       app.Initialize();
 
@@ -47,8 +49,9 @@ namespace ControlPanelPlugin
     void onVesselChange(Vessel v)
     {
       kspVessel.vessel = v;
-
-      Singleton.Set<IVessel>(kspVessel);
+      
+      if( Singleton.Get<IVessel>() == null )
+        Singleton.Set<IVessel>(kspVessel);
 
       if (v == null)
       {
@@ -70,7 +73,7 @@ namespace ControlPanelPlugin
     // coroutine for polling input
     IEnumerator UpdatePanelInput()
     {
-      while (active)
+      while ( gameObject.activeSelf )
       {
         if (updatePanel && kspVessel.vessel != null)
         {
@@ -83,7 +86,7 @@ namespace ControlPanelPlugin
 
     IEnumerator UpdateVessel()
     {
-      while (active)
+      while (gameObject.activeSelf)
       {
         if (updatePanel && kspVessel.vessel != null)
         {
@@ -97,7 +100,7 @@ namespace ControlPanelPlugin
     // coroutine for updating state/sending data to panel
     IEnumerator UpdatePanel()
     {
-      while (active)
+      while ( gameObject.activeSelf )
       {
         if (updatePanel && kspVessel.vessel != null)
         {

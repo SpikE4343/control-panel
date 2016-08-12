@@ -72,6 +72,14 @@ namespace ControlPanelPlugin.Utils
 
     private IEnumerable<Type> GetTypesWithPanelItemAttribute(Assembly assembly)
     {
+      // hack to get around assembly loading
+      if ( assembly == null || String.IsNullOrEmpty( assembly.FullName ) ||
+          !assembly.FullName.StartsWith( "panel" ) &&
+          !assembly.FullName.StartsWith( "control-panel-plugin" ) )
+      {
+        yield break;
+      }
+
       foreach (Type type in assembly.GetTypes())
       {
         if (type.GetCustomAttributes(typeof(ClassSerializerAttribute), false).Length > 0)

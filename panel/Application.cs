@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Boomlagoon.JSON;
+﻿using Boomlagoon.JSON;
 using ControlPanelPlugin.Items.Button;
 using ControlPanelPlugin.Items.Button.Action;
 using ControlPanelPlugin.Messages;
@@ -11,6 +6,7 @@ using ControlPanelPlugin.Network;
 using ControlPanelPlugin.Telemetry;
 using ControlPanelPlugin.Telemetry.Display;
 using ControlPanelPlugin.Utils;
+using System.IO;
 
 namespace ControlPanelPlugin
 {

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ControlPanelPlugin
 {
@@ -80,7 +78,7 @@ namespace ControlPanelPlugin
 
     public void ActiveNextStage()
     {
-      Staging.ActivateNextStage();
+      KSP.UI.Screens.StageManager.ActivateNextStage();
     }
 
     public void EnterMapView()

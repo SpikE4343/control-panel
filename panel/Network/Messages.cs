@@ -290,11 +290,12 @@ namespace ControlPanelPlugin.Messages
     public MessageManager()
     {
       InitializeItems();
-    }
+     }
 
     private void InitializeItems()
     {
-      foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+      var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+      foreach (var assembly in assemblies )
       {
         foreach (var type in GetTypesWithPanelItemAttribute(typeof(MessageSerializerAttribute), assembly))
         {
@@ -309,7 +310,16 @@ namespace ControlPanelPlugin.Messages
 
     private IEnumerable<Type> GetTypesWithPanelItemAttribute(Type attr, Assembly assembly)
     {
-      foreach (Type type in assembly.GetTypes())
+      // hack to get around assembly loading
+      if( assembly == null || String.IsNullOrEmpty(assembly.FullName) || 
+          !assembly.FullName.StartsWith("panel") && 
+          !assembly.FullName.StartsWith( "control-panel-plugin") )
+      {
+        yield break;
+      }
+
+      var types = assembly.GetTypes();
+      foreach (Type type in types)
       {
         if (type.GetCustomAttributes(attr, false).Length > 0)
         {
