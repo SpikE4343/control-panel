@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 using ControlPanelPlugin;
+using UnityEngine;
+using UnityEditor;
 
 namespace tester
 {
@@ -41,7 +43,7 @@ namespace tester
       }
       set
       {
-        throw new NotImplementedException();
+        mAltitude = value;
       }
     }
 
@@ -53,7 +55,7 @@ namespace tester
       }
       set
       {
-        throw new NotImplementedException();
+        mSpeed = value;
       }
     }
 
@@ -97,17 +99,27 @@ namespace tester
       actionGroups[group] = value;
     }
 
-    public float UpdateInterval { get { return 0.01f; } }
+    #region IVessel Members
+
+    public float UpdateInterval { get { return 0.1f; } }
 
     public void Update()
     {
-      mAltitude = mAltitude + 0.2f;// *mainThrottle;
-      mSpeed = mSpeed + 0.01f;// *mainThrottle;
-      mLiquidFuel = (mLiquidFuel - 100.0f);
-      mOxiFuel -= 500.0f;
-      mMonoFuel -= 100.0f;
-      mEvFuel -= 1.0f;
-      verticalSpeed += 0.1f;
+      mAltitude = mAltitude + 0.2f * mainThrottle;
+      mSpeed = mSpeed + 0.01f * mainThrottle;
+      mLiquidFuel = (mLiquidFuel - 100.0f) * mainThrottle;
+      mOxiFuel -= 500.0f * mainThrottle;
+      mMonoFuel -= 100.0f * mainThrottle;
+      mEvFuel -= 1.0f * mainThrottle;
+      verticalSpeed += 0.1f * mainThrottle;
+      nodeSeconds -= UpdateInterval;
+      terrainHeight -= 0.1f * mainThrottle;
+
+      if (nodeSeconds < 0.0f)
+        nodeSeconds = 2.0f * 24.0f * 60.0f * 60.0f;
+
+      if (terrainHeight < 0.0f)
+        terrainHeight = 1000.0f;
     }
 
     public float liquidFuelPercent
@@ -202,7 +214,7 @@ namespace tester
     public bool FineControls { get; set; }
 
 
-    #region IVessel Members
+
 
 
     public float liquidResourcePercent
@@ -213,7 +225,7 @@ namespace tester
       }
       set
       {
-        throw new NotImplementedException();
+        liquidFuelPercent = value;
       }
     }
 
@@ -225,7 +237,7 @@ namespace tester
       }
       set
       {
-        throw new NotImplementedException();
+        oxiFuelPercent = value;
       }
     }
 
@@ -237,7 +249,7 @@ namespace tester
       }
       set
       {
-        throw new NotImplementedException();
+        monoFuelPercent = value;
       }
     }
 
@@ -249,27 +261,90 @@ namespace tester
       }
       set
       {
-        throw new NotImplementedException();
+        electricFuelPercent = value;
       }
     }
 
+    private float terrainHeight = 0.0f;
     public float heightFromTerrain
     {
       get
       {
-        return 0.0f;
+        return terrainHeight;
       }
       set
       {
-        throw new NotImplementedException();
+        terrainHeight = value;
       }
     }
 
-    public float nextNodeSeconds
+    private float nodeSeconds = 0.0f;
+    public float nextNodeSeconds { get { return nodeSeconds; } }
+    #endregion
+
+    #region GUI
+
+    Rect windowPos;
+    Vector2 scrollPos;
+    public void OnGUI()
     {
-      get { return 0.0f; }
+      windowPos = GUILayout.Window(12055, windowPos,
+                                      OnWindowGUI,
+                                      "Vessel",
+                                      GUILayout.Width(300),
+                                      GUILayout.Height(580),
+                                      GUILayout.ExpandHeight(true),
+                                      GUILayout.ExpandWidth(true));
     }
 
+    void OnWindowGUI(int windowid)
+    {
+      GUILayout.BeginVertical("box");
+      GUILayout.BeginHorizontal();
+      GUILayout.Label(string.Format("Vessel: {0}", Name));
+      GUILayout.EndHorizontal();
+
+      scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.ExpandHeight(true), GUILayout.MaxHeight(1000));
+
+      var properties = GetType().GetProperties();
+
+      foreach (var prop in properties)
+      {
+        if (prop.PropertyType.Name == "Single")
+        {
+          var value = (float)prop.GetValue(this, null);
+          var valueStr = string.Format("{0}", value);
+
+          GUILayout.BeginHorizontal();
+          GUILayout.Label(prop.Name);
+          GUILayout.FlexibleSpace();
+
+          if (prop.GetSetMethod() == null)
+          {
+            GUILayout.Label(valueStr);
+          }
+          else
+          {
+            var nextStr = GUILayout.TextField(valueStr, GUILayout.MinWidth(100));
+
+            if (nextStr != valueStr)
+            {
+              var next = Single.Parse(nextStr);
+              prop.SetValue(this, next, null);
+            }
+          }
+
+          GUILayout.EndHorizontal();
+        }
+      }
+
+      GUILayout.EndScrollView();
+
+      GUILayout.EndVertical();
+
+      GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+
+    }
     #endregion
   }
 }

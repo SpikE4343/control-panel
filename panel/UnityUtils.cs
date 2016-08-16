@@ -37,5 +37,38 @@ namespace ControlPanelPlugin
       Int32.TryParse(text, out result);
       return result;
     }
+
+    public static bool GUISelection(string[] items,
+                                    ref int selection,
+                                    ref bool open,
+                                    ref Vector2 scroll,
+                                    int width)
+    {
+      bool pressed = false;
+      if (!open)
+      {
+        pressed = GUILayout.Button(items[selection], GUILayout.Width(width));
+      }
+
+      if (!open && !pressed)
+        return false;
+
+      if (open && pressed)
+      {
+        open = false;
+        return false;
+      }
+
+      GUILayout.BeginVertical("box", GUILayout.Height(250), GUILayout.Width(width));
+      scroll = GUILayout.BeginScrollView(scroll, false, false);
+      var next = GUILayout.SelectionGrid(selection, items, 1, GUILayout.Width(width - 50));
+      GUILayout.EndScrollView();
+      GUILayout.EndVertical();
+
+      bool changed = next != selection;
+      open = !changed;
+      selection = next;
+      return changed;
+    }
   }
 }

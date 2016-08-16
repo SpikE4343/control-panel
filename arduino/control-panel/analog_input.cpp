@@ -12,7 +12,7 @@ void set_analog_input_mapping( char input, char pin )
 {
   inputs[input] = (AnalogInput){pin, 0, 0, 0, 0, 0, 0, 0 };
   memset( inputs[input].samples, 0, sizeof( int ) * MAX_SAMPLES); 
-  //inputs[input].pin = pin;
+  //inputs[input].pin = pi;n
 }
 
 void setup_analog_inputs()
@@ -34,10 +34,10 @@ void update_analog_input(int id)
   input.avgn = input.avgn + 0.25f* (t - input.avgn);
   input.value = (((input.avgn / 1024.0f) - 0.03f)/0.93f) * 100;
 
-//  set_telemetry( 9, 3, 4, 4, 0, input.pin);
-//  set_telemetry( 6, 3, 0, 4, 0, t);
-  set_telemetry( 7, 4, 0, 4, 0, input.value);
-//  set_telemetry( 8, 4, 4, 4, 0, input.avgn);
+  //  set_telemetry( 9, 3, 4, 4, 0, input.pin);
+  //  set_telemetry( 6, 3, 0, 4, 0, t);
+  //  set_telemetry( 7, 4, 0, 4, 0, input.value);
+  //  set_telemetry( 8, 4, 4, 4, 0, input.avgn);
 
   if( input.value >= 100 )
     input.value = 100;
@@ -50,7 +50,7 @@ void update_analog_input(int id)
   if( input.value != input.last )
   {
     input.last = input.value;
-    float ft = input.value;
+    float ft = input. value;
 
     aiMsg[4] = id;
     Serial.write( &aiMsg[0], sizeof(aiMsg) );

@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class UITestController : MonoBehaviour
 {
-  IVessel kspVessel = new TestVessel();
+  public TestVessel kspVessel = new TestVessel();
   bool updatePanel = false;
 
   void Awake()
@@ -99,6 +99,8 @@ public class UITestController : MonoBehaviour
   void OnGUI()
   {
     Singleton.Get<ControlPanel>().OnGUI();
+    if (kspVessel != null)
+      kspVessel.OnGUI();
   }
 
   void Stop()

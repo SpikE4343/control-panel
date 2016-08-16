@@ -31,7 +31,7 @@ namespace ControlPanelPlugin.Telemetry.Display
 
     public override bool Update(float next)
     {
-      float time = Mathf.Min(0.0f, next);
+      float time = Mathf.Max(0.0f, next);
       Precision = 0;
 
       const int minute = 60;
@@ -40,21 +40,21 @@ namespace ControlPanelPlugin.Telemetry.Display
 
       float fdays = time / day;
       Days = (int)fdays;
-      fdays -= Days * day;
+      fdays -= Days;
 
       float fhours = (fdays * day) / hour;
       int Hours = (int)fhours;
-      fhours -= Hours * hour;
+      fhours -= Hours;
 
       float fminutes = (fhours * hour) / minute;
       Minutes = (int)fminutes;
-      fminutes -= Minutes * minute;
+      fminutes -= Minutes;
 
-      Seconds = (int)(fminutes);
+      Seconds = (int)(fminutes * minute);
 
-      float value = (float)(Days * 1000000 +
-                            Hours * 10000 +
-                            Minutes * 100 +
+      float value = (float)(Days * 1000000.0f +
+                            Hours * 10000.0f +
+                            Minutes * 100.0f +
                             Seconds);
 
       return base.Update(value);
